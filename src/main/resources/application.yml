@@ -1,0 +1,17 @@
+micronaut:
+  application:
+    name: reportConnector
+  metrics:
+    enabled: true
+    export:
+      prometheus:
+        enabled: true
+        descriptions: true
+        step: PT1M
+
+pipelines:
+  corePoolSize: 10
+  maxParallel: 50
+  files:
+    - "classpath:pipeline.yaml"
+

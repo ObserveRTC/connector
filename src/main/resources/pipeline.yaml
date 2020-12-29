@@ -1,0 +1,25 @@
+pipeline:
+  name: "MyPipeline"
+  source:
+    type: KafkaSource
+    config:
+      pollMaxRecordsNum: 10000
+      pollMaxWaitTimeInS: 10
+      topic: "reports"
+      properties:
+        bootstrap:
+          servers: localhost:9092
+        group:
+          id: "test-something"
+        key:
+          deserializers: Something
+  evaluator:
+    bufferThresholdNum: 10
+    bufferThresholdInS: 5
+  sink:
+    type: BigQuerySink
+    config:
+      credentialFile: "/Users/balazskreith/Downloads/report-connector/keys/google_api_credentials.json"
+      projectId: "observertc"
+      datasetId: "WebRTCTry"
+

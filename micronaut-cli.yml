@@ -1,0 +1,6 @@
+applicationType: default
+defaultPackage: org.observertc.webrtc.reportconnector
+testFramework: junit
+sourceLanguage: java
+buildTool: gradle
+features: [annotation-api, app-name, asciidoctor, cache-caffeine, github-workflow-docker-registry, gradle, h2, http-client, java, java-application, jdbc-hikari, jooq, junit, logback, management, micrometer, micrometer-prometheus, netty-server, readme, rxjava3, shade, yaml]
