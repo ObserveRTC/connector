@@ -1,6 +1,8 @@
 micronaut:
   application:
     name: reportConnector
+  server:
+    port: ${APPLICATION_SERVER_PORT:7788}
   metrics:
     enabled: true
     export:
@@ -8,10 +10,4 @@ micronaut:
         enabled: true
         descriptions: true
         step: PT1M
-
-pipelines:
-  corePoolSize: 10
-  maxParallel: 50
-  files:
-    - "classpath:pipeline.yaml"
 

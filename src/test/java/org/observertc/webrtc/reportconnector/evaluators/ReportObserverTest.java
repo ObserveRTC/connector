@@ -5,13 +5,12 @@ import io.reactivex.rxjava3.core.Observer;
 import io.reactivex.rxjava3.subjects.PublishSubject;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.observertc.webrtc.reportconnector.evaluators.ReportObserver;
+import org.observertc.webrtc.reportconnector.ReportGenerator;
 import org.observertc.webrtc.schemas.reports.Report;
 import org.observertc.webrtc.schemas.reports.ReportType;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
 import java.util.concurrent.atomic.AtomicReference;
 
 class ReportObserverTest {
@@ -48,13 +47,7 @@ class ReportObserverTest {
         // Given
         AtomicReference<ReportType> passed = new AtomicReference<>(null);
         subject.subscribe(r -> passed.set(r.getType()));
-        Report report = Report.newBuilder()
-                .setServiceName("serviceName")
-                .setPayload(new Object())
-                .setServiceUUID(UUID.randomUUID().toString())
-                .setTimestamp(1234L)
-                .setType(type)
-                .build();
+        Report report = new ReportGenerator().emptyReportSupplier(type).get();
 
         // When
         Observable.fromArray(report)

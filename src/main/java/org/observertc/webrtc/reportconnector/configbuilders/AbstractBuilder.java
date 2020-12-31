@@ -360,12 +360,6 @@ public abstract class AbstractBuilder {
 		this.configs.put(key, value);
 	}
 
-	/**
-	 * Sets up the Builder imlementation with the provided configuration
-	 *
-	 * @param source The provided configuration used to build the result storage
-	 * @return {@link IBuilder} to configure the Builder further.
-	 */
 	public void withConfiguration(Map<String, Object> source) {
 		if (Objects.isNull(source)) {
 			return;

@@ -11,24 +11,17 @@ import reactor.kafka.receiver.KafkaReceiver;
 import reactor.kafka.receiver.ReceiverOptions;
 import reactor.kafka.receiver.ReceiverRecord;
 
-import java.util.Collections;
-import java.util.Objects;
-import java.util.Properties;
-import java.util.UUID;
+import java.util.*;
 
-@Prototype
 public class KafkaSource extends Source {
     private static final Logger logger = LoggerFactory.getLogger(KafkaSource.class);
 
     private final Properties properties;
     private String topic;
-    private long maxWaitingTimeInS;
 
     public KafkaSource() {
         this.properties = new Properties();
     }
-
-
 
     @Override
     protected Observable<byte[]> makeObservable() {
@@ -50,8 +43,8 @@ public class KafkaSource extends Source {
         return this;
     }
 
-    KafkaSource withMaxWaitingTimeInS(long value) {
-        this.maxWaitingTimeInS = value;
+    KafkaSource withProperties(Map<String, Object> properties) {
+        this.properties.putAll(properties);
         return this;
     }
 

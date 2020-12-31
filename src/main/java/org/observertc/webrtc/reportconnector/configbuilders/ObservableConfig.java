@@ -18,6 +18,7 @@ package org.observertc.webrtc.reportconnector.configbuilders;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.micrometer.core.instrument.util.IOUtils;
 import io.reactivex.rxjava3.core.Observable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,18 +27,23 @@ import org.yaml.snakeyaml.constructor.SafeConstructor;
 
 import javax.inject.Singleton;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 
+/**
+ * This class implements a yaml and json interpreter
+ * to provide @link{Map} representation for
+ * @link{Observable} configurations.
+ *
+ */
 @Singleton
-public class ConfigurationSourceProvider {
+public class ObservableConfig {
 
-	private static final Logger logger = LoggerFactory.getLogger(ConfigurationSourceProvider.class);
+	private static final Logger logger = LoggerFactory.getLogger(ObservableConfig.class);
 
 	public Observable<Map<String, Object>> fromYamlString(String input) {
-		Map<String, Object> configs = null;
-		Yaml yaml = new Yaml(new SafeConstructor());
-		Iterable<Object> iterable = yaml.loadAll(input);
-		return Observable.fromIterable(iterable)
+		List<Map<String, Object>> configs = this.makeMapsFromYaml(input);
+		return Observable.fromIterable(configs)
 				.map(this::fromYamlObject)
 				.filter(Objects::nonNull);
 	}
@@ -51,7 +57,15 @@ public class ConfigurationSourceProvider {
 	}
 
 	public Observable<Map<String, Object>> fromYamlInputStream(InputStream input) {
-		List<Map<String, Object>> configs = new LinkedList<>();
+		String text = IOUtils.toString(input, StandardCharsets.UTF_8);
+		List<Map<String, Object>> configs = this.makeMapsFromYaml(text);
+		return Observable.fromIterable(configs)
+				.map(this::fromYamlObject)
+				.filter(Objects::nonNull);
+	}
+
+	private List<Map<String, Object>> makeMapsFromYaml(String input) {
+		List<Map<String, Object>> result = new LinkedList<>();
 		Yaml yaml = new Yaml(new SafeConstructor());
 		Iterable<Object> iterable = yaml.loadAll(input);
 		for (Object obj : iterable) {
@@ -63,24 +77,11 @@ public class ConfigurationSourceProvider {
 				logger.debug("{} does not contain any configuration", input.toString());
 				return null;
 			}
-			if (config.size() == 1) {
-				for (Iterator<Map.Entry<String, Object>> it = config.entrySet().iterator(); it.hasNext(); ) {
-					Map.Entry<String, Object> entry = it.next();
-					if (entry.getValue() instanceof Map == false) {
-						logger.debug("Found a non map profiles");
-						continue;
-					}
-					Map<String, Object> source = (Map<String, Object>) entry.getValue();
-					configs.add(source);
-				}
-			} else {
-				configs.add(config);
-			}
+			result.add(config);
 		}
-		return Observable.fromIterable(configs)
-				.map(this::fromYamlObject)
-				.filter(Objects::nonNull);
+		return result;
 	}
+
 
 	private Map<String, Object> fromYamlObject(Object obj) {
 		if (obj instanceof Map == false) {

@@ -1,0 +1,4 @@
+# An example yaml file to test the ObservableConfig class
+config:
+  aKey: "value"
+  anotherKey: False

@@ -3,14 +3,13 @@
 // (powered by FernFlower decompiler)
 //
 
-package org.observertc.webrtc.reportconnector.configbuilders;
+package org.observertc.webrtc.reportconnector.datawarehouses;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.*;
 import java.util.Map.Entry;
-import java.util.stream.Stream;
 
 public class Job implements Task {
     private static final Logger logger = LoggerFactory.getLogger(Job.class);
@@ -27,11 +26,10 @@ public class Job implements Task {
         } else {
             this.name = name;
         }
-
     }
 
     public Job() {
-        this((String)null);
+        this(null);
     }
 
     public String getName() {
@@ -47,51 +45,41 @@ public class Job implements Task {
         return this;
     }
 
-    public void execute(Map<String, Map<String, Object>> results) {
+    public Task withTask(Task task, Task... dependencies) {
+        if (this.taskGraph.containsKey(task)) {
+            throw new IllegalStateException("Task " + task.getName() + "has already been added to the job. Adding twice violates the the rule of universe.");
+        }
+
+        List<Task> listOfDependencies = Arrays.asList(dependencies);
+        this.taskGraph.put(task, listOfDependencies);
+        return this;
+    }
+
+    @Override
+    public void close() throws Exception {
+
+    }
+
+    @Override
+    public void run() {
         this.perform();
     }
 
-    public Map<String, Object> getResults() {
-        return new HashMap();
-    }
-
-    public Job withTask(Task task, Task... dependencies) {
-        if (this.taskGraph.containsKey(task)) {
-            throw new IllegalStateException("Task " + task.getName() + "has already been added to the job. Adding twice violates the the rule of universe.");
-        } else {
-            List<Task> listOfDependencies = Arrays.asList(dependencies);
-            this.taskGraph.put(task, listOfDependencies);
-            return this;
-        }
-    }
-
-    public void perform() {
+    void perform() {
         this.checkCycles();
         Set<Task> visited = new HashSet();
-        Queue<Task> tasksToExecute = new LinkedList();
-        Stream<Queue<Task>> var10000 = this.taskGraph.keySet().stream().map((t) -> {
-            return this.getTopologicalOrder(t, visited);
-        });
-        Objects.requireNonNull(tasksToExecute);
-        var10000.forEach(tasksToExecute::addAll);
-        while(0 < tasksToExecute.size()) {
-            Task task = (Task)tasksToExecute.poll();
-            Map<String, Map<String, Object>> results = new HashMap();
-            List<Task> adjacents = (List)this.taskGraph.get(task);
-            if (adjacents != null) {
-                Iterator it = adjacents.iterator();
+        Iterator<Task> tasks = this.taskGraph.keySet().stream()
+                .map(task -> this.getTopologicalOrder(task, visited))
+                .flatMap(Queue::stream).iterator();
 
-                while(it.hasNext()) {
-                    Task adjacent = (Task)it.next();
-                    Map<String, Object> adjacentResults = adjacent.getResults();
-                    results.put(adjacent.getName(), adjacentResults);
-                }
+        for (; tasks.hasNext();) {
+            try (Task task = tasks.next()) {
+                task.run();
+            }catch (Exception ex) {
+                logger.error("Task execution for " + this.name + " is failed", ex);
+                throw new RuntimeException(ex);
             }
-
-            logger.info("Executing task {}. Description: {}", task.getName(), task.getDescription());
-            task.execute(results);
         }
-
     }
 
     private Queue<Task> getTopologicalOrder(Task task, Set<Task> visited) {

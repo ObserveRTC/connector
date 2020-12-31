@@ -1,11 +1,12 @@
 package org.observertc.webrtc.reportconnector.sources.kafka;
 
+import io.micronaut.context.annotation.Prototype;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.BytesDeserializer;
 import org.apache.kafka.common.serialization.UUIDDeserializer;
 import org.observertc.webrtc.reportconnector.configbuilders.AbstractBuilder;
+import org.observertc.webrtc.reportconnector.configbuilders.Builder;
 import org.observertc.webrtc.reportconnector.sources.Source;
-import org.observertc.webrtc.reportconnector.sources.SourceTypeBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -15,7 +16,8 @@ import java.util.Objects;
 import java.util.Random;
 import java.util.function.BiConsumer;
 
-public class KafkaSourceBuilder extends AbstractBuilder implements SourceTypeBuilder {
+@Prototype
+public class KafkaSourceBuilder extends AbstractBuilder implements Builder<Source> {
 
     private final static Logger logger = LoggerFactory.getLogger(KafkaSourceBuilder.class);
     private String sourceName;
@@ -27,9 +29,7 @@ public class KafkaSourceBuilder extends AbstractBuilder implements SourceTypeBui
         this.evaluateProperties(this.sourceName, flattenedProperties);
         flattenedProperties.entrySet().stream().forEach(entry -> result.withProperty(entry.getKey(), entry.getValue()));
 
-        result
-                .withMaxWaitingTimeInS(config.pollMaxWaitTimeInS)
-                .forTopic(config.topic);
+        result.forTopic(config.topic);
         return result;
     }
 
@@ -55,9 +55,6 @@ public class KafkaSourceBuilder extends AbstractBuilder implements SourceTypeBui
     }
 
     public static class Config {
-        public int pollMaxRecordsNum = 10000;
-
-        public int pollMaxWaitTimeInS = 10;
 
         @NotNull
         public Map<String, Object> properties;

@@ -1,0 +1,12 @@
+# The name of the topic the KafkaSource should read from.
+# This is a single value, thus all pipeline read from different
+# topics should have a single source
+topic: "topicName"
+
+# All of the valid properties can be found
+# in the official documentation is valid here
+properties:
+  bootstrap:
+    servers: localhost:9092
+  group:
+    id: "test-something"

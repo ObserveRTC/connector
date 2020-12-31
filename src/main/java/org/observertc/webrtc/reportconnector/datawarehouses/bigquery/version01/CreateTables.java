@@ -14,25 +14,24 @@
  * limitations under the License.
  */
 
-package org.observertc.webrtc.reportconnector.sinks.bigquery;
+package org.observertc.webrtc.reportconnector.datawarehouses.bigquery.version01;
 
 import com.google.cloud.bigquery.*;
-import org.observertc.webrtc.reportconnector.configbuilders.AbstractTask;
-import org.observertc.webrtc.reportconnector.configbuilders.Job;
-import org.observertc.webrtc.reportconnector.configbuilders.Task;
 import org.observertc.webrtc.reportconnector.models.*;
+import org.observertc.webrtc.reportconnector.datawarehouses.AbstractTask;
+import org.observertc.webrtc.reportconnector.datawarehouses.Job;
+import org.observertc.webrtc.reportconnector.datawarehouses.Task;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.inject.Singleton;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
 @Singleton
-public class SchemaCheckerJob extends Job implements AutoCloseable, Runnable {
+public class CreateTables extends Job {
 
-	private static final Logger logger = LoggerFactory.getLogger(SchemaCheckerJob.class);
+	private static final Logger logger = LoggerFactory.getLogger(CreateTables.class);
 	private static final String CREATE_DATASET_TASK_NAME = "CreateDatasetTask";
 	private static final String CREATE_INITIATED_CALL_TABLE_TASK_NAME = "CreateInitiatedCallsTableTask";
 	private static final String CREATE_FINISHED_CALL_TABLE_TASK_NAME = "CreateFinishedCallsTableTask";
@@ -51,16 +50,20 @@ public class SchemaCheckerJob extends Job implements AutoCloseable, Runnable {
 	private static volatile boolean run = false;
 
 	private final BigQuery bigQuery;
-//	private final BigQuerySinkBuilder.Config config;
-	private String projectId;
-	private String datasetId;
+	private final String projectId;
+	private final String datasetId;
 	private final Map<EntryType, String> tableNames;
-	private boolean createDatasetIfNotExists = false;
-	private boolean createTableIfNotExists = false;
+	private final boolean createDatasetIfNotExists;
+	private final boolean createTableIfNotExists;
 
-	public SchemaCheckerJob(BigQuery bigQuery) {
-		this.tableNames = new HashMap<>();
-		this.bigQuery = bigQuery;
+	public CreateTables(Config config) {
+		this.tableNames = config.tableNames;
+		this.bigQuery = config.bigQuery;
+		this.projectId = config.projectId;
+		this.datasetId = config.datasetId;
+		this.createTableIfNotExists = config.createDatasetIfNotExists;
+		this.createDatasetIfNotExists = config.createTableIfNotExists;
+
 		Task createDataset = this.makeCreateDatasetTask();
 		Task createInitiatedCallsTable = this.makeCreateInitiatedCallsTableTask();
 		Task createFinishedCallsTable = this.makeCreateFinishedCallsTableTask();
@@ -75,6 +78,7 @@ public class SchemaCheckerJob extends Job implements AutoCloseable, Runnable {
 		Task createMediaSources = this.makeMediaSourcesTableTask();
 		Task createTrackReports = this.makeTrackReportsTableTask();
 		Task createUserMediaErrors = this.makeUserMediaTableTask();
+
 		this.withTask(createDataset)
 				.withTask(createInitiatedCallsTable, createDataset)
 				.withTask(createFinishedCallsTable, createDataset)
@@ -92,54 +96,15 @@ public class SchemaCheckerJob extends Job implements AutoCloseable, Runnable {
 		;
 	}
 
-	public SchemaCheckerJob withCreateDatasetIfNotExists(boolean value) {
-		this.createDatasetIfNotExists = value;
-		return this;
-	}
-
-	public SchemaCheckerJob withProjectId(String value) {
-		this.projectId = value;
-		return this;
-	}
-
-	public SchemaCheckerJob withDatasetId(String value) {
-		this.datasetId = value;
-		return this;
-	}
-
-	public SchemaCheckerJob withEntryName(EntryType entryName, String tableName) {
-		this.tableNames.put(entryName, tableName);
-		return this;
-	}
-
-	public SchemaCheckerJob withCreateTableIfNotExists(boolean value) {
-		this.createTableIfNotExists = value;
-		return this;
-	}
-
 	@Override
 	public void close() throws Exception {
 
 	}
 
-	@Override
-	public void run() {
-		this.perform();
-	}
-
-	@Override
-	public void perform() {
-		if (run) {
-			return;
-		}
-		run = true;
-		super.perform();
-	}
-
 	private Task makeCreateDatasetTask() {
 		return new AbstractTask(CREATE_DATASET_TASK_NAME) {
 			@Override
-			protected void onExecution(Map<String, Map<String, Object>> results) {
+			protected void execute() {
 				if (!createDatasetIfNotExists) {
 					return;
 				}
@@ -162,10 +127,10 @@ public class SchemaCheckerJob extends Job implements AutoCloseable, Runnable {
 	private Task makeCreateInitiatedCallsTableTask() {
 		return new AbstractTask(CREATE_INITIATED_CALL_TABLE_TASK_NAME) {
 			@Override
-			protected void onExecution(Map<String, Map<String, Object>> results) {
+			protected void execute() {
 				String initiatedCallsTable = tableNames.get(EntryType.InitiatedCall);
 				if (Objects.isNull(initiatedCallsTable)) {
-					logger.warn("Table name for entry type {} has not been declared for {}", EntryType.InitiatedCall, SchemaCheckerJob.class.getSimpleName());
+					logger.warn("Table name for entry type {} has not been declared for {}", EntryType.InitiatedCall, CreateTables.class.getSimpleName());
 					return;
 				}
 				TableId tableId = TableId.of(projectId, datasetId, initiatedCallsTable);
@@ -190,10 +155,10 @@ public class SchemaCheckerJob extends Job implements AutoCloseable, Runnable {
 	private Task makeCreateFinishedCallsTableTask() {
 		return new AbstractTask(CREATE_FINISHED_CALL_TABLE_TASK_NAME) {
 			@Override
-			protected void onExecution(Map<String, Map<String, Object>> results) {
+			protected void execute() {
 				String finishedCallsTable = tableNames.get(EntryType.FinishedCall);
 				if (Objects.isNull(finishedCallsTable)) {
-					logger.warn("Table name for entry type {} has not been declared for {}", EntryType.FinishedCall, SchemaCheckerJob.class.getSimpleName());
+					logger.warn("Table name for entry type {} has not been declared for {}", EntryType.FinishedCall, CreateTables.class.getSimpleName());
 					return;
 				}
 				TableId tableId = TableId.of(projectId, datasetId, finishedCallsTable);
@@ -218,10 +183,10 @@ public class SchemaCheckerJob extends Job implements AutoCloseable, Runnable {
 	private Task makeJoinedPeerConnectionsTableTask() {
 		return new AbstractTask(CREATE_JOINED_PEER_CONNECTIONS_TABLE_TASK_NAME) {
 			@Override
-			protected void onExecution(Map<String, Map<String, Object>> results) {
+			protected void execute() {
 				String joinedPeerConnectionsTable = tableNames.get(EntryType.JoinedPeerConnection);
 				if (Objects.isNull(joinedPeerConnectionsTable)) {
-					logger.warn("Table name for entry type {} has not been declared for {}", EntryType.JoinedPeerConnection, SchemaCheckerJob.class.getSimpleName());
+					logger.warn("Table name for entry type {} has not been declared for {}", EntryType.JoinedPeerConnection, CreateTables.class.getSimpleName());
 					return;
 				}
 				TableId tableId = TableId.of(projectId, datasetId, joinedPeerConnectionsTable);
@@ -257,10 +222,10 @@ public class SchemaCheckerJob extends Job implements AutoCloseable, Runnable {
 	private Task makeDetachedPeerConnectionsTableTask() {
 		return new AbstractTask(CREATE_DETACHED_PEER_CONNECTIONS_TABLE_TASK_NAME) {
 			@Override
-			protected void onExecution(Map<String, Map<String, Object>> results) {
+			protected void execute() {
 				String detachedPeerConnectionsTable = tableNames.get(EntryType.DetachedPeerConnection);
 				if (Objects.isNull(detachedPeerConnectionsTable)) {
-					logger.warn("Table name for entry type {} has not been declared for {}", EntryType.DetachedPeerConnection, SchemaCheckerJob.class.getSimpleName());
+					logger.warn("Table name for entry type {} has not been declared for {}", EntryType.DetachedPeerConnection, CreateTables.class.getSimpleName());
 					return;
 				}
 				TableId tableId = TableId.of(projectId, datasetId, detachedPeerConnectionsTable);
@@ -296,10 +261,10 @@ public class SchemaCheckerJob extends Job implements AutoCloseable, Runnable {
 	private Task makeUserMediaTableTask() {
 		return new AbstractTask(CREATE_USER_MEDIA_ERRORS_TASK_NAME) {
 			@Override
-			protected void onExecution(Map<String, Map<String, Object>> results) {
+			protected void execute() {
 				String userMediaErrorsTable = tableNames.get(EntryType.UserMediaError);
 				if (Objects.isNull(userMediaErrorsTable)) {
-					logger.warn("Table name for entry type {} has not been declared for {}", EntryType.UserMediaError, SchemaCheckerJob.class.getSimpleName());
+					logger.warn("Table name for entry type {} has not been declared for {}", EntryType.UserMediaError, CreateTables.class.getSimpleName());
 					return;
 				}
 				TableId tableId = TableId.of(projectId, datasetId, userMediaErrorsTable);
@@ -335,10 +300,10 @@ public class SchemaCheckerJob extends Job implements AutoCloseable, Runnable {
 		return new AbstractTask(CREATE_REMOTE_INBOUND_RTP_SAMPLES_TABLE_TASK_NAME) {
 
 			@Override
-			protected void onExecution(Map<String, Map<String, Object>> results) {
+			protected void execute() {
 				String remoteInboundRTPSamplesTable = tableNames.get(EntryType.RemoteInboundRTP);
 				if (Objects.isNull(remoteInboundRTPSamplesTable)) {
-					logger.warn("Table name for entry type {} has not been declared for {}", EntryType.RemoteInboundRTP, SchemaCheckerJob.class.getSimpleName());
+					logger.warn("Table name for entry type {} has not been declared for {}", EntryType.RemoteInboundRTP, CreateTables.class.getSimpleName());
 					return;
 				}
 				TableId tableId = TableId.of(projectId, datasetId, remoteInboundRTPSamplesTable);
@@ -386,10 +351,10 @@ public class SchemaCheckerJob extends Job implements AutoCloseable, Runnable {
 		return new AbstractTask(CREATE_INBOUND_RTP_SAMPLES_TABLE_TASK_NAME) {
 
 			@Override
-			protected void onExecution(Map<String, Map<String, Object>> results) {
+			protected void execute() {
 				String inboundRTPSamplesTable = tableNames.get(EntryType.InboundRTP);
 				if (Objects.isNull(inboundRTPSamplesTable)) {
-					logger.warn("Table name for entry type {} has not been declared for {}", EntryType.InboundRTP, SchemaCheckerJob.class.getSimpleName());
+					logger.warn("Table name for entry type {} has not been declared for {}", EntryType.InboundRTP, CreateTables.class.getSimpleName());
 					return;
 				}
 				TableId tableId = TableId.of(projectId, datasetId, inboundRTPSamplesTable);
@@ -467,10 +432,10 @@ public class SchemaCheckerJob extends Job implements AutoCloseable, Runnable {
 		return new AbstractTask(CREATE_OUTBOUND_RTP_SAMPLES_TABLE_TASK_NAME) {
 
 			@Override
-			protected void onExecution(Map<String, Map<String, Object>> results) {
+			protected void execute() {
 				String outboundRTPSamplesTable = tableNames.get(EntryType.OutboundRTP);
 				if (Objects.isNull(outboundRTPSamplesTable)) {
-					logger.warn("Table name for entry type {} has not been declared for {}", EntryType.OutboundRTP, SchemaCheckerJob.class.getSimpleName());
+					logger.warn("Table name for entry type {} has not been declared for {}", EntryType.OutboundRTP, CreateTables.class.getSimpleName());
 					return;
 				}
 				TableId tableId = TableId.of(projectId, datasetId, outboundRTPSamplesTable);
@@ -542,10 +507,10 @@ public class SchemaCheckerJob extends Job implements AutoCloseable, Runnable {
 	private Task makeICECandidatePairsTableTask() {
 		return new AbstractTask(CREATE_ICE_CANDIDATE_PAIRS_TABLE_TASK_NAME) {
 			@Override
-			protected void onExecution(Map<String, Map<String, Object>> results) {
+			protected void execute() {
 				String iceCandidatePairsTable = tableNames.get(EntryType.ICECandidatePair);
 				if (Objects.isNull(iceCandidatePairsTable)) {
-					logger.warn("Table name for entry type {} has not been declared for {}", EntryType.ICECandidatePair, SchemaCheckerJob.class.getSimpleName());
+					logger.warn("Table name for entry type {} has not been declared for {}", EntryType.ICECandidatePair, CreateTables.class.getSimpleName());
 					return;
 				}
 				TableId tableId = TableId.of(projectId, datasetId, iceCandidatePairsTable);
@@ -611,10 +576,10 @@ public class SchemaCheckerJob extends Job implements AutoCloseable, Runnable {
 	private Task makeICELocalCandidateTableTask() {
 		return new AbstractTask(CREATE_ICE_LOCAL_CANDIDATE_TABLE_TASK_NAME) {
 			@Override
-			protected void onExecution(Map<String, Map<String, Object>> results) {
+			protected void execute() {
 				String iceLocalCandidatesTable = tableNames.get(EntryType.ICELocalCandidate);
 				if (Objects.isNull(iceLocalCandidatesTable)) {
-					logger.warn("Table name for entry type {} has not been declared for {}", EntryType.ICELocalCandidate, SchemaCheckerJob.class.getSimpleName());
+					logger.warn("Table name for entry type {} has not been declared for {}", EntryType.ICELocalCandidate, CreateTables.class.getSimpleName());
 					return;
 				}
 				TableId tableId = TableId.of(projectId, datasetId, iceLocalCandidatesTable);
@@ -662,10 +627,10 @@ public class SchemaCheckerJob extends Job implements AutoCloseable, Runnable {
 	private Task makeICERemoteCandidateTableTask() {
 		return new AbstractTask(CREATE_ICE_REMOTE_CANDIDATE_TABLE_TASK_NAME) {
 			@Override
-			protected void onExecution(Map<String, Map<String, Object>> results) {
+			protected void execute() {
 				String iceRemoteCandidatesTable = tableNames.get(EntryType.ICERemoteCandidate);
 				if (Objects.isNull(iceRemoteCandidatesTable)) {
-					logger.warn("Table name for entry type {} has not been declared for {}", EntryType.ICERemoteCandidate, SchemaCheckerJob.class.getSimpleName());
+					logger.warn("Table name for entry type {} has not been declared for {}", EntryType.ICERemoteCandidate, CreateTables.class.getSimpleName());
 					return;
 				}
 				TableId tableId = TableId.of(projectId, datasetId, iceRemoteCandidatesTable);
@@ -714,10 +679,10 @@ public class SchemaCheckerJob extends Job implements AutoCloseable, Runnable {
 		return new AbstractTask(CREATE_MEDIA_SOURCES_TABLE_TASK_NAME) {
 
 			@Override
-			protected void onExecution(Map<String, Map<String, Object>> results) {
+			protected void execute() {
 				String mediaSourcesTable = tableNames.get(EntryType.MediaSource);
 				if (Objects.isNull(mediaSourcesTable)) {
-					logger.warn("Table name for entry type {} has not been declared for {}", EntryType.MediaSource, SchemaCheckerJob.class.getSimpleName());
+					logger.warn("Table name for entry type {} has not been declared for {}", EntryType.MediaSource, CreateTables.class.getSimpleName());
 					return;
 				}
 				TableId tableId = TableId.of(projectId, datasetId, mediaSourcesTable);
@@ -766,10 +731,10 @@ public class SchemaCheckerJob extends Job implements AutoCloseable, Runnable {
 		return new AbstractTask(CREATE_TRACK_REPORTS_TABLE_TASK_NAME) {
 
 			@Override
-			protected void onExecution(Map<String, Map<String, Object>> results) {
+			protected void execute() {
 				String trackReportsTable = tableNames.get(EntryType.Track);
 				if (Objects.isNull(trackReportsTable)) {
-					logger.warn("Table name for entry type {} has not been declared for {}", EntryType.Track, SchemaCheckerJob.class.getSimpleName());
+					logger.warn("Table name for entry type {} has not been declared for {}", EntryType.Track, CreateTables.class.getSimpleName());
 					return;
 				}
 				TableId tableId = TableId.of(projectId, datasetId, trackReportsTable);

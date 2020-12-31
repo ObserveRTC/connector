@@ -1,9 +1,11 @@
 package org.observertc.webrtc.reportconnector.sinks.bigquery;
 
+import io.micronaut.context.annotation.Prototype;
 import org.observertc.webrtc.reportconnector.configbuilders.AbstractBuilder;
 import org.observertc.webrtc.reportconnector.models.EntryType;
 import org.observertc.webrtc.reportconnector.sinks.Sink;
 import org.observertc.webrtc.reportconnector.sinks.SinkTypeBuilder;
+import org.observertc.webrtc.reportconnector.datawarehouses.bigquery.SchemaCheckerJob;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -11,6 +13,7 @@ import javax.validation.constraints.NotNull;
 import java.util.HashMap;
 import java.util.Map;
 
+@Prototype
 public class BigQuerySinkBuilder extends AbstractBuilder implements SinkTypeBuilder {
 
     private static final Logger logger = LoggerFactory.getLogger(BigQuerySinkBuilder.class);
@@ -38,19 +41,10 @@ public class BigQuerySinkBuilder extends AbstractBuilder implements SinkTypeBuil
         this.entryTypeMaps.put(EntryType.Track, config.trackReportsTable);
         BigQueryService bigQueryService = new BigQueryService(config.projectId, config.datasetId, config.credentialFile);
 
-        try (SchemaCheckerJob schemaCheckerJob = new SchemaCheckerJob(bigQueryService.getBigQuery())) {
-            schemaCheckerJob
-                    .withCreateDatasetIfNotExists(config.createDatasetIfNotExists)
-                    .withCreateTableIfNotExists(config.createTableIfNotExists)
-                    .withDatasetId(config.datasetId)
-                    .withProjectId(config.projectId);
-            this.entryTypeMaps.entrySet()
-                    .stream()
-                    .forEach(entry -> schemaCheckerJob.withEntryName(entry.getKey(), entry.getValue()));
-            schemaCheckerJob.perform();
-        } catch (Exception e) {
-            logger.error("Error occured during schema checking process", e);
-            return null;
+        if (config.schemaCheck.enabled) {
+            if (!this.checkSchema(bigQueryService, config)) {
+                return null;
+            }
         }
 
         BigQuerySink result = new BigQuerySink(bigQueryService);
@@ -59,6 +53,24 @@ public class BigQuerySinkBuilder extends AbstractBuilder implements SinkTypeBuil
                 .forEach(entry -> result.withEntryRoute(entry.getKey(), entry.getValue()));
 
         return result;
+    }
+
+    private boolean checkSchema(BigQueryService bigQueryService, Config config) {
+        try (SchemaCheckerJob schemaCheckerJob = new SchemaCheckerJob(bigQueryService.getBigQuery())) {
+            schemaCheckerJob
+                    .withCreateDatasetIfNotExists(config.schemaCheck.createDatasetIfNotExists)
+                    .withCreateTableIfNotExists(config.schemaCheck.createTableIfNotExists)
+                    .withDatasetId(config.datasetId)
+                    .withProjectId(config.projectId);
+            this.entryTypeMaps.entrySet()
+                    .stream()
+                    .forEach(entry -> schemaCheckerJob.withEntryName(entry.getKey(), entry.getValue()));
+            schemaCheckerJob.run();
+        } catch (Exception e) {
+            logger.error("Error occured during schema checking process", e);
+            return false;
+        }
+        return true;
     }
 
     public static class Config {
@@ -72,9 +84,15 @@ public class BigQuerySinkBuilder extends AbstractBuilder implements SinkTypeBuil
         @NotNull
         public String datasetId;
 
-        public boolean createDatasetIfNotExists = true;
+        public SchemaCheckConfig schemaCheck = new SchemaCheckConfig();
 
-        public boolean createTableIfNotExists = true;
+        public static class SchemaCheckConfig {
+            public boolean enabled = true;
+
+            public boolean createDatasetIfNotExists = true;
+
+            public boolean createTableIfNotExists = true;
+        }
 
         public String initiatedCallsTable = "InitiatedCalls";
 

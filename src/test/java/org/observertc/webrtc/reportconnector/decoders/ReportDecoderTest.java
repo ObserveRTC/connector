@@ -1,4 +1,4 @@
-package org.observertc.webrtc.reportconnector.sources;
+package org.observertc.webrtc.reportconnector.decoders;
 
 import io.reactivex.rxjava3.core.Observable;
 import org.apache.avro.io.BinaryEncoder;

@@ -3,7 +3,7 @@ package org.observertc.webrtc.reportconnector.controllers;
 import io.micronaut.http.HttpStatus;
 import io.micronaut.http.annotation.*;
 import org.observertc.webrtc.reportconnector.Pipelines;
-import org.observertc.webrtc.reportconnector.configbuilders.ConfigurationSourceProvider;
+import org.observertc.webrtc.reportconnector.configbuilders.ObservableConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -12,12 +12,12 @@ public class PipelinesController {
     private static final Logger logger = LoggerFactory.getLogger(PipelinesController.class);
 
     private final Pipelines pipelines;
-    private final ConfigurationSourceProvider configurationSourceProvider;
+    private final ObservableConfig observableConfig;
     public PipelinesController(
             Pipelines pipelines,
-            ConfigurationSourceProvider configurationSourceProvider) {
+            ObservableConfig observableConfig) {
         this.pipelines = pipelines;
-        this.configurationSourceProvider = configurationSourceProvider;
+        this.observableConfig = observableConfig;
     }
 
     @Get("/")

@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
-package org.observertc.webrtc.reportconnector.sources.kafka;
+package org.observertc.webrtc.reportconnector.evaluators;
 
 import org.observertc.webrtc.schemas.reports.*;
 
 import java.util.function.Consumer;
 
-public interface ReportProcessor extends Consumer<Report> {
+interface ReportProcessor extends Consumer<Report> {
 
 	@Override
 	default void accept(Report report) {

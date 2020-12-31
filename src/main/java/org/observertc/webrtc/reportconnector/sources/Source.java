@@ -11,14 +11,13 @@ import java.util.Objects;
 public abstract class Source extends Observable<byte[]> implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(Source.class);
 
-    private String name;
     private Observer<? super byte[]> observer = null;
     private Observable<byte[]> source;
 
     @Override
     protected void subscribeActual(@NonNull Observer<? super byte[]> observer) {
         if (Objects.nonNull(this.observer)) {
-            throw new IllegalStateException("For Source " + this.name + " Cannot have more than one observer to be subscribed to a source. That's life! Oh no, just this implementation it is how it is.");
+            throw new IllegalStateException("For Source " + this.getClass().getSimpleName() + " Cannot have more than one observer to be subscribed to a source.");
         }
 
         this.observer = observer;
@@ -26,8 +25,12 @@ public abstract class Source extends Observable<byte[]> implements Runnable {
 
     @Override
     public void run() {
+        this.start();
+    }
+
+    public void start() {
         if (Objects.isNull(this.observer)) {
-            logger.error("No observer has been subscribed for {}, therefore the pipeline cannot run", this.name);
+            logger.error("No observer has been subscribed for {}, therefore the pipeline cannot run", this.getClass().getSimpleName());
             return;
         }
         this.source = this.makeObservable();
@@ -35,12 +38,7 @@ public abstract class Source extends Observable<byte[]> implements Runnable {
     }
 
     public void stop() {
-
-    }
-
-    Source withName(String value) {
-        this.name = value;
-        return this;
+        logger.warn("{} stop method is called, but there is no actual implementation for it. ", this.getClass().getSimpleName());
     }
 
     protected abstract Observable<byte[]> makeObservable();

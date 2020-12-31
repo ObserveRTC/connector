@@ -2,7 +2,7 @@ package org.observertc.webrtc.reportconnector;
 
 import io.micronaut.context.ApplicationContext;
 import io.micronaut.runtime.Micronaut;
-import org.observertc.webrtc.reportconnector.configbuilders.ConfigurationSourceProvider;
+import org.observertc.webrtc.reportconnector.configbuilders.ObservableConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -29,7 +29,7 @@ public class Application {
             return;
         }
         List<String> paths = config.files;
-        ConfigurationSourceProvider configurationSourceProvider = context.getBean(ConfigurationSourceProvider.class);
+        ObservableConfig observableConfig = context.getBean(ObservableConfig.class);
         Pipelines pipelines = context.getBean(Pipelines.class);
         AtomicReference<Throwable> error = new AtomicReference<>(null);
         if (Objects.nonNull(paths)) {
@@ -43,7 +43,7 @@ public class Application {
                     } else {
                         inputStream = new FileInputStream(configPath);
                     }
-                    configurationSourceProvider
+                    observableConfig
                             .fromYamlInputStream(inputStream)
                             .subscribe(pipelines::add, error::set);
                     if (Objects.nonNull(error.get())) {

@@ -14,7 +14,8 @@ public class SinkBuilder extends AbstractBuilder {
 
     public SinkBuilder() {
         Package thisPackage = this.getClass().getPackage();
-        this.packages = Arrays.stream(Package.getPackages())
+        Package[] packages = Package.getPackages();
+        this.packages = Arrays.stream(packages)
                 .filter(p -> p.getName().startsWith(thisPackage.getName()))
                 .map(Package::getName)
                 .collect(Collectors.toList());

@@ -14,7 +14,7 @@ import java.util.concurrent.TimeUnit;
 
 public class Evaluator extends Observable<List<Entry>> implements Observer<Report> {
 
-    public final PublishSubject<Entry> entrySink;
+    private final PublishSubject<Entry> entrySink;
     private final ReportObserver reportObserver;
     private int bufferThresholdNum = 10000;
     private int bufferThresholdInS = 30;
