@@ -13,3 +13,4 @@ keys/
 .settings
 .classpath
 .factorypath
+DEBUG_*.java

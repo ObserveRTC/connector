@@ -1,7 +1,7 @@
 package org.observertc.webrtc.reportconnector;
 
 import io.reactivex.rxjava3.core.Observer;
-import org.observertc.webrtc.reportconnector.decoders.ReportDecoder;
+import org.observertc.webrtc.reportconnector.decoders.AvroDecoder;
 import org.observertc.webrtc.reportconnector.evaluators.Evaluator;
 import org.observertc.webrtc.reportconnector.models.Entry;
 import org.observertc.webrtc.reportconnector.sources.Source;
@@ -27,7 +27,7 @@ public class Pipeline implements Runnable {
             throw new IllegalStateException("A pipeline cannot be started without a sink");
         }
         this.source
-                .lift(new ReportDecoder())
+                .lift(new AvroDecoder())
                 .subscribe(this.evaluator);
         this.evaluator.subscribe(this.sink);
         this.source.run();

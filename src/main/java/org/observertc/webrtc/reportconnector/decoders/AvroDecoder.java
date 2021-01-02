@@ -20,27 +20,27 @@ import io.reactivex.rxjava3.annotations.NonNull;
 import io.reactivex.rxjava3.core.ObservableOperator;
 import io.reactivex.rxjava3.core.Observer;
 import io.reactivex.rxjava3.disposables.Disposable;
-import org.apache.avro.io.BinaryDecoder;
-import org.apache.avro.io.DecoderFactory;
 import org.apache.avro.specific.SpecificDatumReader;
 import org.observertc.webrtc.schemas.reports.Report;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.nio.ByteBuffer;
+import java.util.Arrays;
 import java.util.Objects;
 
 
-public class ReportDecoder implements ObservableOperator<Report, byte[]> {
-	private static final Logger logger = LoggerFactory.getLogger(ReportDecoder.class);
+public class AvroDecoder implements ObservableOperator<Report, byte[]> {
+	private static final Logger logger = LoggerFactory.getLogger(AvroDecoder.class);
 
 	private final SpecificDatumReader<Report> reader;
 	private final boolean rethrowException;
 
-	public ReportDecoder() {
+	public AvroDecoder() {
 		this(false);
 	}
 
-	public ReportDecoder(boolean rethrowException) {
+	public AvroDecoder(boolean rethrowException) {
 		this.reader = new SpecificDatumReader<>(Report.class);
 		this.rethrowException = rethrowException;
 	}
@@ -77,12 +77,14 @@ public class ReportDecoder implements ObservableOperator<Report, byte[]> {
 	}
 
 	public Report decode(byte[] bytes) {
-		BinaryDecoder binDecoder = DecoderFactory.get().binaryDecoder(bytes, null);
-		Report report = new Report();
+//		BinaryDecoder binDecoder = DecoderFactory.get().binaryDecoder(bytes, null);
+//		Report report = new Report();
+		Report report;
 		try {
-			reader.read(report, binDecoder);
+			report = Report.fromByteBuffer(ByteBuffer.wrap(bytes));
+//			reader.read(report, binDecoder);
 		} catch (Exception e) {
-			logger.error("Error during process", e);
+			logger.error("Error during process: BYTES:" + Arrays.toString(bytes), e);
 			if (rethrowException) {
 				throw new RuntimeException(e);
 			}

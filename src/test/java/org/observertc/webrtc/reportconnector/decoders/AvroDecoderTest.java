@@ -6,7 +6,6 @@ import org.apache.avro.io.EncoderFactory;
 import org.apache.avro.specific.SpecificDatumWriter;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.observertc.webrtc.reportconnector.decoders.ReportDecoder;
 import org.observertc.webrtc.schemas.reports.Report;
 import org.observertc.webrtc.schemas.reports.ReportType;
 
@@ -15,7 +14,7 @@ import java.io.IOException;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicReference;
 
-class ReportDecoderTest {
+class AvroDecoderTest {
 
     @Test
     public void shouldDecodeValidInput() {
@@ -31,7 +30,7 @@ class ReportDecoderTest {
 
         // When
         Observable.fromArray(bytes)
-                .lift(new ReportDecoder())
+                .lift(new AvroDecoder())
                 .subscribe(decoded::set);
 
         // Then
@@ -64,5 +63,4 @@ class ReportDecoderTest {
         }
         return out;
     }
-
 }
