@@ -76,7 +76,7 @@ java {
 }
 
 
-    dockerBuild{
-        images = ["${System.env.DOCKER_IMAGE}:$project.version"]
-    }
+dockerBuild{
+    images = ["${System.env.DOCKER_IMAGE}:$project.version"]
+}
 
