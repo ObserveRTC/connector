@@ -1,9 +1,13 @@
+
 {
   "type" : "record",
   "name" : "Report",
   "namespace" : "org.observertc.webrtc.schemas.reports",
   "doc" : "A Report object",
   "fields" : [ {
+    "name" : "version",
+    "type" : "int"
+  }, {
     "name" : "serviceUUID",
     "type" : "string"
   }, {

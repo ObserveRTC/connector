@@ -1,19 +1,17 @@
 package org.observertc.webrtc.connector;
 
-import io.reactivex.rxjava3.core.Observer;
 import org.observertc.webrtc.connector.decoders.AvroDecoder;
 import org.observertc.webrtc.connector.evaluators.Evaluator;
-import org.observertc.webrtc.connector.models.Entry;
+import org.observertc.webrtc.connector.sinks.Sink;
 import org.observertc.webrtc.connector.sources.Source;
 
-import java.util.List;
 import java.util.Objects;
 
 public class Pipeline implements Runnable {
     private String name;
     private Source source;
     private Evaluator evaluator;
-    private Observer<List<Entry>> sink;
+    private Sink sink;
 
     public Pipeline() {
     }
@@ -33,6 +31,13 @@ public class Pipeline implements Runnable {
         this.source.run();
     }
 
+    public String getName() {
+        if (Objects.isNull(this.name)) {
+            return "Unkown pipeline";
+        }
+        return this.name;
+    }
+
     Pipeline withName(String name) {
         this.name = name;
         return this;
@@ -40,25 +45,28 @@ public class Pipeline implements Runnable {
 
     Pipeline withSource(Source source) {
         if (Objects.nonNull(this.source)) {
-            throw new IllegalStateException("Cannot set the source for a pipeline twice");
+            throw new IllegalStateException(this.getName() + ": cannot set the source for a pipeline twice");
         }
-        this.source = source;
+        this.source = source
+                .inPipeline(this);
         return this;
     }
 
     Pipeline withEvaluator(Evaluator evaluator) {
         if (Objects.nonNull(this.evaluator)) {
-            throw new IllegalStateException("Cannot set the Evaluator for a pipeline twice");
+            throw new IllegalStateException(this.getName() + ": cannot set the Evaluator for a pipeline twice");
         }
-        this.evaluator = evaluator;
+        this.evaluator = evaluator
+                .inPipeline(this);
         return this;
     }
 
-    Pipeline withSink(Observer<List<Entry>> sink) {
+    Pipeline withSink(Sink sink) {
         if (Objects.nonNull(this.sink)) {
-            throw new IllegalStateException("Cannot set the source for a pipeline twice");
+            throw new IllegalStateException(this.getName() + ": cannot set the source for a pipeline twice");
         }
-        this.sink = sink;
+        this.sink = sink
+                .inPipeline(this);
         return this;
     }
 

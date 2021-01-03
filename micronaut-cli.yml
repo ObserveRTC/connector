@@ -1,5 +1,5 @@
 applicationType: default
-defaultPackage: org.observertc.webrtc.reportconnector
+defaultPackage: org.observertc.webrtc.connector
 testFramework: junit
 sourceLanguage: java
 buildTool: gradle

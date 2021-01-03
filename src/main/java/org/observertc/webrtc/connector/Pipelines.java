@@ -1,5 +1,6 @@
 package org.observertc.webrtc.connector;
 
+import org.observertc.webrtc.ObjectToString;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,7 +36,16 @@ public class Pipelines {
     public Runnable add(Map<String, Object> configuration) {
         PipelineBuilder pipelineBuilder = this.pipelineBuilderProvider.get();
         pipelineBuilder.withConfiguration(configuration);
-        Pipeline pipeline = pipelineBuilder.build();
+        Optional<Pipeline> pipelineHolder = pipelineBuilder.build();
+        if (!pipelineHolder.isPresent()) {
+            logger.warn("Cannot build pipeline for configuration: {}", ObjectToString.toString(configuration));
+            return () -> {
+                logger.warn("A runnable trigger is called for a pipeline, " +
+                        "which was not built. configuration for that pipeline: {}",
+                        ObjectToString.toString(configuration));
+            };
+        }
+        Pipeline pipeline = pipelineHolder.get();
         this.builders.add(pipelineBuilder);
         UUID uuid = UUID.randomUUID();
         this.scheduled.put(uuid, pipeline);

@@ -77,14 +77,11 @@ public class AvroDecoder implements ObservableOperator<Report, byte[]> {
 	}
 
 	public Report decode(byte[] bytes) {
-//		BinaryDecoder binDecoder = DecoderFactory.get().binaryDecoder(bytes, null);
-//		Report report = new Report();
 		Report report;
 		try {
 			report = Report.fromByteBuffer(ByteBuffer.wrap(bytes));
-//			reader.read(report, binDecoder);
 		} catch (Exception e) {
-			logger.error("Error during process: BYTES:" + Arrays.toString(bytes), e);
+			logger.error("Error during avro decoding process. BYTES:" + Arrays.toString(bytes), e);
 			if (rethrowException) {
 				throw new RuntimeException(e);
 			}

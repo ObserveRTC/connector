@@ -6,7 +6,7 @@ plugins {
 }
 
 version = "0.1"
-group = "org.observertc.webrtc.reportconnector"
+group = "org.observertc.webrtc.connector"
 
 apply from: "gradle/asciidoc.gradle"
 repositories {
@@ -32,7 +32,7 @@ micronaut {
     testRuntime("junit5")
     processing {
         incremental(true)
-        annotations("org.observertc.webrtc.reportconnector.*")
+        annotations("org.observertc.webrtc.connector.*")
     }
 }
 
@@ -67,7 +67,7 @@ dependencies {
 
 
 application {
-    mainClass.set("org.observertc.webrtc.reportconnector.Application")
+    mainClass.set("org.observertc.webrtc.connector.Application")
 }
 
 java {

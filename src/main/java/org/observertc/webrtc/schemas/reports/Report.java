@@ -15,8 +15,8 @@ import org.apache.avro.message.SchemaStore;
 /** A Report object */
 @org.apache.avro.specific.AvroGenerated
 public class Report extends org.apache.avro.specific.SpecificRecordBase implements org.apache.avro.specific.SpecificRecord {
-  private static final long serialVersionUID = -6855288153363496564L;
-  public static final org.apache.avro.Schema SCHEMA$ = new org.apache.avro.Schema.Parser().parse("{\"type\":\"record\",\"name\":\"Report\",\"namespace\":\"org.observertc.webrtc.schemas.reports\",\"doc\":\"A Report object\",\"fields\":[{\"name\":\"serviceUUID\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"}},{\"name\":\"serviceName\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}],\"default\":null},{\"name\":\"marker\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}],\"default\":null},{\"name\":\"timestamp\",\"type\":\"long\"},{\"name\":\"payload\",\"type\":[\"null\",{\"type\":\"record\",\"name\":\"InitiatedCall\",\"doc\":\"Initial Call Report payload. Contains information about a call initiated by a client\",\"fields\":[{\"name\":\"callUUID\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"}},{\"name\":\"callName\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}],\"default\":null}]},{\"type\":\"record\",\"name\":\"FinishedCall\",\"doc\":\"Finished Call Report payload. Contains information about a call finished by a client\",\"fields\":[{\"name\":\"callUUID\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"}},{\"name\":\"callName\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}],\"default\":null}]},{\"type\":\"record\",\"name\":\"JoinedPeerConnection\",\"doc\":\"Joined Peer Connection payload. Contains information about a peer connection joined to a call\",\"fields\":[{\"name\":\"mediaUnitId\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}],\"default\":null},{\"name\":\"callUUID\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"}},{\"name\":\"callName\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}],\"default\":null},{\"name\":\"userId\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}],\"default\":null},{\"name\":\"browserId\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}],\"default\":null},{\"name\":\"peerConnectionUUID\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"}}]},{\"type\":\"record\",\"name\":\"DetachedPeerConnection\",\"doc\":\"Detached Peer Connection payload. Contains information about a peer connection detached from a call\",\"fields\":[{\"name\":\"mediaUnitId\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}],\"default\":null},{\"name\":\"callUUID\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"}},{\"name\":\"callName\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}],\"default\":null},{\"name\":\"userId\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}],\"default\":null},{\"name\":\"browserId\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}],\"default\":null},{\"name\":\"peerConnectionUUID\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"}}]},{\"type\":\"record\",\"name\":\"InboundRTP\",\"doc\":\"Inbound RTP payloadContains information about the RTP streams received by the peer connection\",\"fields\":[{\"name\":\"mediaUnitId\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}],\"default\":null},{\"name\":\"callName\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}],\"default\":null},{\"name\":\"userId\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}],\"default\":null},{\"name\":\"browserId\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}],\"default\":null},{\"name\":\"peerConnectionUUID\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"}},{\"name\":\"ssrc\",\"type\":\"long\"},{\"name\":\"bytesReceived\",\"type\":[\"null\",\"long\"],\"default\":null},{\"name\":\"codecId\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}],\"default\":null},{\"name\":\"decoderImplementation\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}],\"default\":null},{\"name\":\"estimatedPlayoutTimestamp\",\"type\":[\"null\",\"double\"],\"default\":null},{\"name\":\"fecPacketsDiscarded\",\"type\":[\"null\",\"int\"],\"default\":null},{\"name\":\"fecPacketsReceived\",\"type\":[\"null\",\"int\"],\"default\":null},{\"name\":\"firCount\",\"type\":[\"null\",\"int\"],\"default\":null},{\"name\":\"framesDecoded\",\"type\":[\"null\",\"int\"],\"default\":null},{\"name\":\"headerBytesReceived\",\"type\":[\"null\",\"long\"],\"default\":null},{\"name\":\"id\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}],\"default\":null},{\"name\":\"isRemote\",\"type\":[\"null\",\"boolean\"],\"default\":null},{\"name\":\"jitter\",\"type\":[\"null\",\"double\"],\"default\":null},{\"name\":\"keyFramesDecoded\",\"type\":[\"null\",\"int\"],\"default\":null},{\"name\":\"lastPacketReceivedTimestamp\",\"type\":[\"null\",\"double\"],\"default\":null},{\"name\":\"mediaType\",\"type\":{\"type\":\"enum\",\"name\":\"MediaType\",\"doc\":\"State of the Media\",\"symbols\":[\"AUDIO\",\"VIDEO\",\"UNKNOWN\",\"NULL\"]},\"default\":\"UNKNOWN\"},{\"name\":\"nackCount\",\"type\":[\"null\",\"int\"],\"default\":null},{\"name\":\"packetsLost\",\"type\":[\"null\",\"int\"],\"default\":null},{\"name\":\"packetsReceived\",\"type\":[\"null\",\"int\"],\"default\":null},{\"name\":\"pliCount\",\"type\":[\"null\",\"int\"],\"default\":null},{\"name\":\"qpSum\",\"type\":[\"null\",\"double\"],\"default\":null},{\"name\":\"totalDecodeTime\",\"type\":[\"null\",\"double\"],\"default\":null},{\"name\":\"totalInterFrameDelay\",\"type\":[\"null\",\"double\"],\"default\":null},{\"name\":\"totalSquaredInterFrameDelay\",\"type\":[\"null\",\"double\"],\"default\":null},{\"name\":\"trackId\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}],\"default\":null},{\"name\":\"transportId\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}],\"default\":null}]},{\"type\":\"record\",\"name\":\"OutboundRTP\",\"doc\":\"Outbound RTP payloadContains information about the RTP streams sent by the peer connection\",\"fields\":[{\"name\":\"mediaUnitId\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}],\"default\":null},{\"name\":\"callName\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}],\"default\":null},{\"name\":\"userId\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}],\"default\":null},{\"name\":\"browserId\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}],\"default\":null},{\"name\":\"peerConnectionUUID\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"}},{\"name\":\"ssrc\",\"type\":\"long\"},{\"name\":\"bytesSent\",\"type\":[\"null\",\"long\"],\"default\":null},{\"name\":\"codecID\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}],\"default\":null},{\"name\":\"encoderImplementation\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}],\"default\":null},{\"name\":\"firCount\",\"type\":[\"null\",\"int\"],\"default\":null},{\"name\":\"framesEncoded\",\"type\":[\"null\",\"int\"],\"default\":null},{\"name\":\"headerBytesSent\",\"type\":[\"null\",\"long\"],\"default\":null},{\"name\":\"id\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}],\"default\":null},{\"name\":\"isRemote\",\"type\":[\"null\",\"boolean\"],\"default\":null},{\"name\":\"keyFramesEncoded\",\"type\":[\"null\",\"long\"],\"default\":null},{\"name\":\"mediaSourceID\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}],\"default\":null},{\"name\":\"mediaType\",\"type\":\"MediaType\",\"default\":\"UNKNOWN\"},{\"name\":\"nackCount\",\"type\":[\"null\",\"int\"],\"default\":null},{\"name\":\"packetsSent\",\"type\":[\"null\",\"int\"],\"default\":null},{\"name\":\"pliCount\",\"type\":[\"null\",\"int\"],\"default\":null},{\"name\":\"qpSum\",\"type\":[\"null\",\"double\"],\"default\":null},{\"name\":\"qualityLimitationReason\",\"type\":{\"type\":\"enum\",\"name\":\"RTCQualityLimitationReason\",\"doc\":\"Type of the quality limitation\",\"symbols\":[\"BANDWIDTH\",\"CPU\",\"NONE\",\"OTHER\",\"UNKNOWN\",\"NULL\"]},\"default\":\"unknown\"},{\"name\":\"qualityLimitationResolutionChanges\",\"type\":[\"null\",\"long\"],\"default\":null},{\"name\":\"remoteID\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}],\"default\":null},{\"name\":\"retransmittedBytesSent\",\"type\":[\"null\",\"long\"],\"default\":null},{\"name\":\"retransmittedPacketsSent\",\"type\":[\"null\",\"int\"],\"default\":null},{\"name\":\"totalEncodedBytesTarget\",\"type\":[\"null\",\"long\"],\"default\":null},{\"name\":\"totalEncodeTime\",\"type\":[\"null\",\"double\"],\"default\":null},{\"name\":\"totalPacketSendDelay\",\"type\":[\"null\",\"double\"],\"default\":null},{\"name\":\"trackID\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}],\"default\":null},{\"name\":\"transportID\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}],\"default\":null}]},{\"type\":\"record\",\"name\":\"RemoteInboundRTP\",\"doc\":\"Remote Inbound RTP payloadContains information about the remote inbound rtp stream the peer connection is connected to\",\"fields\":[{\"name\":\"mediaUnitId\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}],\"default\":null},{\"name\":\"callName\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}],\"default\":null},{\"name\":\"userId\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}],\"default\":null},{\"name\"",":\"browserId\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}],\"default\":null},{\"name\":\"peerConnectionUUID\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"}},{\"name\":\"ssrc\",\"type\":\"long\"},{\"name\":\"codecID\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}],\"default\":null},{\"name\":\"id\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}],\"default\":null},{\"name\":\"jitter\",\"type\":[\"null\",\"float\"],\"default\":null},{\"name\":\"localID\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}],\"default\":null},{\"name\":\"mediaType\",\"type\":\"MediaType\",\"default\":\"UNKNOWN\"},{\"name\":\"packetsLost\",\"type\":[\"null\",\"int\"],\"default\":null},{\"name\":\"roundTripTime\",\"type\":[\"null\",\"double\"],\"default\":null},{\"name\":\"transportID\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}],\"default\":null}]},{\"type\":\"record\",\"name\":\"ICECandidatePair\",\"doc\":\"ICE Candidate Pair payloadContains information about the ICE candidate pair the peer connections are nominated to use to connect.\",\"fields\":[{\"name\":\"mediaUnitId\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}],\"default\":null},{\"name\":\"callName\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}],\"default\":null},{\"name\":\"userId\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}],\"default\":null},{\"name\":\"browserId\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}],\"default\":null},{\"name\":\"peerConnectionUUID\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"}},{\"name\":\"candidatePairId\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"}},{\"name\":\"availableOutgoingBitrate\",\"type\":[\"null\",\"int\"],\"default\":null},{\"name\":\"bytesReceived\",\"type\":[\"null\",\"long\"],\"default\":null},{\"name\":\"bytesSent\",\"type\":[\"null\",\"long\"],\"default\":null},{\"name\":\"consentRequestsSent\",\"type\":[\"null\",\"int\"],\"default\":null},{\"name\":\"currentRoundTripTime\",\"type\":[\"null\",\"double\"],\"default\":null},{\"name\":\"localCandidateID\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}],\"default\":null},{\"name\":\"nominated\",\"type\":[\"null\",\"boolean\"],\"default\":null},{\"name\":\"priority\",\"type\":[\"null\",\"long\"],\"default\":null},{\"name\":\"remoteCandidateID\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}],\"default\":null},{\"name\":\"requestsReceived\",\"type\":[\"null\",\"int\"],\"default\":null},{\"name\":\"requestsSent\",\"type\":[\"null\",\"int\"],\"default\":null},{\"name\":\"responsesReceived\",\"type\":[\"null\",\"int\"],\"default\":null},{\"name\":\"responsesSent\",\"type\":[\"null\",\"int\"],\"default\":null},{\"name\":\"state\",\"type\":{\"type\":\"enum\",\"name\":\"ICEState\",\"doc\":\"State of the ICE\",\"symbols\":[\"FAILED\",\"FROZEN\",\"IN_PROGRESS\",\"SUCCEEDED\",\"WAITING\",\"UNKNOWN\",\"NULL\"]},\"default\":\"UNKNOWN\"},{\"name\":\"totalRoundTripTime\",\"type\":[\"null\",\"double\"],\"default\":null},{\"name\":\"transportID\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}],\"default\":null},{\"name\":\"writable\",\"type\":[\"null\",\"boolean\"],\"default\":null}]},{\"type\":\"record\",\"name\":\"ICERemoteCandidate\",\"doc\":\"Remote ICE Candidate SchemaContains information about the Remote ICE Candidate\",\"fields\":[{\"name\":\"mediaUnitId\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}],\"default\":null},{\"name\":\"callName\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}],\"default\":null},{\"name\":\"userId\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}],\"default\":null},{\"name\":\"browserId\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}],\"default\":null},{\"name\":\"peerConnectionUUID\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"}},{\"name\":\"candidateId\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"}},{\"name\":\"candidateType\",\"type\":{\"type\":\"enum\",\"name\":\"CandidateType\",\"doc\":\"Type of the ICE candidate\",\"symbols\":[\"HOST\",\"PRFLX\",\"RELAY\",\"SRFLX\",\"UNKNOWN\",\"NULL\"]}},{\"name\":\"deleted\",\"type\":[\"null\",\"boolean\"],\"default\":null},{\"name\":\"ipLSH\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}],\"default\":null},{\"name\":\"isRemote\",\"type\":[\"null\",\"boolean\"],\"default\":null},{\"name\":\"port\",\"type\":[\"null\",\"int\"],\"default\":null},{\"name\":\"priority\",\"type\":[\"null\",\"long\"],\"default\":null},{\"name\":\"protocol\",\"type\":{\"type\":\"enum\",\"name\":\"TransportProtocol\",\"doc\":\"Type of the protocol\",\"symbols\":[\"UDP\",\"TCP\",\"UNKNOWN\",\"NULL\"]},\"default\":\"UNKNOWN\"},{\"name\":\"transportID\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}],\"default\":null}]},{\"type\":\"record\",\"name\":\"ICELocalCandidate\",\"doc\":\"Local ICE Candidate SchemaContains information about the Local ICE Candidate\",\"fields\":[{\"name\":\"mediaUnitId\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}],\"default\":null},{\"name\":\"callName\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}],\"default\":null},{\"name\":\"userId\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}],\"default\":null},{\"name\":\"browserId\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}],\"default\":null},{\"name\":\"peerConnectionUUID\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"}},{\"name\":\"candidateId\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"}},{\"name\":\"candidateType\",\"type\":\"CandidateType\"},{\"name\":\"deleted\",\"type\":[\"null\",\"boolean\"],\"default\":null},{\"name\":\"ipLSH\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}],\"default\":null},{\"name\":\"isRemote\",\"type\":[\"null\",\"boolean\"],\"default\":null},{\"name\":\"networkType\",\"type\":{\"type\":\"enum\",\"name\":\"NetworkType\",\"doc\":\"Type of the network\",\"symbols\":[\"BLUETOOTH\",\"CELLULAR\",\"ETHERNET\",\"UNKNOWN\",\"VPN\",\"WIFI\",\"WIMAX\",\"NULL\"]},\"default\":\"UNKNOWN\"},{\"name\":\"port\",\"type\":[\"null\",\"int\"],\"default\":null},{\"name\":\"protocol\",\"type\":\"TransportProtocol\",\"default\":\"UNKNOWN\"},{\"name\":\"priority\",\"type\":[\"null\",\"long\"],\"default\":null},{\"name\":\"transportID\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}],\"default\":null}]},{\"type\":\"record\",\"name\":\"Track\",\"doc\":\"Track payloadContains information about the Track the Peer Connection uses\",\"fields\":[{\"name\":\"mediaUnitId\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}],\"default\":null},{\"name\":\"callName\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}],\"default\":null},{\"name\":\"userId\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}],\"default\":null},{\"name\":\"browserId\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}],\"default\":null},{\"name\":\"peerConnectionUUID\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"}},{\"name\":\"trackId\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}],\"default\":null},{\"name\":\"concealedSamples\",\"type\":[\"null\",\"int\"],\"default\":null},{\"name\":\"concealmentEvents\",\"type\":[\"null\",\"int\"],\"default\":null},{\"name\":\"detached\",\"type\":[\"null\",\"boolean\"],\"default\":null},{\"name\":\"ended\",\"type\":[\"null\",\"boolean\"],\"default\":null},{\"name\":\"framesDecoded\",\"type\":[\"null\",\"int\"],\"default\":null},{\"name\":\"framesDropped\",\"type\":[\"null\",\"int\"],\"default\":null},{\"name\":\"framesSent\",\"type\":[\"null\",\"int\"],\"default\":null},{\"name\":\"framesReceived\",\"type\":[\"null\",\"int\"],\"default\":null},{\"name\":\"hugeFramesSent\",\"type\":[\"null\",\"int\"],\"default\":null},{\"name\":\"insertedSamplesForDeceleration\",\"type\":[\"null\",\"int\"],\"default\":null},{\"name\":\"jitterBufferDelay\",\"type\":[\"null\",\"double\"],\"default\":null},{\"name\":\"jitterBufferEmittedCount\",\"type\":[\"null\",\"int\"],\"default\":null},{\"name\":\"mediaSourceID\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}],\"default\":null},{\"name\":\"mediaType\",\"type\":\"MediaType\",\"default\":\"UNKNOWN\"},{\"name\":\"remoteSource\",\"type\":[\"null\",\"boolean\"],\"default\":null},{\"name\":\"removedSamplesForAcceleration\",\"type\":[\"null\",\"int\"],\"default\":null},{\"name\":\"samplesDuration\",\"type\":[\"null\",\"double\"],\"default\":null},{\"name\":\"silentConcealedSamples\",\"type\":[\"null\",\"int\"],\"default\":null},{\"name\":\"totalSamplesReceived\",\"type\":[\"null\",\"int\"],\"default\":null}]},{\"type\":\"record\",\"name\":\"MediaSource\",\"doc\":\"Media Source payloadContains information about a Media Source the Peer Connection uses\",\"fields\":[{\"name\":\"mediaUnitId\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}],\"default\":null},{\"name\":\"callName\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}],\"default\":null},{\"name\":\"userId\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"","}],\"default\":null},{\"name\":\"browserId\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}],\"default\":null},{\"name\":\"peerConnectionUUID\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"}},{\"name\":\"mediaSourceId\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"}},{\"name\":\"audioLevel\",\"type\":[\"null\",\"float\"],\"default\":null},{\"name\":\"framesPerSecond\",\"type\":[\"null\",\"double\"],\"default\":null},{\"name\":\"height\",\"type\":[\"null\",\"double\"],\"default\":null},{\"name\":\"width\",\"type\":[\"null\",\"double\"],\"default\":null},{\"name\":\"mediaType\",\"type\":\"MediaType\",\"default\":\"UNKNOWN\"},{\"name\":\"totalAudioEnergy\",\"type\":[\"null\",\"float\"],\"default\":null},{\"name\":\"totalSamplesDuration\",\"type\":[\"null\",\"double\"],\"default\":null},{\"name\":\"trackId\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}],\"default\":null}]},{\"type\":\"record\",\"name\":\"UserMediaError\",\"doc\":\"User Media Error Report. Report error messages occured to the users\",\"fields\":[{\"name\":\"mediaUnitId\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}],\"default\":null},{\"name\":\"callName\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}],\"default\":null},{\"name\":\"userId\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}],\"default\":null},{\"name\":\"browserId\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}],\"default\":null},{\"name\":\"peerConnectionUUID\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}],\"default\":null},{\"name\":\"message\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"}}]},{\"type\":\"record\",\"name\":\"ExtensionReport\",\"doc\":\"Extended Report payload. Contains customer added report information\",\"fields\":[{\"name\":\"mediaUnitId\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}],\"default\":null},{\"name\":\"callName\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}],\"default\":null},{\"name\":\"userId\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}],\"default\":null},{\"name\":\"browserId\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}],\"default\":null},{\"name\":\"peerConnectionUUID\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"}},{\"name\":\"extensionType\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}],\"default\":null},{\"name\":\"payload\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"}}]}],\"default\":null},{\"name\":\"type\",\"type\":{\"type\":\"enum\",\"name\":\"ReportType\",\"doc\":\"The type of the report\",\"symbols\":[\"UNKNOWN\",\"INITIATED_CALL\",\"FINISHED_CALL\",\"JOINED_PEER_CONNECTION\",\"DETACHED_PEER_CONNECTION\",\"INBOUND_RTP\",\"REMOTE_INBOUND_RTP\",\"OUTBOUND_RTP\",\"MEDIA_SOURCE\",\"TRACK\",\"ICE_CANDIDATE_PAIR\",\"ICE_REMOTE_CANDIDATE\",\"ICE_LOCAL_CANDIDATE\",\"USER_MEDIA_ERROR\",\"EXTENSION\"]},\"default\":\"UNKNOWN\"}]}");
+  private static final long serialVersionUID = -887798364492627861L;
+  public static final org.apache.avro.Schema SCHEMA$ = new org.apache.avro.Schema.Parser().parse("{\"type\":\"record\",\"name\":\"Report\",\"namespace\":\"org.observertc.webrtc.schemas.reports\",\"doc\":\"A Report object\",\"fields\":[{\"name\":\"version\",\"type\":\"int\"},{\"name\":\"serviceUUID\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"}},{\"name\":\"serviceName\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}],\"default\":null},{\"name\":\"marker\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}],\"default\":null},{\"name\":\"timestamp\",\"type\":\"long\"},{\"name\":\"payload\",\"type\":[\"null\",{\"type\":\"record\",\"name\":\"InitiatedCall\",\"doc\":\"Initial Call Report payload. Contains information about a call initiated by a client\",\"fields\":[{\"name\":\"callUUID\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"}},{\"name\":\"callName\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}],\"default\":null}]},{\"type\":\"record\",\"name\":\"FinishedCall\",\"doc\":\"Finished Call Report payload. Contains information about a call finished by a client\",\"fields\":[{\"name\":\"callUUID\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"}},{\"name\":\"callName\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}],\"default\":null}]},{\"type\":\"record\",\"name\":\"JoinedPeerConnection\",\"doc\":\"Joined Peer Connection payload. Contains information about a peer connection joined to a call\",\"fields\":[{\"name\":\"mediaUnitId\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}],\"default\":null},{\"name\":\"callUUID\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"}},{\"name\":\"callName\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}],\"default\":null},{\"name\":\"userId\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}],\"default\":null},{\"name\":\"browserId\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}],\"default\":null},{\"name\":\"peerConnectionUUID\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"}}]},{\"type\":\"record\",\"name\":\"DetachedPeerConnection\",\"doc\":\"Detached Peer Connection payload. Contains information about a peer connection detached from a call\",\"fields\":[{\"name\":\"mediaUnitId\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}],\"default\":null},{\"name\":\"callUUID\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"}},{\"name\":\"callName\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}],\"default\":null},{\"name\":\"userId\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}],\"default\":null},{\"name\":\"browserId\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}],\"default\":null},{\"name\":\"peerConnectionUUID\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"}}]},{\"type\":\"record\",\"name\":\"InboundRTP\",\"doc\":\"Inbound RTP payloadContains information about the RTP streams received by the peer connection\",\"fields\":[{\"name\":\"mediaUnitId\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}],\"default\":null},{\"name\":\"callName\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}],\"default\":null},{\"name\":\"userId\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}],\"default\":null},{\"name\":\"browserId\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}],\"default\":null},{\"name\":\"peerConnectionUUID\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"}},{\"name\":\"ssrc\",\"type\":\"long\"},{\"name\":\"bytesReceived\",\"type\":[\"null\",\"long\"],\"default\":null},{\"name\":\"codecId\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}],\"default\":null},{\"name\":\"decoderImplementation\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}],\"default\":null},{\"name\":\"estimatedPlayoutTimestamp\",\"type\":[\"null\",\"double\"],\"default\":null},{\"name\":\"fecPacketsDiscarded\",\"type\":[\"null\",\"int\"],\"default\":null},{\"name\":\"fecPacketsReceived\",\"type\":[\"null\",\"int\"],\"default\":null},{\"name\":\"firCount\",\"type\":[\"null\",\"int\"],\"default\":null},{\"name\":\"framesDecoded\",\"type\":[\"null\",\"int\"],\"default\":null},{\"name\":\"headerBytesReceived\",\"type\":[\"null\",\"long\"],\"default\":null},{\"name\":\"id\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}],\"default\":null},{\"name\":\"isRemote\",\"type\":[\"null\",\"boolean\"],\"default\":null},{\"name\":\"jitter\",\"type\":[\"null\",\"double\"],\"default\":null},{\"name\":\"keyFramesDecoded\",\"type\":[\"null\",\"int\"],\"default\":null},{\"name\":\"lastPacketReceivedTimestamp\",\"type\":[\"null\",\"double\"],\"default\":null},{\"name\":\"mediaType\",\"type\":{\"type\":\"enum\",\"name\":\"MediaType\",\"doc\":\"State of the Media\",\"symbols\":[\"AUDIO\",\"VIDEO\",\"UNKNOWN\",\"NULL\"]},\"default\":\"UNKNOWN\"},{\"name\":\"nackCount\",\"type\":[\"null\",\"int\"],\"default\":null},{\"name\":\"packetsLost\",\"type\":[\"null\",\"int\"],\"default\":null},{\"name\":\"packetsReceived\",\"type\":[\"null\",\"int\"],\"default\":null},{\"name\":\"pliCount\",\"type\":[\"null\",\"int\"],\"default\":null},{\"name\":\"qpSum\",\"type\":[\"null\",\"double\"],\"default\":null},{\"name\":\"totalDecodeTime\",\"type\":[\"null\",\"double\"],\"default\":null},{\"name\":\"totalInterFrameDelay\",\"type\":[\"null\",\"double\"],\"default\":null},{\"name\":\"totalSquaredInterFrameDelay\",\"type\":[\"null\",\"double\"],\"default\":null},{\"name\":\"trackId\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}],\"default\":null},{\"name\":\"transportId\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}],\"default\":null}]},{\"type\":\"record\",\"name\":\"OutboundRTP\",\"doc\":\"Outbound RTP payloadContains information about the RTP streams sent by the peer connection\",\"fields\":[{\"name\":\"mediaUnitId\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}],\"default\":null},{\"name\":\"callName\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}],\"default\":null},{\"name\":\"userId\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}],\"default\":null},{\"name\":\"browserId\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}],\"default\":null},{\"name\":\"peerConnectionUUID\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"}},{\"name\":\"ssrc\",\"type\":\"long\"},{\"name\":\"bytesSent\",\"type\":[\"null\",\"long\"],\"default\":null},{\"name\":\"codecID\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}],\"default\":null},{\"name\":\"encoderImplementation\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}],\"default\":null},{\"name\":\"firCount\",\"type\":[\"null\",\"int\"],\"default\":null},{\"name\":\"framesEncoded\",\"type\":[\"null\",\"int\"],\"default\":null},{\"name\":\"headerBytesSent\",\"type\":[\"null\",\"long\"],\"default\":null},{\"name\":\"id\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}],\"default\":null},{\"name\":\"isRemote\",\"type\":[\"null\",\"boolean\"],\"default\":null},{\"name\":\"keyFramesEncoded\",\"type\":[\"null\",\"long\"],\"default\":null},{\"name\":\"mediaSourceID\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}],\"default\":null},{\"name\":\"mediaType\",\"type\":\"MediaType\",\"default\":\"UNKNOWN\"},{\"name\":\"nackCount\",\"type\":[\"null\",\"int\"],\"default\":null},{\"name\":\"packetsSent\",\"type\":[\"null\",\"int\"],\"default\":null},{\"name\":\"pliCount\",\"type\":[\"null\",\"int\"],\"default\":null},{\"name\":\"qpSum\",\"type\":[\"null\",\"double\"],\"default\":null},{\"name\":\"qualityLimitationReason\",\"type\":{\"type\":\"enum\",\"name\":\"RTCQualityLimitationReason\",\"doc\":\"Type of the quality limitation\",\"symbols\":[\"BANDWIDTH\",\"CPU\",\"NONE\",\"OTHER\",\"UNKNOWN\",\"NULL\"]},\"default\":\"unknown\"},{\"name\":\"qualityLimitationResolutionChanges\",\"type\":[\"null\",\"long\"],\"default\":null},{\"name\":\"remoteID\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}],\"default\":null},{\"name\":\"retransmittedBytesSent\",\"type\":[\"null\",\"long\"],\"default\":null},{\"name\":\"retransmittedPacketsSent\",\"type\":[\"null\",\"int\"],\"default\":null},{\"name\":\"totalEncodedBytesTarget\",\"type\":[\"null\",\"long\"],\"default\":null},{\"name\":\"totalEncodeTime\",\"type\":[\"null\",\"double\"],\"default\":null},{\"name\":\"totalPacketSendDelay\",\"type\":[\"null\",\"double\"],\"default\":null},{\"name\":\"trackID\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}],\"default\":null},{\"name\":\"transportID\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}],\"default\":null}]},{\"type\":\"record\",\"name\":\"RemoteInboundRTP\",\"doc\":\"Remote Inbound RTP payloadContains information about the remote inbound rtp stream the peer connection is connected to\",\"fields\":[{\"name\":\"mediaUnitId\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}],\"default\":null},{\"name\":\"callName\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}],\"default\":null},{\"name\":\"userId\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"S","tring\"}],\"default\":null},{\"name\":\"browserId\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}],\"default\":null},{\"name\":\"peerConnectionUUID\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"}},{\"name\":\"ssrc\",\"type\":\"long\"},{\"name\":\"codecID\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}],\"default\":null},{\"name\":\"id\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}],\"default\":null},{\"name\":\"jitter\",\"type\":[\"null\",\"float\"],\"default\":null},{\"name\":\"localID\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}],\"default\":null},{\"name\":\"mediaType\",\"type\":\"MediaType\",\"default\":\"UNKNOWN\"},{\"name\":\"packetsLost\",\"type\":[\"null\",\"int\"],\"default\":null},{\"name\":\"roundTripTime\",\"type\":[\"null\",\"double\"],\"default\":null},{\"name\":\"transportID\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}],\"default\":null}]},{\"type\":\"record\",\"name\":\"ICECandidatePair\",\"doc\":\"ICE Candidate Pair payloadContains information about the ICE candidate pair the peer connections are nominated to use to connect.\",\"fields\":[{\"name\":\"mediaUnitId\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}],\"default\":null},{\"name\":\"callName\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}],\"default\":null},{\"name\":\"userId\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}],\"default\":null},{\"name\":\"browserId\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}],\"default\":null},{\"name\":\"peerConnectionUUID\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"}},{\"name\":\"candidatePairId\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"}},{\"name\":\"availableOutgoingBitrate\",\"type\":[\"null\",\"int\"],\"default\":null},{\"name\":\"bytesReceived\",\"type\":[\"null\",\"long\"],\"default\":null},{\"name\":\"bytesSent\",\"type\":[\"null\",\"long\"],\"default\":null},{\"name\":\"consentRequestsSent\",\"type\":[\"null\",\"int\"],\"default\":null},{\"name\":\"currentRoundTripTime\",\"type\":[\"null\",\"double\"],\"default\":null},{\"name\":\"localCandidateID\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}],\"default\":null},{\"name\":\"nominated\",\"type\":[\"null\",\"boolean\"],\"default\":null},{\"name\":\"priority\",\"type\":[\"null\",\"long\"],\"default\":null},{\"name\":\"remoteCandidateID\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}],\"default\":null},{\"name\":\"requestsReceived\",\"type\":[\"null\",\"int\"],\"default\":null},{\"name\":\"requestsSent\",\"type\":[\"null\",\"int\"],\"default\":null},{\"name\":\"responsesReceived\",\"type\":[\"null\",\"int\"],\"default\":null},{\"name\":\"responsesSent\",\"type\":[\"null\",\"int\"],\"default\":null},{\"name\":\"state\",\"type\":{\"type\":\"enum\",\"name\":\"ICEState\",\"doc\":\"State of the ICE\",\"symbols\":[\"FAILED\",\"FROZEN\",\"IN_PROGRESS\",\"SUCCEEDED\",\"WAITING\",\"UNKNOWN\",\"NULL\"]},\"default\":\"UNKNOWN\"},{\"name\":\"totalRoundTripTime\",\"type\":[\"null\",\"double\"],\"default\":null},{\"name\":\"transportID\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}],\"default\":null},{\"name\":\"writable\",\"type\":[\"null\",\"boolean\"],\"default\":null}]},{\"type\":\"record\",\"name\":\"ICERemoteCandidate\",\"doc\":\"Remote ICE Candidate SchemaContains information about the Remote ICE Candidate\",\"fields\":[{\"name\":\"mediaUnitId\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}],\"default\":null},{\"name\":\"callName\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}],\"default\":null},{\"name\":\"userId\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}],\"default\":null},{\"name\":\"browserId\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}],\"default\":null},{\"name\":\"peerConnectionUUID\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"}},{\"name\":\"candidateId\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"}},{\"name\":\"candidateType\",\"type\":{\"type\":\"enum\",\"name\":\"CandidateType\",\"doc\":\"Type of the ICE candidate\",\"symbols\":[\"HOST\",\"PRFLX\",\"RELAY\",\"SRFLX\",\"UNKNOWN\",\"NULL\"]}},{\"name\":\"deleted\",\"type\":[\"null\",\"boolean\"],\"default\":null},{\"name\":\"ipLSH\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}],\"default\":null},{\"name\":\"isRemote\",\"type\":[\"null\",\"boolean\"],\"default\":null},{\"name\":\"port\",\"type\":[\"null\",\"int\"],\"default\":null},{\"name\":\"priority\",\"type\":[\"null\",\"long\"],\"default\":null},{\"name\":\"protocol\",\"type\":{\"type\":\"enum\",\"name\":\"TransportProtocol\",\"doc\":\"Type of the protocol\",\"symbols\":[\"UDP\",\"TCP\",\"UNKNOWN\",\"NULL\"]},\"default\":\"UNKNOWN\"},{\"name\":\"transportID\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}],\"default\":null}]},{\"type\":\"record\",\"name\":\"ICELocalCandidate\",\"doc\":\"Local ICE Candidate SchemaContains information about the Local ICE Candidate\",\"fields\":[{\"name\":\"mediaUnitId\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}],\"default\":null},{\"name\":\"callName\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}],\"default\":null},{\"name\":\"userId\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}],\"default\":null},{\"name\":\"browserId\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}],\"default\":null},{\"name\":\"peerConnectionUUID\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"}},{\"name\":\"candidateId\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"}},{\"name\":\"candidateType\",\"type\":\"CandidateType\"},{\"name\":\"deleted\",\"type\":[\"null\",\"boolean\"],\"default\":null},{\"name\":\"ipLSH\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}],\"default\":null},{\"name\":\"isRemote\",\"type\":[\"null\",\"boolean\"],\"default\":null},{\"name\":\"networkType\",\"type\":{\"type\":\"enum\",\"name\":\"NetworkType\",\"doc\":\"Type of the network\",\"symbols\":[\"BLUETOOTH\",\"CELLULAR\",\"ETHERNET\",\"UNKNOWN\",\"VPN\",\"WIFI\",\"WIMAX\",\"NULL\"]},\"default\":\"UNKNOWN\"},{\"name\":\"port\",\"type\":[\"null\",\"int\"],\"default\":null},{\"name\":\"protocol\",\"type\":\"TransportProtocol\",\"default\":\"UNKNOWN\"},{\"name\":\"priority\",\"type\":[\"null\",\"long\"],\"default\":null},{\"name\":\"transportID\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}],\"default\":null}]},{\"type\":\"record\",\"name\":\"Track\",\"doc\":\"Track payloadContains information about the Track the Peer Connection uses\",\"fields\":[{\"name\":\"mediaUnitId\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}],\"default\":null},{\"name\":\"callName\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}],\"default\":null},{\"name\":\"userId\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}],\"default\":null},{\"name\":\"browserId\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}],\"default\":null},{\"name\":\"peerConnectionUUID\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"}},{\"name\":\"trackId\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}],\"default\":null},{\"name\":\"concealedSamples\",\"type\":[\"null\",\"int\"],\"default\":null},{\"name\":\"concealmentEvents\",\"type\":[\"null\",\"int\"],\"default\":null},{\"name\":\"detached\",\"type\":[\"null\",\"boolean\"],\"default\":null},{\"name\":\"ended\",\"type\":[\"null\",\"boolean\"],\"default\":null},{\"name\":\"framesDecoded\",\"type\":[\"null\",\"int\"],\"default\":null},{\"name\":\"framesDropped\",\"type\":[\"null\",\"int\"],\"default\":null},{\"name\":\"framesSent\",\"type\":[\"null\",\"int\"],\"default\":null},{\"name\":\"framesReceived\",\"type\":[\"null\",\"int\"],\"default\":null},{\"name\":\"hugeFramesSent\",\"type\":[\"null\",\"int\"],\"default\":null},{\"name\":\"insertedSamplesForDeceleration\",\"type\":[\"null\",\"int\"],\"default\":null},{\"name\":\"jitterBufferDelay\",\"type\":[\"null\",\"double\"],\"default\":null},{\"name\":\"jitterBufferEmittedCount\",\"type\":[\"null\",\"int\"],\"default\":null},{\"name\":\"mediaSourceID\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}],\"default\":null},{\"name\":\"mediaType\",\"type\":\"MediaType\",\"default\":\"UNKNOWN\"},{\"name\":\"remoteSource\",\"type\":[\"null\",\"boolean\"],\"default\":null},{\"name\":\"removedSamplesForAcceleration\",\"type\":[\"null\",\"int\"],\"default\":null},{\"name\":\"samplesDuration\",\"type\":[\"null\",\"double\"],\"default\":null},{\"name\":\"silentConcealedSamples\",\"type\":[\"null\",\"int\"],\"default\":null},{\"name\":\"totalSamplesReceived\",\"type\":[\"null\",\"int\"],\"default\":null}]},{\"type\":\"record\",\"name\":\"MediaSource\",\"doc\":\"Media Source payloadContains information about a Media Source the Peer Connection uses\",\"fields\":[{\"name\":\"mediaUnitId\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}],\"default\":null},{\"name\":\"callName\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}],\"default\":null},{\"name\":\"userId\",\"type\":[\"null\",{\"type\":\"str","ing\",\"avro.java.string\":\"String\"}],\"default\":null},{\"name\":\"browserId\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}],\"default\":null},{\"name\":\"peerConnectionUUID\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"}},{\"name\":\"mediaSourceId\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"}},{\"name\":\"audioLevel\",\"type\":[\"null\",\"float\"],\"default\":null},{\"name\":\"framesPerSecond\",\"type\":[\"null\",\"double\"],\"default\":null},{\"name\":\"height\",\"type\":[\"null\",\"double\"],\"default\":null},{\"name\":\"width\",\"type\":[\"null\",\"double\"],\"default\":null},{\"name\":\"mediaType\",\"type\":\"MediaType\",\"default\":\"UNKNOWN\"},{\"name\":\"totalAudioEnergy\",\"type\":[\"null\",\"float\"],\"default\":null},{\"name\":\"totalSamplesDuration\",\"type\":[\"null\",\"double\"],\"default\":null},{\"name\":\"trackId\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}],\"default\":null}]},{\"type\":\"record\",\"name\":\"UserMediaError\",\"doc\":\"User Media Error Report. Report error messages occured to the users\",\"fields\":[{\"name\":\"mediaUnitId\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}],\"default\":null},{\"name\":\"callName\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}],\"default\":null},{\"name\":\"userId\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}],\"default\":null},{\"name\":\"browserId\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}],\"default\":null},{\"name\":\"peerConnectionUUID\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}],\"default\":null},{\"name\":\"message\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"}}]},{\"type\":\"record\",\"name\":\"ExtensionReport\",\"doc\":\"Extended Report payload. Contains customer added report information\",\"fields\":[{\"name\":\"mediaUnitId\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}],\"default\":null},{\"name\":\"callName\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}],\"default\":null},{\"name\":\"userId\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}],\"default\":null},{\"name\":\"browserId\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}],\"default\":null},{\"name\":\"peerConnectionUUID\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"}},{\"name\":\"extensionType\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}],\"default\":null},{\"name\":\"payload\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"}}]}],\"default\":null},{\"name\":\"type\",\"type\":{\"type\":\"enum\",\"name\":\"ReportType\",\"doc\":\"The type of the report\",\"symbols\":[\"UNKNOWN\",\"INITIATED_CALL\",\"FINISHED_CALL\",\"JOINED_PEER_CONNECTION\",\"DETACHED_PEER_CONNECTION\",\"INBOUND_RTP\",\"REMOTE_INBOUND_RTP\",\"OUTBOUND_RTP\",\"MEDIA_SOURCE\",\"TRACK\",\"ICE_CANDIDATE_PAIR\",\"ICE_REMOTE_CANDIDATE\",\"ICE_LOCAL_CANDIDATE\",\"USER_MEDIA_ERROR\",\"EXTENSION\"]},\"default\":\"UNKNOWN\"}]}");
   public static org.apache.avro.Schema getClassSchema() { return SCHEMA$; }
 
   private static SpecificData MODEL$ = new SpecificData();
@@ -72,6 +72,7 @@ public class Report extends org.apache.avro.specific.SpecificRecordBase implemen
     return DECODER.decode(b);
   }
 
+   private int version;
    private java.lang.String serviceUUID;
    private java.lang.String serviceName;
    private java.lang.String marker;
@@ -88,6 +89,7 @@ public class Report extends org.apache.avro.specific.SpecificRecordBase implemen
 
   /**
    * All-args constructor.
+   * @param version The new value for version
    * @param serviceUUID The new value for serviceUUID
    * @param serviceName The new value for serviceName
    * @param marker The new value for marker
@@ -95,7 +97,8 @@ public class Report extends org.apache.avro.specific.SpecificRecordBase implemen
    * @param payload The new value for payload
    * @param type The new value for type
    */
-  public Report(java.lang.String serviceUUID, java.lang.String serviceName, java.lang.String marker, java.lang.Long timestamp, java.lang.Object payload, org.observertc.webrtc.schemas.reports.ReportType type) {
+  public Report(java.lang.Integer version, java.lang.String serviceUUID, java.lang.String serviceName, java.lang.String marker, java.lang.Long timestamp, java.lang.Object payload, org.observertc.webrtc.schemas.reports.ReportType type) {
+    this.version = version;
     this.serviceUUID = serviceUUID;
     this.serviceName = serviceName;
     this.marker = marker;
@@ -109,12 +112,13 @@ public class Report extends org.apache.avro.specific.SpecificRecordBase implemen
   // Used by DatumWriter.  Applications should not call.
   public java.lang.Object get(int field$) {
     switch (field$) {
-    case 0: return serviceUUID;
-    case 1: return serviceName;
-    case 2: return marker;
-    case 3: return timestamp;
-    case 4: return payload;
-    case 5: return type;
+    case 0: return version;
+    case 1: return serviceUUID;
+    case 2: return serviceName;
+    case 3: return marker;
+    case 4: return timestamp;
+    case 5: return payload;
+    case 6: return type;
     default: throw new IndexOutOfBoundsException("Invalid index: " + field$);
     }
   }
@@ -123,15 +127,26 @@ public class Report extends org.apache.avro.specific.SpecificRecordBase implemen
   @SuppressWarnings(value="unchecked")
   public void put(int field$, java.lang.Object value$) {
     switch (field$) {
-    case 0: serviceUUID = value$ != null ? value$.toString() : null; break;
-    case 1: serviceName = value$ != null ? value$.toString() : null; break;
-    case 2: marker = value$ != null ? value$.toString() : null; break;
-    case 3: timestamp = (java.lang.Long)value$; break;
-    case 4: payload = value$; break;
-    case 5: type = (org.observertc.webrtc.schemas.reports.ReportType)value$; break;
+    case 0: version = (java.lang.Integer)value$; break;
+    case 1: serviceUUID = value$ != null ? value$.toString() : null; break;
+    case 2: serviceName = value$ != null ? value$.toString() : null; break;
+    case 3: marker = value$ != null ? value$.toString() : null; break;
+    case 4: timestamp = (java.lang.Long)value$; break;
+    case 5: payload = value$; break;
+    case 6: type = (org.observertc.webrtc.schemas.reports.ReportType)value$; break;
     default: throw new IndexOutOfBoundsException("Invalid index: " + field$);
     }
   }
+
+  /**
+   * Gets the value of the 'version' field.
+   * @return The value of the 'version' field.
+   */
+  public int getVersion() {
+    return version;
+  }
+
+
 
   /**
    * Gets the value of the 'serviceUUID' field.
@@ -234,6 +249,7 @@ public class Report extends org.apache.avro.specific.SpecificRecordBase implemen
   public static class Builder extends org.apache.avro.specific.SpecificRecordBuilderBase<Report>
     implements org.apache.avro.data.RecordBuilder<Report> {
 
+    private int version;
     private java.lang.String serviceUUID;
     private java.lang.String serviceName;
     private java.lang.String marker;
@@ -252,29 +268,33 @@ public class Report extends org.apache.avro.specific.SpecificRecordBase implemen
      */
     private Builder(org.observertc.webrtc.schemas.reports.Report.Builder other) {
       super(other);
-      if (isValidValue(fields()[0], other.serviceUUID)) {
-        this.serviceUUID = data().deepCopy(fields()[0].schema(), other.serviceUUID);
+      if (isValidValue(fields()[0], other.version)) {
+        this.version = data().deepCopy(fields()[0].schema(), other.version);
         fieldSetFlags()[0] = other.fieldSetFlags()[0];
       }
-      if (isValidValue(fields()[1], other.serviceName)) {
-        this.serviceName = data().deepCopy(fields()[1].schema(), other.serviceName);
+      if (isValidValue(fields()[1], other.serviceUUID)) {
+        this.serviceUUID = data().deepCopy(fields()[1].schema(), other.serviceUUID);
         fieldSetFlags()[1] = other.fieldSetFlags()[1];
       }
-      if (isValidValue(fields()[2], other.marker)) {
-        this.marker = data().deepCopy(fields()[2].schema(), other.marker);
+      if (isValidValue(fields()[2], other.serviceName)) {
+        this.serviceName = data().deepCopy(fields()[2].schema(), other.serviceName);
         fieldSetFlags()[2] = other.fieldSetFlags()[2];
       }
-      if (isValidValue(fields()[3], other.timestamp)) {
-        this.timestamp = data().deepCopy(fields()[3].schema(), other.timestamp);
+      if (isValidValue(fields()[3], other.marker)) {
+        this.marker = data().deepCopy(fields()[3].schema(), other.marker);
         fieldSetFlags()[3] = other.fieldSetFlags()[3];
       }
-      if (isValidValue(fields()[4], other.payload)) {
-        this.payload = data().deepCopy(fields()[4].schema(), other.payload);
+      if (isValidValue(fields()[4], other.timestamp)) {
+        this.timestamp = data().deepCopy(fields()[4].schema(), other.timestamp);
         fieldSetFlags()[4] = other.fieldSetFlags()[4];
       }
-      if (isValidValue(fields()[5], other.type)) {
-        this.type = data().deepCopy(fields()[5].schema(), other.type);
+      if (isValidValue(fields()[5], other.payload)) {
+        this.payload = data().deepCopy(fields()[5].schema(), other.payload);
         fieldSetFlags()[5] = other.fieldSetFlags()[5];
+      }
+      if (isValidValue(fields()[6], other.type)) {
+        this.type = data().deepCopy(fields()[6].schema(), other.type);
+        fieldSetFlags()[6] = other.fieldSetFlags()[6];
       }
     }
 
@@ -284,30 +304,73 @@ public class Report extends org.apache.avro.specific.SpecificRecordBase implemen
      */
     private Builder(org.observertc.webrtc.schemas.reports.Report other) {
       super(SCHEMA$);
-      if (isValidValue(fields()[0], other.serviceUUID)) {
-        this.serviceUUID = data().deepCopy(fields()[0].schema(), other.serviceUUID);
+      if (isValidValue(fields()[0], other.version)) {
+        this.version = data().deepCopy(fields()[0].schema(), other.version);
         fieldSetFlags()[0] = true;
       }
-      if (isValidValue(fields()[1], other.serviceName)) {
-        this.serviceName = data().deepCopy(fields()[1].schema(), other.serviceName);
+      if (isValidValue(fields()[1], other.serviceUUID)) {
+        this.serviceUUID = data().deepCopy(fields()[1].schema(), other.serviceUUID);
         fieldSetFlags()[1] = true;
       }
-      if (isValidValue(fields()[2], other.marker)) {
-        this.marker = data().deepCopy(fields()[2].schema(), other.marker);
+      if (isValidValue(fields()[2], other.serviceName)) {
+        this.serviceName = data().deepCopy(fields()[2].schema(), other.serviceName);
         fieldSetFlags()[2] = true;
       }
-      if (isValidValue(fields()[3], other.timestamp)) {
-        this.timestamp = data().deepCopy(fields()[3].schema(), other.timestamp);
+      if (isValidValue(fields()[3], other.marker)) {
+        this.marker = data().deepCopy(fields()[3].schema(), other.marker);
         fieldSetFlags()[3] = true;
       }
-      if (isValidValue(fields()[4], other.payload)) {
-        this.payload = data().deepCopy(fields()[4].schema(), other.payload);
+      if (isValidValue(fields()[4], other.timestamp)) {
+        this.timestamp = data().deepCopy(fields()[4].schema(), other.timestamp);
         fieldSetFlags()[4] = true;
       }
-      if (isValidValue(fields()[5], other.type)) {
-        this.type = data().deepCopy(fields()[5].schema(), other.type);
+      if (isValidValue(fields()[5], other.payload)) {
+        this.payload = data().deepCopy(fields()[5].schema(), other.payload);
         fieldSetFlags()[5] = true;
       }
+      if (isValidValue(fields()[6], other.type)) {
+        this.type = data().deepCopy(fields()[6].schema(), other.type);
+        fieldSetFlags()[6] = true;
+      }
+    }
+
+    /**
+      * Gets the value of the 'version' field.
+      * @return The value.
+      */
+    public int getVersion() {
+      return version;
+    }
+
+
+    /**
+      * Sets the value of the 'version' field.
+      * @param value The value of 'version'.
+      * @return This builder.
+      */
+    public org.observertc.webrtc.schemas.reports.Report.Builder setVersion(int value) {
+      validate(fields()[0], value);
+      this.version = value;
+      fieldSetFlags()[0] = true;
+      return this;
+    }
+
+    /**
+      * Checks whether the 'version' field has been set.
+      * @return True if the 'version' field has been set, false otherwise.
+      */
+    public boolean hasVersion() {
+      return fieldSetFlags()[0];
+    }
+
+
+    /**
+      * Clears the value of the 'version' field.
+      * @return This builder.
+      */
+    public org.observertc.webrtc.schemas.reports.Report.Builder clearVersion() {
+      fieldSetFlags()[0] = false;
+      return this;
     }
 
     /**
@@ -325,9 +388,9 @@ public class Report extends org.apache.avro.specific.SpecificRecordBase implemen
       * @return This builder.
       */
     public org.observertc.webrtc.schemas.reports.Report.Builder setServiceUUID(java.lang.String value) {
-      validate(fields()[0], value);
+      validate(fields()[1], value);
       this.serviceUUID = value;
-      fieldSetFlags()[0] = true;
+      fieldSetFlags()[1] = true;
       return this;
     }
 
@@ -336,7 +399,7 @@ public class Report extends org.apache.avro.specific.SpecificRecordBase implemen
       * @return True if the 'serviceUUID' field has been set, false otherwise.
       */
     public boolean hasServiceUUID() {
-      return fieldSetFlags()[0];
+      return fieldSetFlags()[1];
     }
 
 
@@ -346,7 +409,7 @@ public class Report extends org.apache.avro.specific.SpecificRecordBase implemen
       */
     public org.observertc.webrtc.schemas.reports.Report.Builder clearServiceUUID() {
       serviceUUID = null;
-      fieldSetFlags()[0] = false;
+      fieldSetFlags()[1] = false;
       return this;
     }
 
@@ -365,9 +428,9 @@ public class Report extends org.apache.avro.specific.SpecificRecordBase implemen
       * @return This builder.
       */
     public org.observertc.webrtc.schemas.reports.Report.Builder setServiceName(java.lang.String value) {
-      validate(fields()[1], value);
+      validate(fields()[2], value);
       this.serviceName = value;
-      fieldSetFlags()[1] = true;
+      fieldSetFlags()[2] = true;
       return this;
     }
 
@@ -376,7 +439,7 @@ public class Report extends org.apache.avro.specific.SpecificRecordBase implemen
       * @return True if the 'serviceName' field has been set, false otherwise.
       */
     public boolean hasServiceName() {
-      return fieldSetFlags()[1];
+      return fieldSetFlags()[2];
     }
 
 
@@ -386,7 +449,7 @@ public class Report extends org.apache.avro.specific.SpecificRecordBase implemen
       */
     public org.observertc.webrtc.schemas.reports.Report.Builder clearServiceName() {
       serviceName = null;
-      fieldSetFlags()[1] = false;
+      fieldSetFlags()[2] = false;
       return this;
     }
 
@@ -405,9 +468,9 @@ public class Report extends org.apache.avro.specific.SpecificRecordBase implemen
       * @return This builder.
       */
     public org.observertc.webrtc.schemas.reports.Report.Builder setMarker(java.lang.String value) {
-      validate(fields()[2], value);
+      validate(fields()[3], value);
       this.marker = value;
-      fieldSetFlags()[2] = true;
+      fieldSetFlags()[3] = true;
       return this;
     }
 
@@ -416,7 +479,7 @@ public class Report extends org.apache.avro.specific.SpecificRecordBase implemen
       * @return True if the 'marker' field has been set, false otherwise.
       */
     public boolean hasMarker() {
-      return fieldSetFlags()[2];
+      return fieldSetFlags()[3];
     }
 
 
@@ -426,7 +489,7 @@ public class Report extends org.apache.avro.specific.SpecificRecordBase implemen
       */
     public org.observertc.webrtc.schemas.reports.Report.Builder clearMarker() {
       marker = null;
-      fieldSetFlags()[2] = false;
+      fieldSetFlags()[3] = false;
       return this;
     }
 
@@ -445,9 +508,9 @@ public class Report extends org.apache.avro.specific.SpecificRecordBase implemen
       * @return This builder.
       */
     public org.observertc.webrtc.schemas.reports.Report.Builder setTimestamp(long value) {
-      validate(fields()[3], value);
+      validate(fields()[4], value);
       this.timestamp = value;
-      fieldSetFlags()[3] = true;
+      fieldSetFlags()[4] = true;
       return this;
     }
 
@@ -456,7 +519,7 @@ public class Report extends org.apache.avro.specific.SpecificRecordBase implemen
       * @return True if the 'timestamp' field has been set, false otherwise.
       */
     public boolean hasTimestamp() {
-      return fieldSetFlags()[3];
+      return fieldSetFlags()[4];
     }
 
 
@@ -465,7 +528,7 @@ public class Report extends org.apache.avro.specific.SpecificRecordBase implemen
       * @return This builder.
       */
     public org.observertc.webrtc.schemas.reports.Report.Builder clearTimestamp() {
-      fieldSetFlags()[3] = false;
+      fieldSetFlags()[4] = false;
       return this;
     }
 
@@ -484,9 +547,9 @@ public class Report extends org.apache.avro.specific.SpecificRecordBase implemen
       * @return This builder.
       */
     public org.observertc.webrtc.schemas.reports.Report.Builder setPayload(java.lang.Object value) {
-      validate(fields()[4], value);
+      validate(fields()[5], value);
       this.payload = value;
-      fieldSetFlags()[4] = true;
+      fieldSetFlags()[5] = true;
       return this;
     }
 
@@ -495,7 +558,7 @@ public class Report extends org.apache.avro.specific.SpecificRecordBase implemen
       * @return True if the 'payload' field has been set, false otherwise.
       */
     public boolean hasPayload() {
-      return fieldSetFlags()[4];
+      return fieldSetFlags()[5];
     }
 
 
@@ -505,7 +568,7 @@ public class Report extends org.apache.avro.specific.SpecificRecordBase implemen
       */
     public org.observertc.webrtc.schemas.reports.Report.Builder clearPayload() {
       payload = null;
-      fieldSetFlags()[4] = false;
+      fieldSetFlags()[5] = false;
       return this;
     }
 
@@ -524,9 +587,9 @@ public class Report extends org.apache.avro.specific.SpecificRecordBase implemen
       * @return This builder.
       */
     public org.observertc.webrtc.schemas.reports.Report.Builder setType(org.observertc.webrtc.schemas.reports.ReportType value) {
-      validate(fields()[5], value);
+      validate(fields()[6], value);
       this.type = value;
-      fieldSetFlags()[5] = true;
+      fieldSetFlags()[6] = true;
       return this;
     }
 
@@ -535,7 +598,7 @@ public class Report extends org.apache.avro.specific.SpecificRecordBase implemen
       * @return True if the 'type' field has been set, false otherwise.
       */
     public boolean hasType() {
-      return fieldSetFlags()[5];
+      return fieldSetFlags()[6];
     }
 
 
@@ -545,7 +608,7 @@ public class Report extends org.apache.avro.specific.SpecificRecordBase implemen
       */
     public org.observertc.webrtc.schemas.reports.Report.Builder clearType() {
       type = null;
-      fieldSetFlags()[5] = false;
+      fieldSetFlags()[6] = false;
       return this;
     }
 
@@ -554,12 +617,13 @@ public class Report extends org.apache.avro.specific.SpecificRecordBase implemen
     public Report build() {
       try {
         Report record = new Report();
-        record.serviceUUID = fieldSetFlags()[0] ? this.serviceUUID : (java.lang.String) defaultValue(fields()[0]);
-        record.serviceName = fieldSetFlags()[1] ? this.serviceName : (java.lang.String) defaultValue(fields()[1]);
-        record.marker = fieldSetFlags()[2] ? this.marker : (java.lang.String) defaultValue(fields()[2]);
-        record.timestamp = fieldSetFlags()[3] ? this.timestamp : (java.lang.Long) defaultValue(fields()[3]);
-        record.payload = fieldSetFlags()[4] ? this.payload :  defaultValue(fields()[4]);
-        record.type = fieldSetFlags()[5] ? this.type : (org.observertc.webrtc.schemas.reports.ReportType) defaultValue(fields()[5]);
+        record.version = fieldSetFlags()[0] ? this.version : (java.lang.Integer) defaultValue(fields()[0]);
+        record.serviceUUID = fieldSetFlags()[1] ? this.serviceUUID : (java.lang.String) defaultValue(fields()[1]);
+        record.serviceName = fieldSetFlags()[2] ? this.serviceName : (java.lang.String) defaultValue(fields()[2]);
+        record.marker = fieldSetFlags()[3] ? this.marker : (java.lang.String) defaultValue(fields()[3]);
+        record.timestamp = fieldSetFlags()[4] ? this.timestamp : (java.lang.Long) defaultValue(fields()[4]);
+        record.payload = fieldSetFlags()[5] ? this.payload :  defaultValue(fields()[5]);
+        record.type = fieldSetFlags()[6] ? this.type : (org.observertc.webrtc.schemas.reports.ReportType) defaultValue(fields()[6]);
         return record;
       } catch (org.apache.avro.AvroMissingFieldException e) {
         throw e;

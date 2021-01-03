@@ -33,7 +33,9 @@ public class BigQuerySink extends Sink {
             if (Objects.isNull(requestBuilder)) {
                 String tableName = this.routes.get(entry.getEntryType());
                 if (Objects.isNull(tableName)) {
-                    logger.warn("There is no route defined for entry type {}", entry.getEntryType());
+                    logger.warn("{}: There is no route defined for entry type {}",
+                            this.getPipelineName(),
+                            entry.getEntryType());
                     continue;
                 }
                 TableId tableId = TableId.of(this.bigQueryService.getProjectId(),
@@ -48,7 +50,7 @@ public class BigQuerySink extends Sink {
         }
 
         if (requestbuilders.size() < 1) {
-            logger.info("No entries to send");
+            logger.info("{}: No entries to send", this.getPipelineName());
             return;
         }
 
@@ -63,12 +65,20 @@ public class BigQuerySink extends Sink {
             if (response.hasErrors()) {
                 // If any of the insertions failed, this lets you inspect the errors
                 for (Map.Entry<Long, List<BigQueryError>> errorEntry : response.getInsertErrors().entrySet()) {
-                    logger.error("{}: {}", errorEntry.getKey(), String.join(", \n",
-                            errorEntry.getValue().stream().map(Object::toString).collect(Collectors.toList())));
+                    logger.error("{}: Table: {}, ErrorEntryKey: {} ErrorResponse: {}",
+                            this.getPipelineName(),
+                            entryType,
+                            errorEntry.getKey(),
+                            String.join(", \n", errorEntry.getValue().stream().map(Object::toString).collect(Collectors.toList()))
+                    );
                     // inspect row error
                 }
             } else {
-                logger.info("To {} inserted {} rows", this.routes.get(entryType), counts.get(entryType));
+                logger.info("{}: {} rows inserted to inserted {}.",
+                        this.getPipelineName(),
+                        counts.get(entryType),
+                        this.routes.get(entryType)
+                );
             }
         }
     }

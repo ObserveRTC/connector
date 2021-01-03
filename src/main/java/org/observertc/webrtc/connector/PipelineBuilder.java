@@ -10,14 +10,17 @@ import org.observertc.webrtc.connector.sinks.Sink;
 import org.observertc.webrtc.connector.sinks.SinkBuilder;
 import org.observertc.webrtc.connector.sources.Source;
 import org.observertc.webrtc.connector.sources.SourceBuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.validation.constraints.NotNull;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 
 @Prototype
-public class PipelineBuilder extends AbstractBuilder implements Function<Map<String, Object>, Pipeline> {
-
+public class PipelineBuilder extends AbstractBuilder implements Function<Map<String, Object>, Optional<Pipeline>> {
+    private static final Logger logger = LoggerFactory.getLogger(PipelineBuilder.class);
     private Disposable disposable;
 
     public PipelineBuilder() {
@@ -25,13 +28,13 @@ public class PipelineBuilder extends AbstractBuilder implements Function<Map<Str
     }
 
     @Override
-    public Pipeline apply(Map<String, Object> source) throws Throwable {
+    public Optional<Pipeline> apply(Map<String, Object> source) throws Throwable {
         this.getConfigs().clear();
         this.withConfiguration(source);
         return this.build();
     }
 
-    public Pipeline build() {
+    public Optional<Pipeline> build() {
         Config config = this.convertAndValidate(Config.class);
         Pipeline result = new Pipeline()
                 .withName(config.name);
@@ -39,6 +42,10 @@ public class PipelineBuilder extends AbstractBuilder implements Function<Map<Str
         SourceBuilder sourceBuilder = new SourceBuilder();
         sourceBuilder.withConfiguration(config.source);
         Source source = sourceBuilder.build();
+        if (Objects.isNull(source)) {
+            logger.warn("Source was not build for pipeline {}, this pipeline cannot be built.", config.name);
+            return Optional.empty();
+        }
         result.withSource(source);
 
         EvaluatorBuilder evaluatorBuilder = new EvaluatorBuilder();
@@ -51,9 +58,13 @@ public class PipelineBuilder extends AbstractBuilder implements Function<Map<Str
         SinkBuilder sinkBuilder = new SinkBuilder();
         sinkBuilder.withConfiguration(config.sink);
         Sink sink = sinkBuilder.build();
+        if (Objects.isNull(sink)) {
+            logger.warn("Source was not build for pipeline {}, this pipeline cannot be built.", config.name);
+            return Optional.empty();
+        }
         result.withSink(sink);
 
-        return result;
+        return Optional.of(result);
     }
 
     public static class Config {
