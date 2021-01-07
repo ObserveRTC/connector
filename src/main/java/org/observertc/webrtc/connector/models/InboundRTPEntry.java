@@ -15,6 +15,8 @@
  */
 package org.observertc.webrtc.connector.models;
 
+import com.google.cloud.bigquery.Field;
+import com.google.cloud.bigquery.LegacySQLTypeName;
 import org.observertc.webrtc.schemas.reports.MediaType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -55,6 +57,7 @@ public class InboundRTPEntry implements Entry {
 	public static final String FEC_PACKETS_DISCARDED_FIELD_NAME = "FECPacketsDiscarded";
 	public static final String LAST_PACKET_RECEIVED_TIMESTAMP = "lastPacketReceivedTimestamp";
 	public static final String FEC_PACKETS_RECEIVED_FIELD_NAME = "FECPacketsReceived";
+	public static final String TRANSPORT_ID_FIELD_NAME = "transportId";
 
 	private static Logger logger = LoggerFactory.getLogger(InboundRTPEntry.class);
 
@@ -227,6 +230,10 @@ public class InboundRTPEntry implements Entry {
 		return this;
 	}
 
+	public InboundRTPEntry withTransportId(String transportId) {
+		this.values.put(TRANSPORT_ID_FIELD_NAME, transportId);
+		return this;
+	}
 	@Override
 	public Map<String, Object> toMap() {
 		return this.values;
@@ -236,5 +243,6 @@ public class InboundRTPEntry implements Entry {
 	public EntryType getEntryType() {
 		return EntryType.InboundRTP;
 	}
+
 
 }

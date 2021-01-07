@@ -59,7 +59,7 @@ public class PipelineBuilder extends AbstractBuilder implements Function<Map<Str
         sinkBuilder.withConfiguration(config.sink);
         Sink sink = sinkBuilder.build();
         if (Objects.isNull(sink)) {
-            logger.warn("Source was not build for pipeline {}, this pipeline cannot be built.", config.name);
+            logger.warn("Sink was not build for pipeline {}, this pipeline cannot be built.", config.name);
             return Optional.empty();
         }
         result.withSink(sink);

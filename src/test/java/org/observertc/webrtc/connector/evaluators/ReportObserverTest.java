@@ -33,6 +33,7 @@ class ReportObserverTest {
         types.put(observer.iceRemoteCandidateReport, ReportType.ICE_REMOTE_CANDIDATE);
         types.put(observer.iceCandidatePairReport, ReportType.ICE_CANDIDATE_PAIR);
         types.put(observer.userMediaErrorReport, ReportType.USER_MEDIA_ERROR);
+        types.put(observer.observerEventReport, ReportType.OBSERVER_EVENT);
         types.put(observer.trackReport, ReportType.TRACK);
         types.put(observer.unrecognizedReport, null);
 

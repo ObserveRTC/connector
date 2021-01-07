@@ -55,9 +55,10 @@ public class OutboundRTPEntry implements Entry {
 	public static final String TOTAL_ENCODED_TIME_FIELD_NAME = "totalEncodeTime";
 	public static final String TOTAL_PACKET_SEND_DELAY_FIELD_NAME = "totalPacketSendDelay";
 	public static final String TOTAL_ENCODED_BYTES_TARGET_FIELD_NAME = "totalEncodedBytesTarget";
+	public static final String TRANSPORT_ID_FIELD_NAME = "transportId";
 
 
-	private static Logger logger = LoggerFactory.getLogger(OutboundRTPEntry.class);
+    private static Logger logger = LoggerFactory.getLogger(OutboundRTPEntry.class);
 
 
 	private final Map<String, Object> values;
@@ -235,6 +236,11 @@ public class OutboundRTPEntry implements Entry {
 
 	public OutboundRTPEntry withKeyFramesEncoded(Long value) {
 		this.values.put(KEYFRAMES_ENCODED_FIELD_NAME, value);
+		return this;
+	}
+
+	public OutboundRTPEntry withTransportId(String value) {
+		this.values.put(TRANSPORT_ID_FIELD_NAME, value);
 		return this;
 	}
 

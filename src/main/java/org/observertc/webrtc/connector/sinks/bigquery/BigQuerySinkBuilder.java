@@ -2,10 +2,10 @@ package org.observertc.webrtc.connector.sinks.bigquery;
 
 import io.micronaut.context.annotation.Prototype;
 import org.observertc.webrtc.connector.configbuilders.AbstractBuilder;
+import org.observertc.webrtc.connector.datawarehouses.bigquery.SchemaCheckerJob;
 import org.observertc.webrtc.connector.models.EntryType;
 import org.observertc.webrtc.connector.sinks.Sink;
 import org.observertc.webrtc.connector.sinks.SinkTypeBuilder;
-import org.observertc.webrtc.connector.datawarehouses.bigquery.SchemaCheckerJob;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -39,6 +39,7 @@ public class BigQuerySinkBuilder extends AbstractBuilder implements SinkTypeBuil
         this.entryTypeMaps.put(EntryType.MediaSource, config.mediaSourcesTable);
         this.entryTypeMaps.put(EntryType.UserMediaError, config.userMediaErrorsTable);
         this.entryTypeMaps.put(EntryType.Track, config.trackReportsTable);
+        this.entryTypeMaps.put(EntryType.ObserverEvent, config.observerEventTable);
         BigQueryService bigQueryService = new BigQueryService(config.projectId, config.datasetId, config.credentialFile);
 
         if (config.schemaCheck.enabled) {
@@ -60,6 +61,7 @@ public class BigQuerySinkBuilder extends AbstractBuilder implements SinkTypeBuil
             schemaCheckerJob
                     .withCreateDatasetIfNotExists(config.schemaCheck.createDatasetIfNotExists)
                     .withCreateTableIfNotExists(config.schemaCheck.createTableIfNotExists)
+                    .withDeleteTableIfExists(config.schemaCheck.deleteTableIfExists)
                     .withDatasetId(config.datasetId)
                     .withProjectId(config.projectId);
             this.entryTypeMaps.entrySet()
@@ -92,6 +94,8 @@ public class BigQuerySinkBuilder extends AbstractBuilder implements SinkTypeBuil
             public boolean createDatasetIfNotExists = true;
 
             public boolean createTableIfNotExists = true;
+
+            public String deleteTableIfExists = null;
         }
 
         public String initiatedCallsTable = "InitiatedCalls";
@@ -119,6 +123,8 @@ public class BigQuerySinkBuilder extends AbstractBuilder implements SinkTypeBuil
         public String trackReportsTable = "TrackReports";
 
         public String userMediaErrorsTable = "UserMediaErrors";
+
+        public String observerEventTable = "UserMediaErrors";
 
     }
 }

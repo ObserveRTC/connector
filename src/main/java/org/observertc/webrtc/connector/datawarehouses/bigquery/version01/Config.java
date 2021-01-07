@@ -12,18 +12,21 @@ public class Config {
     public final Map<EntryType, String> tableNames;
     public final boolean createDatasetIfNotExists;
     public final boolean createTableIfNotExists;
+    public final String deleteTableIfExists;
 
     public Config(BigQuery bigQuery,
                   String projectId,
                   String datasetId,
                   Map<EntryType, String> tableNames,
                   boolean createDatasetIfNotExists,
-                  boolean createTableIfNotExists) {
+                  boolean createTableIfNotExists,
+                  String deleteTableIfExists) {
         this.bigQuery = bigQuery;
         this.projectId = projectId;
         this.datasetId = datasetId;
         this.tableNames = tableNames;
         this.createDatasetIfNotExists = createDatasetIfNotExists;
         this.createTableIfNotExists = createTableIfNotExists;
+        this.deleteTableIfExists = deleteTableIfExists;
     }
 }

@@ -92,6 +92,7 @@ public class ReportGenerator {
                 .setType(reportType)
                 .setTimestamp(1234L)
                 .setPayload(payload)
+                .setVersion(1)
                 .build();
         return result;
     }

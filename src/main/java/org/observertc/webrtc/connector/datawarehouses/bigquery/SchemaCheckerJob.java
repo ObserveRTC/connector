@@ -17,10 +17,10 @@
 package org.observertc.webrtc.connector.datawarehouses.bigquery;
 
 import com.google.cloud.bigquery.BigQuery;
-import org.observertc.webrtc.connector.models.EntryType;
 import org.observertc.webrtc.connector.datawarehouses.Job;
 import org.observertc.webrtc.connector.datawarehouses.Task;
 import org.observertc.webrtc.connector.datawarehouses.bigquery.version01.CreateTables;
+import org.observertc.webrtc.connector.models.EntryType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -40,6 +40,7 @@ public class SchemaCheckerJob extends Job {
 	private final Map<EntryType, String> tableNames;
 	private boolean createDatasetIfNotExists = false;
 	private boolean createTableIfNotExists = false;
+	private String deleteTableIfExists = null;
 
 	public SchemaCheckerJob(BigQuery bigQuery) {
 		this.tableNames = new HashMap<>();
@@ -73,6 +74,11 @@ public class SchemaCheckerJob extends Job {
 		return this;
 	}
 
+	public SchemaCheckerJob withDeleteTableIfExists(String value) {
+		this.deleteTableIfExists = value;
+		return this;
+	}
+
 	@Override
 	public void run() {
 		org.observertc.webrtc.connector.datawarehouses.bigquery.version01.Config config;
@@ -82,7 +88,8 @@ public class SchemaCheckerJob extends Job {
 				this.datasetId,
 				this.tableNames,
 				this.createDatasetIfNotExists,
-				this.createTableIfNotExists);
+				this.createTableIfNotExists,
+				this.deleteTableIfExists);
 		Job createTables = new CreateTables(config);
 		this.withTask(createTables);
 
@@ -97,7 +104,8 @@ public class SchemaCheckerJob extends Job {
 				this.datasetId,
 				this.tableNames,
 				this.createDatasetIfNotExists,
-				this.createTableIfNotExists);
+				this.createTableIfNotExists,
+				this.deleteTableIfExists);
 		Job createTables = new CreateTables(config);
 
 		return new Job(VERSION_01_JOB_NAME)

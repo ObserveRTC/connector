@@ -23,6 +23,7 @@ class InboundRTPMapper implements Function<Report, InboundRTPEntry> {
                 .withBrowserId(inboundRTP.getBrowserId())
                 .withPeerConnectionUUID(inboundRTP.getPeerConnectionUUID())
                 //
+                .withTransportId(inboundRTP.getTransportId())
                 .withSSRC(inboundRTP.getSsrc())
                 .withMediaType(inboundRTP.getMediaType())
                 .withBytesReceived(inboundRTP.getBytesReceived())
@@ -46,6 +47,8 @@ class InboundRTPMapper implements Function<Report, InboundRTPEntry> {
                 .withFECPacketsReceived(inboundRTP.getFecPacketsReceived())
                 //
                 ;
+
         return entry;
     }
+
 }

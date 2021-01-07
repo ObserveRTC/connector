@@ -18,7 +18,7 @@ class JoinedPeerConnectionMapper implements Function<Report, JoinedPeerConnectio
                 .withCallName(joinedPeerConnection.getCallName())
                 .withMarker(report.getMarker())
                 .withTimestamp(report.getTimestamp())
-                .withTimeZone("NOT IMPLEMENTED")
+                .withTimeZone(joinedPeerConnection.getTimeZoneId())
                 //
                 .withMediaUnitId(joinedPeerConnection.getMediaUnitId())
                 .withUserId(joinedPeerConnection.getUserId())

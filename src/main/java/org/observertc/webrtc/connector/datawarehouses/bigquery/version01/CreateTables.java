@@ -46,6 +46,7 @@ public class CreateTables extends Job {
 	private static final String CREATE_MEDIA_SOURCES_TABLE_TASK_NAME = "CreateMediaSourcesTableTask";
 	private static final String CREATE_TRACK_REPORTS_TABLE_TASK_NAME = "CreateTrackReportsTableTask";
 	private static final String CREATE_USER_MEDIA_ERRORS_TASK_NAME = "CreateUserMediaErrorsTableTask";
+	private static final String CREATE_OBSERVER_EVENT_TABLE_TASK_NAME = "CreateObserverEventTableTask";
 
 	private static volatile boolean run = false;
 
@@ -55,14 +56,17 @@ public class CreateTables extends Job {
 	private final Map<EntryType, String> tableNames;
 	private final boolean createDatasetIfNotExists;
 	private final boolean createTableIfNotExists;
+	private String deleteTableIfExists;
+
 
 	public CreateTables(Config config) {
 		this.tableNames = config.tableNames;
 		this.bigQuery = config.bigQuery;
 		this.projectId = config.projectId;
 		this.datasetId = config.datasetId;
-		this.createTableIfNotExists = config.createDatasetIfNotExists;
-		this.createDatasetIfNotExists = config.createTableIfNotExists;
+		this.createDatasetIfNotExists = config.createDatasetIfNotExists;
+		this.createTableIfNotExists = config.createTableIfNotExists;
+		this.deleteTableIfExists = config.deleteTableIfExists;
 
 		Task createDataset = this.makeCreateDatasetTask();
 		Task createInitiatedCallsTable = this.makeCreateInitiatedCallsTableTask();
@@ -147,7 +151,7 @@ public class CreateTables extends Job {
 						,
 						Field.newBuilder(InitiatedCallEntry.MARKER_FIELD_NAME, LegacySQLTypeName.STRING).setMode(Field.Mode.NULLABLE).build()
 				);
-				createTableIfNotExists(tableId, schema);
+				applySchemaForTable(tableId, schema);
 			}
 		};
 	}
@@ -175,7 +179,7 @@ public class CreateTables extends Job {
 						,
 						Field.newBuilder(FinishedCallEntry.MARKER_FIELD_NAME, LegacySQLTypeName.STRING).setMode(Field.Mode.NULLABLE).build()
 				);
-				createTableIfNotExists(tableId, schema);
+				applySchemaForTable(tableId, schema);
 			}
 		};
 	}
@@ -214,7 +218,7 @@ public class CreateTables extends Job {
 						Field.newBuilder(JoinedPeerConnectionEntry.MARKER_FIELD_NAME, LegacySQLTypeName.STRING).setMode(Field.Mode.NULLABLE).build()
 
 				);
-				createTableIfNotExists(tableId, schema);
+				applySchemaForTable(tableId, schema);
 			}
 		};
 	}
@@ -253,7 +257,7 @@ public class CreateTables extends Job {
 						Field.newBuilder(DetachedPeerConnectionEntry.MARKER_FIELD_NAME, LegacySQLTypeName.STRING).setMode(Field.Mode.NULLABLE).build()
 
 				);
-				createTableIfNotExists(tableId, schema);
+				applySchemaForTable(tableId, schema);
 			}
 		};
 	}
@@ -290,7 +294,7 @@ public class CreateTables extends Job {
 						Field.newBuilder(UserMediaErrorEntry.MARKER_FIELD_NAME, LegacySQLTypeName.STRING).setMode(Field.Mode.NULLABLE).build()
 
 				);
-				createTableIfNotExists(tableId, schema);
+				applySchemaForTable(tableId, schema);
 			}
 		};
 	}
@@ -336,12 +340,12 @@ public class CreateTables extends Job {
 						,
 						Field.newBuilder(RemoteInboundRTPEntry.MEDIA_TYPE_FIELD_NAME, LegacySQLTypeName.STRING).setMode(Field.Mode.NULLABLE).build()
 						,
-						Field.newBuilder(RemoteInboundRTPEntry.TRANSPORT_ID_FIELD_NAME, LegacySQLTypeName.STRING).setMode(Field.Mode.REQUIRED).build()
+						Field.newBuilder(RemoteInboundRTPEntry.TRANSPORT_ID_FIELD_NAME, LegacySQLTypeName.STRING).setMode(Field.Mode.NULLABLE).build()
 						,
 						Field.newBuilder(RemoteInboundRTPEntry.MARKER_FIELD_NAME, LegacySQLTypeName.STRING).setMode(Field.Mode.NULLABLE).build()
 
 				);
-				createTableIfNotExists(tableId, schema);
+				applySchemaForTable(tableId, schema);
 			}
 		};
 	}
@@ -369,7 +373,7 @@ public class CreateTables extends Job {
 						,
 						Field.newBuilder(InboundRTPEntry.USER_ID_FIELD_NAME, LegacySQLTypeName.STRING).setMode(Field.Mode.NULLABLE).build()
 						,
-						Field.newBuilder(InboundRTPEntry.BROWSERID_FIELD_NAME, LegacySQLTypeName.STRING).setMode(Field.Mode.REQUIRED).build()
+						Field.newBuilder(InboundRTPEntry.BROWSERID_FIELD_NAME, LegacySQLTypeName.STRING).setMode(Field.Mode.NULLABLE).build()
 						,
 						Field.newBuilder(InboundRTPEntry.PEER_CONNECTION_UUID_FIELD_NAME, LegacySQLTypeName.STRING).setMode(Field.Mode.REQUIRED).build()
 						,
@@ -418,11 +422,13 @@ public class CreateTables extends Job {
 						,
 						Field.newBuilder(InboundRTPEntry.FEC_PACKETS_RECEIVED_FIELD_NAME, LegacySQLTypeName.INTEGER).setMode(Field.Mode.NULLABLE).build()
 						,
+						Field.newBuilder(InboundRTPEntry.TRANSPORT_ID_FIELD_NAME, LegacySQLTypeName.STRING).setMode(Field.Mode.NULLABLE).build()
+						,
 						Field.newBuilder(InboundRTPEntry.MARKER_FIELD_NAME, LegacySQLTypeName.STRING).setMode(Field.Mode.NULLABLE).build()
 
 				);
 
-				createTableIfNotExists(tableId, schema);
+				applySchemaForTable(tableId, schema);
 			}
 		};
 	}
@@ -495,10 +501,12 @@ public class CreateTables extends Job {
 						,
 						Field.newBuilder(OutboundRTPEntry.TOTAL_ENCODED_BYTES_TARGET_FIELD_NAME, LegacySQLTypeName.INTEGER).setMode(Field.Mode.NULLABLE).build()
 						,
+						Field.newBuilder(OutboundRTPEntry.TRANSPORT_ID_FIELD_NAME, LegacySQLTypeName.STRING).setMode(Field.Mode.NULLABLE).build()
+						,
 						Field.newBuilder(OutboundRTPEntry.MARKER_FIELD_NAME, LegacySQLTypeName.STRING).setMode(Field.Mode.NULLABLE).build()
 
 				);
-				createTableIfNotExists(tableId, schema);
+				applySchemaForTable(tableId, schema);
 			}
 		};
 	}
@@ -568,7 +576,7 @@ public class CreateTables extends Job {
 						,
 						Field.newBuilder(ICECandidatePairEntry.MARKER_FIELD_NAME, LegacySQLTypeName.STRING).setMode(Field.Mode.NULLABLE).build()
 				);
-				createTableIfNotExists(tableId, schema);
+				applySchemaForTable(tableId, schema);
 			}
 		};
 	}
@@ -618,7 +626,7 @@ public class CreateTables extends Job {
 						,
 						Field.newBuilder(ICELocalCandidateEntry.MARKER_FIELD_NAME, LegacySQLTypeName.STRING).setMode(Field.Mode.NULLABLE).build()
 				);
-				createTableIfNotExists(tableId, schema);
+				applySchemaForTable(tableId, schema);
 			}
 		};
 	}
@@ -668,7 +676,7 @@ public class CreateTables extends Job {
 						,
 						Field.newBuilder(ICERemoteCandidateEntry.MARKER_FIELD_NAME, LegacySQLTypeName.STRING).setMode(Field.Mode.NULLABLE).build()
 				);
-				createTableIfNotExists(tableId, schema);
+				applySchemaForTable(tableId, schema);
 			}
 		};
 	}
@@ -721,7 +729,46 @@ public class CreateTables extends Job {
 						,
 						Field.newBuilder(MediaSourceEntry.MARKER_FIELD_NAME, LegacySQLTypeName.STRING).setMode(Field.Mode.NULLABLE).build()
 				);
-				createTableIfNotExists(tableId, schema);
+				applySchemaForTable(tableId, schema);
+			}
+		};
+	}
+
+	private Task makeObserverEventTableTask() {
+
+		return new AbstractTask(CREATE_OBSERVER_EVENT_TABLE_TASK_NAME) {
+
+			@Override
+			protected void execute() {
+				String mediaSourcesTable = tableNames.get(EntryType.ObserverEvent);
+				if (Objects.isNull(mediaSourcesTable)) {
+					logger.warn("Table name for entry type {} has not been declared for {}", EntryType.MediaSource, CreateTables.class.getSimpleName());
+					return;
+				}
+				TableId tableId = TableId.of(projectId, datasetId, mediaSourcesTable);
+				Schema schema = Schema.of(
+						Field.newBuilder(ObserverEventEntry.SERVICE_UUID_FIELD_NAME, LegacySQLTypeName.STRING).setMode(Field.Mode.REQUIRED).build()
+						,
+						Field.newBuilder(ObserverEventEntry.SERVICE_NAME_FIELD_NAME, LegacySQLTypeName.STRING).setMode(Field.Mode.NULLABLE).build()
+						,
+						Field.newBuilder(ObserverEventEntry.MEDIA_UNIT_ID_FIELD_NAME, LegacySQLTypeName.STRING).setMode(Field.Mode.NULLABLE).build()
+						,
+						Field.newBuilder(ObserverEventEntry.CALL_NAME_FIELD_NAME, LegacySQLTypeName.STRING).setMode(Field.Mode.NULLABLE).build()
+						,
+						Field.newBuilder(ObserverEventEntry.USER_ID_FIELD_NAME, LegacySQLTypeName.STRING).setMode(Field.Mode.NULLABLE).build()
+						,
+						Field.newBuilder(ObserverEventEntry.BROWSERID_FIELD_NAME, LegacySQLTypeName.STRING).setMode(Field.Mode.NULLABLE).build()
+						,
+						Field.newBuilder(ObserverEventEntry.PEER_CONNECTION_UUID_FIELD_NAME, LegacySQLTypeName.STRING).setMode(Field.Mode.REQUIRED).build()
+						,
+						Field.newBuilder(ObserverEventEntry.TIMESTAMP_FIELD_NAME, LegacySQLTypeName.INTEGER).setMode(Field.Mode.REQUIRED).build()
+						,
+						Field.newBuilder(ObserverEventEntry.EVENT_TYPE_FIELD_NAME, LegacySQLTypeName.STRING).setMode(Field.Mode.NULLABLE).build()
+						,
+						Field.newBuilder(ObserverEventEntry.MESSAGE_FIELD_NAME, LegacySQLTypeName.STRING).setMode(Field.Mode.NULLABLE).build()
+
+				);
+				applySchemaForTable(tableId, schema);
 			}
 		};
 	}
@@ -805,17 +852,29 @@ public class CreateTables extends Job {
 						,
 						Field.newBuilder(TrackEntry.MARKER_FIELD_NAME, LegacySQLTypeName.STRING).setMode(Field.Mode.NULLABLE).build()
 				);
-				createTableIfNotExists(tableId, schema);
+				applySchemaForTable(tableId, schema);
 			}
 		};
 	}
 
 
-	private void createTableIfNotExists(TableId tableId, Schema schema) {
-		logger.info("Checking table {} existance in dataset: {}, project: {}", tableId.getTable(), tableId.getDataset(), tableId.getProject());
+	private void applySchemaForTable(TableId tableId, Schema schema) {
+		logger.info("Checking table {} exist in dataset: {}, project: {}", tableId.getTable(), tableId.getDataset(), tableId.getProject());
 		Table table = bigQuery.getTable(tableId);
+
 		if (table != null && table.exists()) {
-			return;
+			if (Objects.nonNull(this.deleteTableIfExists) && this.deleteTableIfExists.equals(tableId.getTable())) {
+				logger.info("Delete table is on for {}, and the pattern matched now", this.deleteTableIfExists);
+				try {
+					bigQuery.delete(tableId);
+					logger.info("Table {} is successfully deleted", tableId.getTable());
+				} catch (Exception ex) {
+					logger.error("Cannot delete table " + tableId.toString() + ", some error happened", ex);
+					return;
+				}
+			} else {
+				return;
+			}
 		}
 		if (!this.createTableIfNotExists) {
 			return;
@@ -824,6 +883,7 @@ public class CreateTables extends Job {
 			TableDefinition tableDefinition = StandardTableDefinition.of(schema);
 			TableInfo tableInfo = TableInfo.newBuilder(tableId, tableDefinition).build();
 			bigQuery.create(tableInfo);
+
 			logger.info("Table {} is successfully created", tableId.getTable());
 		} catch (BigQueryException e) {
 			logger.error("Error during table creation. Table: " + tableId.getTable(), e);

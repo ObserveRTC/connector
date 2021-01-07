@@ -18,7 +18,7 @@ class DetachedPeerConnectionMapper implements Function<Report, DetachedPeerConne
                 .withCallName(detachedPeerConnection.getCallName())
                 .withMarker(report.getMarker())
                 .withTimestamp(report.getTimestamp())
-                .withTimeZone("NOT IMPLEMENTED")
+                .withTimeZone(detachedPeerConnection.getTimeZoneId())
                 //
                 .withMediaUnitId(detachedPeerConnection.getMediaUnitId())
                 .withUserId(detachedPeerConnection.getUserId())

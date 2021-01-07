@@ -10,8 +10,14 @@ public enum EntryType {
      DetachedPeerConnection,
      OutboundRTP,
      Track,
+     MediaSource,
+     UserMediaError,
+     ICERemoteCandidate,
+     ICELocalCandidate,
+     ICECandidatePair,
+     ObserverEvent,
      // for types we have no idea
-     UNKNOWN, MediaSource, UserMediaError, ICERemoteCandidate, ICELocalCandidate, ICECandidatePair,
+     UNKNOWN,
 
 
 

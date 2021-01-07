@@ -15,8 +15,8 @@ import org.apache.avro.message.SchemaStore;
 /** Detached Peer Connection payload. Contains information about a peer connection detached from a call */
 @org.apache.avro.specific.AvroGenerated
 public class DetachedPeerConnection extends org.apache.avro.specific.SpecificRecordBase implements org.apache.avro.specific.SpecificRecord {
-  private static final long serialVersionUID = 8749270849342106642L;
-  public static final org.apache.avro.Schema SCHEMA$ = new org.apache.avro.Schema.Parser().parse("{\"type\":\"record\",\"name\":\"DetachedPeerConnection\",\"namespace\":\"org.observertc.webrtc.schemas.reports\",\"doc\":\"Detached Peer Connection payload. Contains information about a peer connection detached from a call\",\"fields\":[{\"name\":\"mediaUnitId\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}],\"default\":null},{\"name\":\"callUUID\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"}},{\"name\":\"callName\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}],\"default\":null},{\"name\":\"userId\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}],\"default\":null},{\"name\":\"browserId\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}],\"default\":null},{\"name\":\"peerConnectionUUID\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"}}]}");
+  private static final long serialVersionUID = 1606076504019173415L;
+  public static final org.apache.avro.Schema SCHEMA$ = new org.apache.avro.Schema.Parser().parse("{\"type\":\"record\",\"name\":\"DetachedPeerConnection\",\"namespace\":\"org.observertc.webrtc.schemas.reports\",\"doc\":\"Detached Peer Connection payload. Contains information about a peer connection detached from a call\",\"fields\":[{\"name\":\"mediaUnitId\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}],\"default\":null},{\"name\":\"callUUID\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"}},{\"name\":\"callName\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}],\"default\":null},{\"name\":\"userId\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}],\"default\":null},{\"name\":\"browserId\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}],\"default\":null},{\"name\":\"timeZoneId\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}],\"default\":null},{\"name\":\"peerConnectionUUID\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"}}]}");
   public static org.apache.avro.Schema getClassSchema() { return SCHEMA$; }
 
   private static SpecificData MODEL$ = new SpecificData();
@@ -77,6 +77,7 @@ public class DetachedPeerConnection extends org.apache.avro.specific.SpecificRec
    private java.lang.String callName;
    private java.lang.String userId;
    private java.lang.String browserId;
+   private java.lang.String timeZoneId;
    private java.lang.String peerConnectionUUID;
 
   /**
@@ -93,14 +94,16 @@ public class DetachedPeerConnection extends org.apache.avro.specific.SpecificRec
    * @param callName The new value for callName
    * @param userId The new value for userId
    * @param browserId The new value for browserId
+   * @param timeZoneId The new value for timeZoneId
    * @param peerConnectionUUID The new value for peerConnectionUUID
    */
-  public DetachedPeerConnection(java.lang.String mediaUnitId, java.lang.String callUUID, java.lang.String callName, java.lang.String userId, java.lang.String browserId, java.lang.String peerConnectionUUID) {
+  public DetachedPeerConnection(java.lang.String mediaUnitId, java.lang.String callUUID, java.lang.String callName, java.lang.String userId, java.lang.String browserId, java.lang.String timeZoneId, java.lang.String peerConnectionUUID) {
     this.mediaUnitId = mediaUnitId;
     this.callUUID = callUUID;
     this.callName = callName;
     this.userId = userId;
     this.browserId = browserId;
+    this.timeZoneId = timeZoneId;
     this.peerConnectionUUID = peerConnectionUUID;
   }
 
@@ -114,7 +117,8 @@ public class DetachedPeerConnection extends org.apache.avro.specific.SpecificRec
     case 2: return callName;
     case 3: return userId;
     case 4: return browserId;
-    case 5: return peerConnectionUUID;
+    case 5: return timeZoneId;
+    case 6: return peerConnectionUUID;
     default: throw new IndexOutOfBoundsException("Invalid index: " + field$);
     }
   }
@@ -128,7 +132,8 @@ public class DetachedPeerConnection extends org.apache.avro.specific.SpecificRec
     case 2: callName = value$ != null ? value$.toString() : null; break;
     case 3: userId = value$ != null ? value$.toString() : null; break;
     case 4: browserId = value$ != null ? value$.toString() : null; break;
-    case 5: peerConnectionUUID = value$ != null ? value$.toString() : null; break;
+    case 5: timeZoneId = value$ != null ? value$.toString() : null; break;
+    case 6: peerConnectionUUID = value$ != null ? value$.toString() : null; break;
     default: throw new IndexOutOfBoundsException("Invalid index: " + field$);
     }
   }
@@ -179,6 +184,16 @@ public class DetachedPeerConnection extends org.apache.avro.specific.SpecificRec
    */
   public java.lang.String getBrowserId() {
     return browserId;
+  }
+
+
+
+  /**
+   * Gets the value of the 'timeZoneId' field.
+   * @return The value of the 'timeZoneId' field.
+   */
+  public java.lang.String getTimeZoneId() {
+    return timeZoneId;
   }
 
 
@@ -239,6 +254,7 @@ public class DetachedPeerConnection extends org.apache.avro.specific.SpecificRec
     private java.lang.String callName;
     private java.lang.String userId;
     private java.lang.String browserId;
+    private java.lang.String timeZoneId;
     private java.lang.String peerConnectionUUID;
 
     /** Creates a new Builder */
@@ -272,9 +288,13 @@ public class DetachedPeerConnection extends org.apache.avro.specific.SpecificRec
         this.browserId = data().deepCopy(fields()[4].schema(), other.browserId);
         fieldSetFlags()[4] = other.fieldSetFlags()[4];
       }
-      if (isValidValue(fields()[5], other.peerConnectionUUID)) {
-        this.peerConnectionUUID = data().deepCopy(fields()[5].schema(), other.peerConnectionUUID);
+      if (isValidValue(fields()[5], other.timeZoneId)) {
+        this.timeZoneId = data().deepCopy(fields()[5].schema(), other.timeZoneId);
         fieldSetFlags()[5] = other.fieldSetFlags()[5];
+      }
+      if (isValidValue(fields()[6], other.peerConnectionUUID)) {
+        this.peerConnectionUUID = data().deepCopy(fields()[6].schema(), other.peerConnectionUUID);
+        fieldSetFlags()[6] = other.fieldSetFlags()[6];
       }
     }
 
@@ -304,9 +324,13 @@ public class DetachedPeerConnection extends org.apache.avro.specific.SpecificRec
         this.browserId = data().deepCopy(fields()[4].schema(), other.browserId);
         fieldSetFlags()[4] = true;
       }
-      if (isValidValue(fields()[5], other.peerConnectionUUID)) {
-        this.peerConnectionUUID = data().deepCopy(fields()[5].schema(), other.peerConnectionUUID);
+      if (isValidValue(fields()[5], other.timeZoneId)) {
+        this.timeZoneId = data().deepCopy(fields()[5].schema(), other.timeZoneId);
         fieldSetFlags()[5] = true;
+      }
+      if (isValidValue(fields()[6], other.peerConnectionUUID)) {
+        this.peerConnectionUUID = data().deepCopy(fields()[6].schema(), other.peerConnectionUUID);
+        fieldSetFlags()[6] = true;
       }
     }
 
@@ -511,6 +535,46 @@ public class DetachedPeerConnection extends org.apache.avro.specific.SpecificRec
     }
 
     /**
+      * Gets the value of the 'timeZoneId' field.
+      * @return The value.
+      */
+    public java.lang.String getTimeZoneId() {
+      return timeZoneId;
+    }
+
+
+    /**
+      * Sets the value of the 'timeZoneId' field.
+      * @param value The value of 'timeZoneId'.
+      * @return This builder.
+      */
+    public org.observertc.webrtc.schemas.reports.DetachedPeerConnection.Builder setTimeZoneId(java.lang.String value) {
+      validate(fields()[5], value);
+      this.timeZoneId = value;
+      fieldSetFlags()[5] = true;
+      return this;
+    }
+
+    /**
+      * Checks whether the 'timeZoneId' field has been set.
+      * @return True if the 'timeZoneId' field has been set, false otherwise.
+      */
+    public boolean hasTimeZoneId() {
+      return fieldSetFlags()[5];
+    }
+
+
+    /**
+      * Clears the value of the 'timeZoneId' field.
+      * @return This builder.
+      */
+    public org.observertc.webrtc.schemas.reports.DetachedPeerConnection.Builder clearTimeZoneId() {
+      timeZoneId = null;
+      fieldSetFlags()[5] = false;
+      return this;
+    }
+
+    /**
       * Gets the value of the 'peerConnectionUUID' field.
       * @return The value.
       */
@@ -525,9 +589,9 @@ public class DetachedPeerConnection extends org.apache.avro.specific.SpecificRec
       * @return This builder.
       */
     public org.observertc.webrtc.schemas.reports.DetachedPeerConnection.Builder setPeerConnectionUUID(java.lang.String value) {
-      validate(fields()[5], value);
+      validate(fields()[6], value);
       this.peerConnectionUUID = value;
-      fieldSetFlags()[5] = true;
+      fieldSetFlags()[6] = true;
       return this;
     }
 
@@ -536,7 +600,7 @@ public class DetachedPeerConnection extends org.apache.avro.specific.SpecificRec
       * @return True if the 'peerConnectionUUID' field has been set, false otherwise.
       */
     public boolean hasPeerConnectionUUID() {
-      return fieldSetFlags()[5];
+      return fieldSetFlags()[6];
     }
 
 
@@ -546,7 +610,7 @@ public class DetachedPeerConnection extends org.apache.avro.specific.SpecificRec
       */
     public org.observertc.webrtc.schemas.reports.DetachedPeerConnection.Builder clearPeerConnectionUUID() {
       peerConnectionUUID = null;
-      fieldSetFlags()[5] = false;
+      fieldSetFlags()[6] = false;
       return this;
     }
 
@@ -560,7 +624,8 @@ public class DetachedPeerConnection extends org.apache.avro.specific.SpecificRec
         record.callName = fieldSetFlags()[2] ? this.callName : (java.lang.String) defaultValue(fields()[2]);
         record.userId = fieldSetFlags()[3] ? this.userId : (java.lang.String) defaultValue(fields()[3]);
         record.browserId = fieldSetFlags()[4] ? this.browserId : (java.lang.String) defaultValue(fields()[4]);
-        record.peerConnectionUUID = fieldSetFlags()[5] ? this.peerConnectionUUID : (java.lang.String) defaultValue(fields()[5]);
+        record.timeZoneId = fieldSetFlags()[5] ? this.timeZoneId : (java.lang.String) defaultValue(fields()[5]);
+        record.peerConnectionUUID = fieldSetFlags()[6] ? this.peerConnectionUUID : (java.lang.String) defaultValue(fields()[6]);
         return record;
       } catch (org.apache.avro.AvroMissingFieldException e) {
         throw e;
@@ -627,6 +692,14 @@ public class DetachedPeerConnection extends org.apache.avro.specific.SpecificRec
       out.writeString(this.browserId);
     }
 
+    if (this.timeZoneId == null) {
+      out.writeIndex(0);
+      out.writeNull();
+    } else {
+      out.writeIndex(1);
+      out.writeString(this.timeZoneId);
+    }
+
     out.writeString(this.peerConnectionUUID);
 
   }
@@ -666,10 +739,17 @@ public class DetachedPeerConnection extends org.apache.avro.specific.SpecificRec
         this.browserId = in.readString();
       }
 
+      if (in.readIndex() != 1) {
+        in.readNull();
+        this.timeZoneId = null;
+      } else {
+        this.timeZoneId = in.readString();
+      }
+
       this.peerConnectionUUID = in.readString();
 
     } else {
-      for (int i = 0; i < 6; i++) {
+      for (int i = 0; i < 7; i++) {
         switch (fieldOrder[i].pos()) {
         case 0:
           if (in.readIndex() != 1) {
@@ -712,6 +792,15 @@ public class DetachedPeerConnection extends org.apache.avro.specific.SpecificRec
           break;
 
         case 5:
+          if (in.readIndex() != 1) {
+            in.readNull();
+            this.timeZoneId = null;
+          } else {
+            this.timeZoneId = in.readString();
+          }
+          break;
+
+        case 6:
           this.peerConnectionUUID = in.readString();
           break;
 

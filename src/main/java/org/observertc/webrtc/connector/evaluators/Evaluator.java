@@ -149,4 +149,9 @@ public class Evaluator extends Observable<List<Entry>> implements Observer<Repor
         this.reportObserver.detachedPeerConnectionCallReport.map(mapper).subscribe(this.entrySink);
         return this;
     }
+
+    Evaluator withObserverEventMapper(Function<Report, ObserverEventEntry> mapper) {
+        this.reportObserver.observerEventReport.map(mapper).subscribe(this.entrySink);
+        return this;
+    }
 }

@@ -2,6 +2,7 @@ package org.observertc.webrtc.connector.models;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 public class FinishedCallEntry implements Entry{
     public static final String SERVICE_UUID_FIELD_NAME = "serviceUUID";

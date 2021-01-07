@@ -75,6 +75,11 @@ public class EvaluatorBuilder extends AbstractBuilder  {
             result.withTrackMapper(mapper);
         }
 
+        if (config.evaluateObserverEvents) {
+            Function<Report, ObserverEventEntry> mapper = new ObserverEventMapper();
+            result.withObserverEventMapper(mapper);
+        }
+
         return result
                 .withBufferThresholdNum(config.bufferThresholdNum)
                 .withBufferThresholdInS(config.bufferThresholdInS);
@@ -96,5 +101,6 @@ public class EvaluatorBuilder extends AbstractBuilder  {
         public boolean evaluateUserMediaError = true;
         public boolean evaluateMediaSources = true;
         public boolean evaluateTracks = true;
+        public boolean evaluateObserverEvents = true;
     }
 }

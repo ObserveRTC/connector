@@ -44,6 +44,7 @@ class ReportObserver implements Observer<Report> {
 	public final PublishSubject<Report> mediaSourceReport = PublishSubject.create();
 	public final PublishSubject<Report> userMediaErrorReport = PublishSubject.create();
 
+	public final PublishSubject<Report> observerEventReport = PublishSubject.create();
 	public final PublishSubject<Report> iceRemoteCandidateReport = PublishSubject.create();
 	public final PublishSubject<Report> iceLocalCandidateReport = PublishSubject.create();
 	public final PublishSubject<Report> iceCandidatePairReport = PublishSubject.create();
@@ -149,6 +150,11 @@ class ReportObserver implements Observer<Report> {
 			case TRACK:
 				this.trackReport.onNext(report);
 				break;
+			case OBSERVER_EVENT:
+				this.observerEventReport.onNext(report);
+				break;
+			case EXTENSION:
+			case UNKNOWN:
 			default:
 				this.processUnrecognizedReport(report);
 				break;

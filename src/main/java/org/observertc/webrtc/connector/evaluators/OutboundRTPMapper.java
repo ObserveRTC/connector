@@ -31,6 +31,7 @@ class OutboundRTPMapper implements Function<Report, OutboundRTPEntry> {
                 .withFramesEncoded(outboundRTP.getFramesEncoded())
                 .withHeaderBytesSent(outboundRTP.getHeaderBytesSent())
                 .withKeyFramesEncoded(outboundRTP.getKeyFramesEncoded())
+                .withTransportId(outboundRTP.getTransportID())
                 .withNackCount(outboundRTP.getNackCount())
                 .withPacketsSent(outboundRTP.getPacketsSent())
                 .withPLICount(outboundRTP.getPliCount())
