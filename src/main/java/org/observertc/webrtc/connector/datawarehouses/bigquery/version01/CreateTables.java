@@ -82,7 +82,7 @@ public class CreateTables extends Job {
 		Task createMediaSources = this.makeMediaSourcesTableTask();
 		Task createTrackReports = this.makeTrackReportsTableTask();
 		Task createUserMediaErrors = this.makeUserMediaTableTask();
-
+		Task createObserverEvents = this.makeObserverEventTableTask();
 		this.withTask(createDataset)
 				.withTask(createInitiatedCallsTable, createDataset)
 				.withTask(createFinishedCallsTable, createDataset)
@@ -97,6 +97,7 @@ public class CreateTables extends Job {
 				.withTask(createMediaSources, createDataset)
 				.withTask(createTrackReports, createDataset)
 				.withTask(createUserMediaErrors, createDataset)
+				.withTask(createObserverEvents, createDataset)
 		;
 	}
 
