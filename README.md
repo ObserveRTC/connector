@@ -1,6 +1,6 @@
 WebRTC-Observer Report Connector Service
 ===
-WebRTC applications integrated with [WebExtrApp](https://github.com/ObserveRTC/integrations) 
+WebRTC applications integrated with [observer.js](https://github.com/ObserveRTC/integrations) 
 forward their reports to the [WebRTC-Observer](https://github.com/ObserveRTC/webrtc-observer) service.
 WebRTC-Observer creates [Reports](https://observertc.org/docs/references/reports/).
 
