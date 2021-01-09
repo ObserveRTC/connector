@@ -1,4 +1,4 @@
-package org.observertc.webrtc.connector.evaluators;
+package org.observertc.webrtc.connector.transformations;
 
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.core.Observer;
@@ -37,9 +37,9 @@ class ReportObserverTest {
         types.put(observer.trackReport, ReportType.TRACK);
         types.put(observer.unrecognizedReport, null);
 
+
         types
                 .entrySet()
-                .stream()
                 .forEach(entry -> testItWorks(observer, entry.getKey(), entry.getValue())
                 );
     }

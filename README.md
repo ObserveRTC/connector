@@ -29,7 +29,7 @@ source:
   type: SourceType
   # SourceType specific configurations
   config: {}
-evaluator:
+mapper:
   # Evaluator configurations
 sink:
   type: SinkType
@@ -58,14 +58,14 @@ the following configurations you can apply:
 
 ### Evaluators
 
-Under the `evaluator` property 
+Under the `mapper` property 
 the following configurations you can change
 
 ```yaml
-    # determines the number of Entries the evaluator 
+    # determines the number of Entries the mapper 
     # holds in the buffer before it sends to the sink
     bufferThresholdNum: 10000 # <- default
-    # determines the number of seconds the evaluator 
+    # determines the number of seconds the mapper 
     # wait up until it sends the list of Entries anyway 
     # regardless if it reached the number defined as threshold or not. 
     bufferThresholdInS: 30 # <- default

@@ -4,7 +4,7 @@ import io.reactivex.rxjava3.annotations.NonNull;
 import io.reactivex.rxjava3.core.Observer;
 import io.reactivex.rxjava3.disposables.Disposable;
 import org.observertc.webrtc.connector.Pipeline;
-import org.observertc.webrtc.connector.models.Entry;
+import org.observertc.webrtc.schemas.reports.Report;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
-public abstract class Sink implements Observer<List<Entry>> {
+public abstract class Sink implements Observer<List<Report>> {
     private static final Logger logger = LoggerFactory.getLogger(Sink.class);
     private Optional<Pipeline> pipelineHolder = Optional.empty();
 

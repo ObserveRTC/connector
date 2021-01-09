@@ -1,78 +1,87 @@
 package org.observertc.webrtc.connector.sinks.bigquery;
 
 import io.micronaut.context.annotation.Prototype;
+import org.observertc.webrtc.connector.adapters.bigquery.Adapter;
+import org.observertc.webrtc.connector.adapters.bigquery.version1.SchemaAdapter;
 import org.observertc.webrtc.connector.configbuilders.AbstractBuilder;
-import org.observertc.webrtc.connector.datawarehouses.bigquery.SchemaCheckerJob;
-import org.observertc.webrtc.connector.models.EntryType;
 import org.observertc.webrtc.connector.sinks.Sink;
 import org.observertc.webrtc.connector.sinks.SinkTypeBuilder;
+import org.observertc.webrtc.schemas.reports.ReportType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.validation.constraints.NotNull;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 @Prototype
 public class BigQuerySinkBuilder extends AbstractBuilder implements SinkTypeBuilder {
 
     private static final Logger logger = LoggerFactory.getLogger(BigQuerySinkBuilder.class);
-    private final Map<EntryType, String> entryTypeMaps;
+    private final Map<ReportType, String> mapping;
 
     public BigQuerySinkBuilder() {
-        this.entryTypeMaps = new HashMap<>();
+        this.mapping = new HashMap<>();
     }
 
     @Override
     public Sink build() {
         Config config = this.convertAndValidate(Config.class);
-        this.entryTypeMaps.put(EntryType.InitiatedCall, config.initiatedCallsTable);
-        this.entryTypeMaps.put(EntryType.FinishedCall, config.finishedCallsTable);
-        this.entryTypeMaps.put(EntryType.JoinedPeerConnection, config.joinedPeerConnectionsTable);
-        this.entryTypeMaps.put(EntryType.DetachedPeerConnection, config.detachedPeerConnectionsTable);
-        this.entryTypeMaps.put(EntryType.InboundRTP, config.inboundRTPSamplesTable);
-        this.entryTypeMaps.put(EntryType.RemoteInboundRTP, config.remoteInboundRTPSamplesTable);
-        this.entryTypeMaps.put(EntryType.OutboundRTP, config.outboundRTPSamplesTable);
-        this.entryTypeMaps.put(EntryType.ICECandidatePair, config.iceCandidatePairsTable);
-        this.entryTypeMaps.put(EntryType.ICELocalCandidate, config.iceLocalCandidatesTable);
-        this.entryTypeMaps.put(EntryType.ICERemoteCandidate, config.iceRemoteCandidatesTable);
-        this.entryTypeMaps.put(EntryType.MediaSource, config.mediaSourcesTable);
-        this.entryTypeMaps.put(EntryType.UserMediaError, config.userMediaErrorsTable);
-        this.entryTypeMaps.put(EntryType.Track, config.trackReportsTable);
-        this.entryTypeMaps.put(EntryType.ObserverEvent, config.observerEventTable);
+        this.mapping.put(ReportType.INITIATED_CALL, config.initiatedCallsTable);
+        this.mapping.put(ReportType.FINISHED_CALL, config.finishedCallsTable);
+        this.mapping.put(ReportType.JOINED_PEER_CONNECTION, config.joinedPeerConnectionsTable);
+        this.mapping.put(ReportType.DETACHED_PEER_CONNECTION, config.detachedPeerConnectionsTable);
+        this.mapping.put(ReportType.INBOUND_RTP, config.inboundRTPSamplesTable);
+        this.mapping.put(ReportType.REMOTE_INBOUND_RTP, config.remoteInboundRTPSamplesTable);
+        this.mapping.put(ReportType.OUTBOUND_RTP, config.outboundRTPSamplesTable);
+        this.mapping.put(ReportType.ICE_CANDIDATE_PAIR, config.iceCandidatePairsTable);
+        this.mapping.put(ReportType.ICE_LOCAL_CANDIDATE, config.iceLocalCandidatesTable);
+        this.mapping.put(ReportType.ICE_REMOTE_CANDIDATE, config.iceRemoteCandidatesTable);
+        this.mapping.put(ReportType.MEDIA_SOURCE, config.mediaSourcesTable);
+        this.mapping.put(ReportType.USER_MEDIA_ERROR, config.userMediaErrorsTable);
+        this.mapping.put(ReportType.TRACK, config.trackReportsTable);
+        this.mapping.put(ReportType.OBSERVER_EVENT, config.observerEventTable);
         BigQueryService bigQueryService = new BigQueryService(config.projectId, config.datasetId, config.credentialFile);
 
-        if (config.schemaCheck.enabled) {
-            if (!this.checkSchema(bigQueryService, config)) {
-                return null;
-            }
+        Map<ReportType, Adapter> adapters = this.runSchemaAdapter(bigQueryService, config);
+        if (Objects.isNull(adapters)) {
+            logger.error("The schema cannot be built, because it does not have adapters");
+            return null;
         }
 
         BigQuerySink result = new BigQuerySink(bigQueryService);
-        this.entryTypeMaps.entrySet()
-                .stream()
-                .forEach(entry -> result.withEntryRoute(entry.getKey(), entry.getValue()));
+        adapters.entrySet()
+                .forEach(
+                        entry -> {
+                            ReportType reportType = entry.getKey();
+                            String tableName = this.mapping.get(reportType);
+                            result.withRoute(
+                                    reportType,
+                                    tableName,
+                                    entry.getValue()
+                            );
+                        });
 
         return result;
     }
 
-    private boolean checkSchema(BigQueryService bigQueryService, Config config) {
-        try (SchemaCheckerJob schemaCheckerJob = new SchemaCheckerJob(bigQueryService.getBigQuery())) {
+    private Map<ReportType, Adapter> runSchemaAdapter(BigQueryService bigQueryService, Config config) {
+        try (SchemaAdapter schemaCheckerJob = new SchemaAdapter(bigQueryService.getBigQuery(), config.projectId, config.datasetId)) {
             schemaCheckerJob
+                    .withSchemaCheckEnabled(config.schemaCheck.enabled)
                     .withCreateDatasetIfNotExists(config.schemaCheck.createDatasetIfNotExists)
                     .withCreateTableIfNotExists(config.schemaCheck.createTableIfNotExists)
                     .withDeleteTableIfExists(config.schemaCheck.deleteTableIfExists)
-                    .withDatasetId(config.datasetId)
-                    .withProjectId(config.projectId);
-            this.entryTypeMaps.entrySet()
-                    .stream()
-                    .forEach(entry -> schemaCheckerJob.withEntryName(entry.getKey(), entry.getValue()));
+                    ;
+            this.mapping.entrySet()
+                    .forEach(entry -> schemaCheckerJob.withTableName(entry.getKey(), entry.getValue()));
             schemaCheckerJob.run();
+            return schemaCheckerJob.getAdapters();
         } catch (Exception e) {
             logger.error("Error occured during schema checking process", e);
-            return false;
+            return null;
         }
-        return true;
     }
 
     public static class Config {
@@ -124,7 +133,7 @@ public class BigQuerySinkBuilder extends AbstractBuilder implements SinkTypeBuil
 
         public String userMediaErrorsTable = "UserMediaErrors";
 
-        public String observerEventTable = "UserMediaErrors";
+        public String observerEventTable = "ObserverEventReports";
 
     }
 }
