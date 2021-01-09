@@ -1,16 +1,18 @@
-package org.observertc.webrtc.connector;
+package org.observertc.webrtc.connector.pipelines;
 
 import io.micronaut.context.annotation.Prototype;
-import io.reactivex.rxjava3.core.ObservableOperator;
 import io.reactivex.rxjava3.disposables.Disposable;
 import io.reactivex.rxjava3.functions.Function;
+import org.observertc.webrtc.ObjectToString;
 import org.observertc.webrtc.connector.configbuilders.AbstractBuilder;
-import org.observertc.webrtc.connector.decoders.AvroDecoder;
+import org.observertc.webrtc.connector.decoders.Decoder;
+import org.observertc.webrtc.connector.decoders.DecoderBuilder;
 import org.observertc.webrtc.connector.sinks.Sink;
 import org.observertc.webrtc.connector.sinks.SinkBuilder;
 import org.observertc.webrtc.connector.sources.Source;
 import org.observertc.webrtc.connector.sources.SourceBuilder;
-import org.observertc.webrtc.schemas.reports.Report;
+import org.observertc.webrtc.connector.transformations.Transformation;
+import org.observertc.webrtc.connector.transformations.TransformationBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -47,15 +49,29 @@ public class PipelineBuilder extends AbstractBuilder implements Function<Map<Str
         }
         result.withSource(source);
 
-        ObservableOperator<Report, byte[]> decoder = this.invoke(config.decoder.type);
-        if (Objects.isNull(decoder)) {
-            logger.warn("Decoder {} for pipeline {}, cannot be loaded or cannot be casted to {}.",
-                    config.decoder, config.name, ObservableOperator.class.getSimpleName());
+        DecoderBuilder decoderBuilder = new DecoderBuilder();
+        decoderBuilder.withConfiguration(config.decoder);
+        Optional<Decoder> decoderHolder = decoderBuilder.build();
+        if (!decoderHolder.isPresent()) {
+            logger.warn("{} is cannot build without a decoder.",
+                    config.name);
             return Optional.empty();
         }
-        result.withDecoder(decoder);
+        result.withDecoder(decoderHolder.get());
 
-        result.withBuffer(config.buffer.maxItems, config.buffer.maxWaitInS);
+        for (Map<String, Object> transformationConfig : config.transformations) {
+            TransformationBuilder transformationBuilder = new TransformationBuilder();
+            transformationBuilder.withConfiguration(transformationConfig);
+            Optional<Transformation> transformationOptional = transformationBuilder.build();
+            if (!transformationOptional.isPresent()) {
+                logger.warn("Cannot make a transformation object from {}", ObjectToString.toString(transformationConfig));
+                continue;
+            }
+            Transformation transformation = transformationOptional.get();
+            result.withTransformation(transformation);
+        }
+
+        result.withBuffer(config.buffer);
 
         SinkBuilder sinkBuilder = new SinkBuilder();
         sinkBuilder.withConfiguration(config.sink);
@@ -71,40 +87,22 @@ public class PipelineBuilder extends AbstractBuilder implements Function<Map<Str
 
     public static class Config {
 
-        public static class DecoderConfig {
-            public String type = AvroDecoder.class.getName();
-            public Map<String, Object> config = new HashMap<>();
-        }
-
-        public static class TransformationConfig {
-            public String type;
-            public Map<String, Object> config;
-        }
-
-        public static class BufferConfig {
-            public int maxItems = 100;
-            public int maxWaitInS = 5;
-        }
-
-        @NotNull
         public String name;
+
+        public MetaConfig meta = new MetaConfig();
 
         @NotNull
         public Map<String, Object> source;
 
-        public DecoderConfig decoder = new DecoderConfig();
+        public Map<String, Object> decoder = new HashMap<>();
 
-        public List<TransformationConfig> transformations = new ArrayList<>();
+        public List<Map<String, Object>> transformations = new ArrayList<>();
 
         public BufferConfig buffer = new BufferConfig();
 
         @NotNull
         public Map<String, Object> sink;
 
-        public MetaConfig meta = new MetaConfig();
-
-        public static class MetaConfig {
-            public int replicas = 1;
-        }
     }
+
 }

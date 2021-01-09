@@ -17,7 +17,6 @@
 package org.observertc.webrtc.connector.decoders;
 
 import io.reactivex.rxjava3.annotations.NonNull;
-import io.reactivex.rxjava3.core.ObservableOperator;
 import io.reactivex.rxjava3.core.Observer;
 import io.reactivex.rxjava3.disposables.Disposable;
 import org.apache.avro.specific.SpecificDatumReader;
@@ -30,7 +29,7 @@ import java.util.Arrays;
 import java.util.Objects;
 
 
-public class AvroDecoder implements ObservableOperator<Report, byte[]> {
+public class AvroDecoder implements Decoder {
 	private static final Logger logger = LoggerFactory.getLogger(AvroDecoder.class);
 
 	private final SpecificDatumReader<Report> reader;

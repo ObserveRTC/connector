@@ -6,7 +6,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.validation.constraints.NotNull;
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -28,12 +31,8 @@ public class SourceBuilder extends AbstractBuilder {
 
     public Source build() {
         Config config = this.convertAndValidate(Config.class);
-        Optional<Object> concreteSourceBuilderHolder = this.packages.stream()
-                .map(pName -> AbstractBuilder.builderClassName(pName, config.type))
-                .map(this::invoke)
-                .filter(Objects::nonNull)
-                .filter(o -> o instanceof Builder)
-                .findFirst();
+        String builderClassName = AbstractBuilder.getBuilderClassName(config.type);
+        Optional<Builder> concreteSourceBuilderHolder = this.tryInvoke(builderClassName);
         if (!concreteSourceBuilderHolder.isPresent()) {
             logger.error("Cannot find source builder for {} in packages: {}", config.type, String.join(",", this.packages ));
             return null;

@@ -1,8 +1,10 @@
-package org.observertc.webrtc.connector;
+package org.observertc.webrtc.connector.pipelines;
 
+import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.core.ObservableOperator;
 import org.observertc.webrtc.connector.sinks.Sink;
 import org.observertc.webrtc.connector.sources.Source;
+import org.observertc.webrtc.connector.transformations.Transformation;
 import org.observertc.webrtc.schemas.reports.Report;
 
 import java.util.LinkedList;
@@ -14,11 +16,10 @@ public class Pipeline implements Runnable {
     private String name;
     private Source source;
     private ObservableOperator<Report, byte[]> decoder;
-    private List<ObservableOperator<Report, Report>> transformations = new LinkedList<>();
+    private List<Transformation> transformations = new LinkedList<>();
 
     private Sink sink;
-    private int maxItems = 10000;
-    private int maxWaitingTimeInS = 30;
+    private BufferConfig bufferConfig = null;
 
     public Pipeline() {
     }
@@ -28,20 +29,30 @@ public class Pipeline implements Runnable {
         if (Objects.isNull(this.source)) {
             throw new IllegalStateException("A pipeline cannot be started without a source");
         }
+        if (Objects.isNull(this.decoder)) {
+            throw new IllegalStateException("A pipeline cannot be started without a decoder");
+        }
         if (Objects.isNull(this.sink)) {
             throw new IllegalStateException("A pipeline cannot be started without a sink");
         }
-        this.source
-                .lift(this.decoder)
-//                .map(e -> List.of(e))
-                .buffer(this.maxItems)
-//                .buffer(this.maxItems, this.maxWaitingTimeInS, TimeUnit.SECONDS)
-                .subscribe(this.sink)
-        ;
 
-//        for (ObservableOperator<Report, Report> transformation : this.transformations) {
-//            out = out.lift(transformation);
-//        }
+        Observable<byte[]> observableBytes = this.source;
+
+        Observable<Report> observableReport = observableBytes.lift(this.decoder).share();
+
+        for (Transformation transformation : this.transformations) {
+            observableReport = observableReport.lift(transformation).share();
+        }
+
+        Observable<List<Report>> observableReports;
+        if (this.bufferConfig.maxWaitingTimeInS < 1) {
+            observableReports = observableReport.buffer(this.bufferConfig.maxItems).share();
+        } else {
+            observableReports = observableReport.buffer(this.bufferConfig.maxWaitingTimeInS, TimeUnit.SECONDS, this.bufferConfig.maxItems).share();
+        }
+
+        observableReports.subscribe(this.sink);
+
         this.source.run();
     }
 
@@ -74,13 +85,12 @@ public class Pipeline implements Runnable {
         return this;
     }
 
-    Pipeline withBuffer(int maxItems, int maxWaitingTimeInS) {
-        this.maxItems = maxItems;
-        this.maxWaitingTimeInS = maxWaitingTimeInS;
+    Pipeline withBuffer(BufferConfig bufferConfig) {
+        this.bufferConfig = bufferConfig;
         return this;
     }
 
-    Pipeline withTransformation(ObservableOperator<Report, Report> transformation) {
+    Pipeline withTransformation(Transformation transformation) {
         this.transformations.add(transformation);
         return this;
     }

@@ -1,36 +1,32 @@
 package org.observertc.webrtc.connector.transformations;
 
-import io.reactivex.ObservableOperator;
-import io.reactivex.Observer;
-import io.reactivex.annotations.NonNull;
-import io.reactivex.disposables.Disposable;
+import io.reactivex.rxjava3.functions.Predicate;
 import org.observertc.webrtc.schemas.reports.Report;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-public class Filter implements ObservableOperator<Report, Report> {
+import javax.validation.constraints.NotNull;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Optional;
 
-    @NonNull
+public class Filter extends Transformation {
+    private static final Logger logger  = LoggerFactory.getLogger(Filter.class);
+    private Predicate<Report> typeFilter = report -> true;
+    private final List<Predicate<Report>> filters = new LinkedList<>();
+
+    Filter addPredicate(@NotNull Predicate<Report> predicate) {
+        this.filters.add(predicate);
+        return this;
+    }
+
     @Override
-    public Observer<? super Report> apply(@NonNull Observer<? super Report> observer)  {
-        return new Observer<>() {
-            @Override
-            public void onSubscribe(@NonNull Disposable d) {
-
+    protected Optional<Report> transform(Report report) throws Throwable {
+        for (Predicate<Report> predicate : this.filters) {
+            if (!predicate.test(report)) {
+                return Optional.empty();
             }
-
-            @Override
-            public void onNext(@NonNull Report report) {
-                observer.onNext(report);
-            }
-
-            @Override
-            public void onError(@NonNull Throwable e) {
-
-            }
-
-            @Override
-            public void onComplete() {
-
-            }
-        };
+        }
+        return Optional.of(report);
     }
 }

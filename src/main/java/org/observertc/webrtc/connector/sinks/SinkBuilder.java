@@ -5,7 +5,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.validation.constraints.NotNull;
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class SinkBuilder extends AbstractBuilder {
@@ -23,12 +26,8 @@ public class SinkBuilder extends AbstractBuilder {
 
     public Sink build() {
         Config config = this.convertAndValidate(Config.class);
-        Optional<Object> sinkTypeBuilderHolder = this.packages.stream()
-                .map(pName -> AbstractBuilder.builderClassName(pName, config.type))
-                .map(this::invoke)
-                .filter(Objects::nonNull)
-                .filter(o -> o instanceof SinkTypeBuilder)
-                .findFirst();
+        String builderClassName = AbstractBuilder.getBuilderClassName(config.type);
+        Optional<SinkTypeBuilder> sinkTypeBuilderHolder = this.tryInvoke(builderClassName);
         if (!sinkTypeBuilderHolder.isPresent()) {
             logger.error("Cannot find sink builder for {} in packages: {}", config.type, String.join(",", this.packages ));
             return null;

@@ -93,6 +93,7 @@ public class ReportGenerator {
                 .setTimestamp(1234L)
                 .setPayload(payload)
                 .setVersion(1)
+                .setMarker("marker")
                 .build();
         return result;
     }

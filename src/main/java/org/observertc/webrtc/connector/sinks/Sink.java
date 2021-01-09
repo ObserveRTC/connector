@@ -3,7 +3,7 @@ package org.observertc.webrtc.connector.sinks;
 import io.reactivex.rxjava3.annotations.NonNull;
 import io.reactivex.rxjava3.core.Observer;
 import io.reactivex.rxjava3.disposables.Disposable;
-import org.observertc.webrtc.connector.Pipeline;
+import org.observertc.webrtc.connector.pipelines.Pipeline;
 import org.observertc.webrtc.schemas.reports.Report;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

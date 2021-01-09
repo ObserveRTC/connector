@@ -17,6 +17,7 @@
 package org.observertc.webrtc.connector.configbuilders;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.observertc.webrtc.connector.decoders.Decoder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,6 +28,7 @@ import java.util.*;
 import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 /**
  * This class provides a skeletal implementation for builder classes
@@ -48,12 +50,13 @@ public abstract class AbstractBuilder {
 	private static final String SYSTEM_ENV_PATTERN_REGEX = "\\$\\{([A-Za-z0-9_]+)(?::([^\\}]*))?\\}";
 	private final Pattern systemEnvPattern = Pattern.compile(SYSTEM_ENV_PATTERN_REGEX);
 	private static Logger logger = LoggerFactory.getLogger(AbstractBuilder.class);
+	private static final String BUILDER_CLASS_SUFFIX = "Builder";
 
-	public static String builderClassName(String packageName, String className) {
-		if (!className.endsWith("Builder")){
-			className = className.concat("Builder");
+	public static String getBuilderClassName( String className) {
+		if (!className.endsWith(BUILDER_CLASS_SUFFIX)){
+			return className.concat(BUILDER_CLASS_SUFFIX);
 		}
-		return packageName.concat(".").concat(className);
+		return className;
 	}
 
 	private ObjectMapper mapper = new ObjectMapper();
@@ -215,7 +218,13 @@ public abstract class AbstractBuilder {
 				Map.Entry<String, Object> entry = it.next();
 				Object before = entry.getValue();
 				Object after = this.checkForSystemEnv(before);
-				entry.setValue(after);
+				if (Objects.isNull(before)) {
+					if (Objects.nonNull(after)) {
+						entry.setValue(after);
+					}
+				} else if (!before.equals(after)){
+					entry.setValue(after);
+				}
 			}
 			return map;
 		}
@@ -310,6 +319,37 @@ public abstract class AbstractBuilder {
 		return Optional.of(result);
 	}
 
+	protected<T> Optional<T> tryInvoke(String className, Object... params) {
+		T result = this.invoke(className, params);
+		if (Objects.nonNull(result)) {
+			return Optional.of(result);
+		}
+
+		Package thisPackage = this.getClass().getPackage();
+		return this.tryInvoke(thisPackage, className, params);
+
+	}
+
+	protected<T> Optional<T> tryInvoke(Package startPackage, String className, Object... params) {
+		T result = this.invoke(className, params);
+		if (Objects.nonNull(result)) {
+			return Optional.of(result);
+		}
+
+		List<String> packages = Arrays.stream(Package.getPackages())
+				.filter(p -> p.getName().startsWith(startPackage.getName()))
+				.map(Package::getName)
+				.collect(Collectors.toList());
+
+		for (String packageName : packages) {
+			String klassName = String.join(".", packageName, className);
+			result = this.invoke(klassName, params);
+			if (Objects.nonNull(result)) {
+				return Optional.of(result);
+			}
+		}
+		return Optional.empty();
+	}
 	/**
 	 * Invokes a constructor for the given class
 	 *
@@ -361,6 +401,9 @@ public abstract class AbstractBuilder {
 
 	public void withConfiguration(Map<String, Object> source) {
 		if (Objects.isNull(source)) {
+			return;
+		}
+		if (source.size() < 1) {
 			return;
 		}
 		this.getConfigs().putAll(source);
