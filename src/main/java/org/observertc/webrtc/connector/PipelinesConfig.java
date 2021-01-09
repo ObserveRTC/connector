@@ -11,4 +11,5 @@ public class PipelinesConfig {
     public List<String> files = new ArrayList<>();
     public int corePoolSize = 10;
     public int maxPoolSize = 50;
+
 }

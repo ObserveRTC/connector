@@ -6,6 +6,7 @@ import io.reactivex.rxjava3.subjects.PublishSubject;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.observertc.webrtc.connector.ReportGenerator;
+import org.observertc.webrtc.connector.sinks.bigquery.mappers.ReportObserver;
 import org.observertc.webrtc.schemas.reports.Report;
 import org.observertc.webrtc.schemas.reports.ReportType;
 

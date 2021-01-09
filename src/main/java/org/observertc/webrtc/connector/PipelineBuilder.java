@@ -1,22 +1,21 @@
 package org.observertc.webrtc.connector;
 
 import io.micronaut.context.annotation.Prototype;
+import io.reactivex.rxjava3.core.ObservableOperator;
 import io.reactivex.rxjava3.disposables.Disposable;
 import io.reactivex.rxjava3.functions.Function;
 import org.observertc.webrtc.connector.configbuilders.AbstractBuilder;
-import org.observertc.webrtc.connector.evaluators.Evaluator;
-import org.observertc.webrtc.connector.evaluators.EvaluatorBuilder;
+import org.observertc.webrtc.connector.decoders.AvroDecoder;
 import org.observertc.webrtc.connector.sinks.Sink;
 import org.observertc.webrtc.connector.sinks.SinkBuilder;
 import org.observertc.webrtc.connector.sources.Source;
 import org.observertc.webrtc.connector.sources.SourceBuilder;
+import org.observertc.webrtc.schemas.reports.Report;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.validation.constraints.NotNull;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 
 @Prototype
 public class PipelineBuilder extends AbstractBuilder implements Function<Map<String, Object>, Optional<Pipeline>> {
@@ -48,12 +47,15 @@ public class PipelineBuilder extends AbstractBuilder implements Function<Map<Str
         }
         result.withSource(source);
 
-        EvaluatorBuilder evaluatorBuilder = new EvaluatorBuilder();
-        if (Objects.nonNull(config.evaluator)) {
-            evaluatorBuilder.withConfiguration(config.evaluator);
+        ObservableOperator<Report, byte[]> decoder = this.invoke(config.decoder.type);
+        if (Objects.isNull(decoder)) {
+            logger.warn("Decoder {} for pipeline {}, cannot be loaded or cannot be casted to {}.",
+                    config.decoder, config.name, ObservableOperator.class.getSimpleName());
+            return Optional.empty();
         }
-        Evaluator evaluator = evaluatorBuilder.build();
-        result.withEvaluator(evaluator);
+        result.withDecoder(decoder);
+
+        result.withBuffer(config.buffer.maxItems, config.buffer.maxWaitInS);
 
         SinkBuilder sinkBuilder = new SinkBuilder();
         sinkBuilder.withConfiguration(config.sink);
@@ -69,15 +71,40 @@ public class PipelineBuilder extends AbstractBuilder implements Function<Map<Str
 
     public static class Config {
 
+        public static class DecoderConfig {
+            public String type = AvroDecoder.class.getName();
+            public Map<String, Object> config = new HashMap<>();
+        }
+
+        public static class TransformationConfig {
+            public String type;
+            public Map<String, Object> config;
+        }
+
+        public static class BufferConfig {
+            public int maxItems = 100;
+            public int maxWaitInS = 5;
+        }
+
         @NotNull
         public String name;
 
         @NotNull
         public Map<String, Object> source;
 
-        public Map<String, Object> evaluator;
+        public DecoderConfig decoder = new DecoderConfig();
+
+        public List<TransformationConfig> transformations = new ArrayList<>();
+
+        public BufferConfig buffer = new BufferConfig();
 
         @NotNull
         public Map<String, Object> sink;
+
+        public MetaConfig meta = new MetaConfig();
+
+        public static class MetaConfig {
+            public int replicas = 1;
+        }
     }
 }

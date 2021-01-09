@@ -17,10 +17,11 @@
 package org.observertc.webrtc.connector.datawarehouses.bigquery;
 
 import com.google.cloud.bigquery.BigQuery;
-import org.observertc.webrtc.connector.datawarehouses.Job;
-import org.observertc.webrtc.connector.datawarehouses.Task;
-import org.observertc.webrtc.connector.datawarehouses.bigquery.version01.CreateTables;
-import org.observertc.webrtc.connector.models.EntryType;
+import org.observertc.webrtc.connector.adapters.Job;
+import org.observertc.webrtc.connector.adapters.Task;
+import org.observertc.webrtc.connector.adapters.bigquery.prehistoric.Config;
+import org.observertc.webrtc.connector.adapters.bigquery.prehistoric.CreateTables;
+import org.observertc.webrtc.connector.sinks.bigquery.models.EntryType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -81,8 +82,8 @@ public class SchemaCheckerJob extends Job {
 
 	@Override
 	public void run() {
-		org.observertc.webrtc.connector.datawarehouses.bigquery.version01.Config config;
-		config = new org.observertc.webrtc.connector.datawarehouses.bigquery.version01.Config(
+		Config config;
+		config = new Config(
 				this.bigQuery,
 				this.projectId,
 				this.datasetId,
@@ -97,8 +98,8 @@ public class SchemaCheckerJob extends Job {
 	}
 
 	private Task makeVersion1Check() {
-		org.observertc.webrtc.connector.datawarehouses.bigquery.version01.Config config;
-		config = new org.observertc.webrtc.connector.datawarehouses.bigquery.version01.Config(
+		Config config;
+		config = new Config(
 				this.bigQuery,
 				this.projectId,
 				this.datasetId,

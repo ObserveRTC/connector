@@ -1,57 +1,57 @@
-package org.observertc.webrtc.connector.sinks.bigquery;
+package org.observertc.webrtc.connector.sinks.bigqueryv2;
 
 import com.google.cloud.bigquery.BigQueryError;
 import com.google.cloud.bigquery.InsertAllRequest;
 import com.google.cloud.bigquery.InsertAllResponse;
 import com.google.cloud.bigquery.TableId;
 import io.reactivex.rxjava3.annotations.NonNull;
-import org.observertc.webrtc.connector.sinks.bigquery.models.Entry;
-import org.observertc.webrtc.connector.sinks.bigquery.models.EntryType;
+import org.observertc.webrtc.connector.adapters.bigquery.Adapter;
 import org.observertc.webrtc.connector.sinks.Sink;
-import org.observertc.webrtc.connector.sinks.bigquery.mappers.Mapper;
 import org.observertc.webrtc.schemas.reports.Report;
+import org.observertc.webrtc.schemas.reports.ReportType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class BigQuerySink extends Sink {
-    private static final Logger logger = LoggerFactory.getLogger(BigQuerySink.class);
-    private final Map<EntryType, String> routes;
+public class BigQuerySinkV2 extends Sink {
+    private static final Logger logger = LoggerFactory.getLogger(BigQuerySinkV2.class);
+    private final Map<ReportType, Route> routes;
     private final BigQueryService bigQueryService;
-    public BigQuerySink(BigQueryService bigQueryService) {
+
+    public BigQuerySinkV2(BigQueryService bigQueryService) {
         this.routes = new HashMap<>();
         this.bigQueryService = bigQueryService;
     }
 
     @Override
     public void onNext(@NonNull List<Report> reports) {
-        Map<EntryType, InsertAllRequest.Builder> requestbuilders = new HashMap<>();
-        Map<EntryType, Integer> counts = new HashMap<>();
-        List<Entry> entries = new LinkedList<>();
-        Mapper mapper = new Mapper();
-        mapper.subscribe(entries::add);
-        reports.forEach(mapper::onNext);
-        for (Entry entry : entries) {
-            InsertAllRequest.Builder requestBuilder = requestbuilders.get(entry.getEntryType());
+        Map<ReportType, InsertAllRequest.Builder> requestbuilders = new HashMap<>();
+        Map<ReportType, Integer> counts = new HashMap<>();
+        for (Report report : reports) {
+            ReportType reportType = report.getType();
+            InsertAllRequest.Builder requestBuilder = requestbuilders.get(reportType);
+            Route route = this.routes.get(reportType);
+            Adapter adapter = route.adapter;
             if (Objects.isNull(requestBuilder)) {
-                String tableName = this.routes.get(entry.getEntryType());
+                String tableName = route.tableName;
                 if (Objects.isNull(tableName)) {
                     logger.warn("{}: There is no route defined for entry type {}",
                             this.getPipelineName(),
-                            entry.getEntryType());
+                            reportType);
                     continue;
                 }
                 TableId tableId = TableId.of(this.bigQueryService.getProjectId(),
                         this.bigQueryService.getDatasetId(),
                         tableName);
                 requestBuilder = InsertAllRequest.newBuilder(tableId);
-                requestbuilders.put(entry.getEntryType(), requestBuilder);
+                requestbuilders.put(reportType, requestBuilder);
             }
-            requestBuilder.addRow(entry.toMap());
-            int count = counts.getOrDefault(entry.getEntryType(), 0);
-            counts.put(entry.getEntryType(), ++count);
+            Map<String, Object> row = adapter.apply(report);
+            requestBuilder.addRow(row);
+            int count = counts.getOrDefault(reportType, 0);
+            counts.put(reportType, ++count);
         }
 
         if (requestbuilders.size() < 1) {
@@ -59,10 +59,10 @@ public class BigQuerySink extends Sink {
             return;
         }
 
-        Iterator<Map.Entry<EntryType, InsertAllRequest.Builder>> it = requestbuilders.entrySet().iterator();
+        Iterator<Map.Entry<ReportType, InsertAllRequest.Builder>> it = requestbuilders.entrySet().iterator();
         for (; it.hasNext();) {
-            Map.Entry<EntryType, InsertAllRequest.Builder> entry = it.next();
-            EntryType entryType = entry.getKey();
+            Map.Entry<ReportType, InsertAllRequest.Builder> entry = it.next();
+            ReportType entryType = entry.getKey();
             InsertAllRequest.Builder requestBuilder = entry.getValue();
             InsertAllResponse response =
                     this.bigQueryService.getBigQuery().insertAll(requestBuilder.build());
@@ -82,14 +82,25 @@ public class BigQuerySink extends Sink {
                 logger.info("{}: {} rows inserted to inserted {}.",
                         this.getPipelineName(),
                         counts.get(entryType),
-                        this.routes.get(entryType)
+                        this.routes.get(entryType).tableName
                 );
             }
         }
     }
 
-    BigQuerySink withEntryRoute(EntryType entryType, String tableName) {
-        this.routes.put(entryType, tableName);
+    BigQuerySinkV2 withRoute(ReportType reportType, String tableName, Adapter adapter) {
+        Route route = new Route(tableName, adapter);
+        this.routes.put(reportType, route);
         return this;
+    }
+
+    private class Route {
+        public final String tableName;
+        public final Adapter adapter;
+
+        private Route(String tableName, Adapter adapter) {
+            this.tableName = tableName;
+            this.adapter = adapter;
+        }
     }
 }

@@ -2,7 +2,7 @@ package org.observertc.webrtc.connector.sinks;
 
 import io.reactivex.rxjava3.annotations.NonNull;
 import io.reactivex.rxjava3.disposables.Disposable;
-import org.observertc.webrtc.connector.models.Entry;
+import org.observertc.webrtc.schemas.reports.Report;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -21,13 +21,13 @@ public class LoggerSink extends Sink {
     }
 
     @Override
-    public void onNext(@NonNull List<Entry> entries) {
-        logger.info("Number of entries are: {}", entries.size());
+    public void onNext(@NonNull List<Report> reports) {
+        logger.info("Number of reports are: {}", reports.size());
         if (this.detailedRow) {
-            for (Entry entry : entries) {
-                logger.info("EntryType {}. The row: \n {}",
-                        entry.getEntryType(),
-                        this.mapString(entry.toMap(), "\t"));
+            for (Report report : reports) {
+                logger.info("Report {}",
+                        report.toString()
+                );
             }
         }
     }

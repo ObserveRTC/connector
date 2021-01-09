@@ -3,7 +3,7 @@ package org.observertc.webrtc.connector.sinks.bigquery;
 import io.micronaut.context.annotation.Prototype;
 import org.observertc.webrtc.connector.configbuilders.AbstractBuilder;
 import org.observertc.webrtc.connector.datawarehouses.bigquery.SchemaCheckerJob;
-import org.observertc.webrtc.connector.models.EntryType;
+import org.observertc.webrtc.connector.sinks.bigquery.models.EntryType;
 import org.observertc.webrtc.connector.sinks.Sink;
 import org.observertc.webrtc.connector.sinks.SinkTypeBuilder;
 import org.slf4j.Logger;
@@ -124,7 +124,7 @@ public class BigQuerySinkBuilder extends AbstractBuilder implements SinkTypeBuil
 
         public String userMediaErrorsTable = "UserMediaErrors";
 
-        public String observerEventTable = "UserMediaErrors";
+        public String observerEventTable = "ObserverEventReports";
 
     }
 }
