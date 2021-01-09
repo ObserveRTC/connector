@@ -2,7 +2,7 @@ package org.observertc.webrtc.connector.controllers;
 
 import io.micronaut.http.HttpStatus;
 import io.micronaut.http.annotation.*;
-import org.observertc.webrtc.connector.Pipelines;
+import org.observertc.webrtc.connector.pipelines.Pipelines;
 import org.observertc.webrtc.connector.configbuilders.ObservableConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -4,6 +4,8 @@ import io.micronaut.context.ApplicationContext;
 import io.micronaut.runtime.Micronaut;
 import org.jooq.tools.StringUtils;
 import org.observertc.webrtc.connector.configbuilders.ObservableConfig;
+import org.observertc.webrtc.connector.pipelines.Pipelines;
+import org.observertc.webrtc.connector.pipelines.PipelinesConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

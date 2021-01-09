@@ -3,11 +3,10 @@ package org.observertc.webrtc.connector.sources;
 import io.reactivex.rxjava3.annotations.NonNull;
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.core.Observer;
-import org.observertc.webrtc.connector.Pipeline;
+import org.observertc.webrtc.connector.pipelines.Pipeline;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.nio.channels.Pipe;
 import java.util.Objects;
 import java.util.Optional;
 

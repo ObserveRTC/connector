@@ -1,4 +1,4 @@
-package org.observertc.webrtc.connector;
+package org.observertc.webrtc.connector.pipelines;
 
 import io.micronaut.context.annotation.ConfigurationProperties;
 

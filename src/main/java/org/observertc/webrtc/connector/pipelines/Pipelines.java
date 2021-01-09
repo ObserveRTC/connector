@@ -1,4 +1,4 @@
-package org.observertc.webrtc.connector;
+package org.observertc.webrtc.connector.pipelines;
 
 import org.observertc.webrtc.ObjectToString;
 import org.slf4j.Logger;
