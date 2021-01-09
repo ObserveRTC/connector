@@ -17,6 +17,7 @@ class AvroDecoderTest {
         // Given
         AtomicReference<Report> decoded = new AtomicReference<>(null);
         Report report = Report.newBuilder()
+                .setVersion(1)
                 .setServiceUUID(UUID.randomUUID().toString())
                 .setServiceName("serviceName")
                 .setType(ReportType.INITIATED_CALL)

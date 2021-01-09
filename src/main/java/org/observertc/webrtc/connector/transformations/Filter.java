@@ -1,4 +1,4 @@
-package org.observertc.webrtc.connector.evaluators;
+package org.observertc.webrtc.connector.transformations;
 
 import io.reactivex.ObservableOperator;
 import io.reactivex.Observer;
@@ -10,8 +10,8 @@ public class Filter implements ObservableOperator<Report, Report> {
 
     @NonNull
     @Override
-    public Observer<? super Report> apply(@NonNull Observer<? super Report> observer) throws Exception {
-        return new Observer<Report>() {
+    public Observer<? super Report> apply(@NonNull Observer<? super Report> observer)  {
+        return new Observer<>() {
             @Override
             public void onSubscribe(@NonNull Disposable d) {
 

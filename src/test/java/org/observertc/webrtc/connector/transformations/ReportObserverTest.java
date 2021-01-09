@@ -1,4 +1,4 @@
-package org.observertc.webrtc.connector.evaluators;
+package org.observertc.webrtc.connector.transformations;
 
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.core.Observer;
@@ -6,7 +6,6 @@ import io.reactivex.rxjava3.subjects.PublishSubject;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.observertc.webrtc.connector.ReportGenerator;
-import org.observertc.webrtc.connector.sinks.bigquery.mappers.ReportObserver;
 import org.observertc.webrtc.schemas.reports.Report;
 import org.observertc.webrtc.schemas.reports.ReportType;
 
@@ -38,9 +37,9 @@ class ReportObserverTest {
         types.put(observer.trackReport, ReportType.TRACK);
         types.put(observer.unrecognizedReport, null);
 
+
         types
                 .entrySet()
-                .stream()
                 .forEach(entry -> testItWorks(observer, entry.getKey(), entry.getValue())
                 );
     }

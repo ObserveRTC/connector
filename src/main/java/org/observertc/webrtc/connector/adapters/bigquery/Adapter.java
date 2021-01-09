@@ -15,7 +15,7 @@ public class Adapter implements Function<SpecificRecordBase, Map<String, Object>
     public Map<String, Object> apply(SpecificRecordBase subject) {
         Map<String, Object> result = new HashMap<>();
         Iterator<Map.Entry<String, Mapping>> it = this.mappings.entrySet().iterator();
-        for (;it.hasNext();) {
+        while(it.hasNext()) {
             Map.Entry<String, Mapping> entry = it.next();
             String field = entry.getKey();
             Mapping mapping = entry.getValue();
@@ -27,7 +27,7 @@ public class Adapter implements Function<SpecificRecordBase, Map<String, Object>
         }
 
         Iterator<Map.Entry<String, Adapter>> it2 = this.adapters.entrySet().iterator();
-        for (;it2.hasNext();) {
+        while(it2.hasNext()) {
             Map.Entry<String, Adapter> entry = it2.next();
             String field = entry.getKey();
             Adapter adapter = entry.getValue();
@@ -39,13 +39,13 @@ public class Adapter implements Function<SpecificRecordBase, Map<String, Object>
         return result;
     }
 
-    public Adapter add(String fieldName, Function<String, String> fieldAdapter, Function valueAdapter) {
+    Adapter add(String fieldName, Function<String, String> fieldAdapter, Function valueAdapter) {
         Mapping mapping = new Mapping(fieldAdapter, valueAdapter);
         this.mappings.put(fieldName, mapping);
         return this;
     }
 
-    public Adapter add(String fieldName, Adapter adapter) {
+    Adapter add(String fieldName, Adapter adapter) {
         this.adapters.put(fieldName, adapter);
         return this;
     }
