@@ -1,4 +1,4 @@
-package org.observertc.webrtc.connector.sinks.bigquery;
+package org.observertc.webrtc.connector.common;
 
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.auth.oauth2.ServiceAccountCredentials;
