@@ -5,8 +5,8 @@ import org.observertc.webrtc.connector.adapters.bigquery.Adapter;
 import org.observertc.webrtc.connector.adapters.bigquery.version1.SchemaAdapter;
 import org.observertc.webrtc.connector.common.BigQueryService;
 import org.observertc.webrtc.connector.configbuilders.AbstractBuilder;
+import org.observertc.webrtc.connector.configbuilders.Builder;
 import org.observertc.webrtc.connector.sinks.Sink;
-import org.observertc.webrtc.connector.sinks.SinkTypeBuilder;
 import org.observertc.webrtc.schemas.reports.ReportType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,7 +17,7 @@ import java.util.Map;
 import java.util.Objects;
 
 @Prototype
-public class BigQuerySinkBuilder extends AbstractBuilder implements SinkTypeBuilder {
+public class BigQuerySinkBuilder extends AbstractBuilder implements Builder<Sink> {
 
     private static final Logger logger = LoggerFactory.getLogger(BigQuerySinkBuilder.class);
     private final Map<ReportType, String> mapping;

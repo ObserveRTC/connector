@@ -15,20 +15,25 @@ import java.util.Optional;
 public abstract class Sink implements Observer<List<Report>> {
     private static final Logger logger = LoggerFactory.getLogger(Sink.class);
     private Optional<Pipeline> pipelineHolder = Optional.empty();
-
+    private Disposable upstream;
     @Override
     public void onSubscribe(@NonNull Disposable d) {
-
+        this.upstream = d;
     }
 
     @Override
     public void onError(@NonNull Throwable e) {
-
+        if (Objects.nonNull(this.upstream)) {
+            if (!upstream.isDisposed()) {
+                this.upstream.dispose();
+            }
+        }
+        logger.warn("Error occurred in pipeline " + this.getPipelineName(), e);
     }
 
     @Override
     public void onComplete() {
-
+        logger.info("Pipeline {} is completed", this.getPipelineName());
     }
 
     public Sink inPipeline(Pipeline pipeline) {

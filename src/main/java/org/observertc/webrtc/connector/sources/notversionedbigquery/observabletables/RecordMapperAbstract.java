@@ -42,9 +42,14 @@ public abstract class RecordMapperAbstract extends Observable<Report> {
             TableResult result = bigquery.listTableData(tableId, BigQuery.TableDataListOption.pageSize(this.limit));
             this.fieldMap.putAll(this.buildFieldMap(tableId));
             logger.info("Fetching records for {} has begun", this.tableName);
+            int fetched = 0;
             for (FieldValueList row : result.iterateAll()) {
                 Report report = this.makeReport(row);
                 observer.onNext(report);
+                if (this.limit <= ++fetched) {
+                    logger.info("Fetched {} records from table {}", fetched, this.tableName);
+                    fetched = 0;
+                }
             }
             logger.info("Fetching records for {} has ended", this.tableName);
 

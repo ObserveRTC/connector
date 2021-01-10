@@ -1,6 +1,7 @@
 package org.observertc.webrtc.connector.sinks;
 
 import org.observertc.webrtc.connector.configbuilders.AbstractBuilder;
+import org.observertc.webrtc.connector.configbuilders.Builder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,14 +28,14 @@ public class SinkBuilder extends AbstractBuilder {
     public Sink build() {
         Config config = this.convertAndValidate(Config.class);
         String builderClassName = AbstractBuilder.getBuilderClassName(config.type);
-        Optional<SinkTypeBuilder> sinkTypeBuilderHolder = this.tryInvoke(builderClassName);
-        if (!sinkTypeBuilderHolder.isPresent()) {
+        Optional<Builder> builderHolder = this.tryInvoke(builderClassName);
+        if (!builderHolder.isPresent()) {
             logger.error("Cannot find sink builder for {} in packages: {}", config.type, String.join(",", this.packages ));
             return null;
         }
-        SinkTypeBuilder sinkTypeBuilder = (SinkTypeBuilder) sinkTypeBuilderHolder.get();
-        sinkTypeBuilder.withConfiguration(config.config);
-        return sinkTypeBuilder.build();
+        Builder<Sink> sinkBuilder = (Builder<Sink>) builderHolder.get();
+        sinkBuilder.withConfiguration(config.config);
+        return sinkBuilder.build();
     }
 
     public static class Config {
