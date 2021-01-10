@@ -1,8 +1,9 @@
 package org.observertc.webrtc.connector.sinks;
 
 import org.observertc.webrtc.connector.configbuilders.AbstractBuilder;
+import org.observertc.webrtc.connector.configbuilders.Builder;
 
-public class LoggerSinkBuilder extends AbstractBuilder implements SinkTypeBuilder{
+public class LoggerSinkBuilder extends AbstractBuilder implements Builder<Sink> {
 
     @Override
     public Sink build() {

@@ -69,6 +69,10 @@ public class Application {
                     } else {
                         inputStream = new FileInputStream(configPath);
                     }
+                    if (Objects.isNull(inputStream)) {
+                        logger.warn("Cannot find {}", configPath);
+                        continue;
+                    }
                     observableConfig
                             .fromYamlInputStream(inputStream)
                             .subscribe(pipelines::add, error::set);

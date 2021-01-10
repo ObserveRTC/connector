@@ -6,6 +6,7 @@ import com.google.cloud.bigquery.InsertAllResponse;
 import com.google.cloud.bigquery.TableId;
 import io.reactivex.rxjava3.annotations.NonNull;
 import org.observertc.webrtc.connector.adapters.bigquery.Adapter;
+import org.observertc.webrtc.connector.common.BigQueryService;
 import org.observertc.webrtc.connector.sinks.Sink;
 import org.observertc.webrtc.schemas.reports.Report;
 import org.observertc.webrtc.schemas.reports.ReportType;
