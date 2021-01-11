@@ -3,7 +3,7 @@
 // (powered by FernFlower decompiler)
 //
 
-package org.observertc.webrtc.connector.adapters;
+package org.observertc.webrtc.connector.databases;
 
 public interface Task extends Runnable, AutoCloseable{
 

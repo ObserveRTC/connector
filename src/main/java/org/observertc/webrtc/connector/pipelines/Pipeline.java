@@ -6,6 +6,8 @@ import org.observertc.webrtc.connector.sinks.Sink;
 import org.observertc.webrtc.connector.sources.Source;
 import org.observertc.webrtc.connector.transformations.Transformation;
 import org.observertc.webrtc.schemas.reports.Report;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -13,15 +15,18 @@ import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 public class Pipeline implements Runnable {
+    private static final Logger DEFAULT_LOGGER = LoggerFactory.getLogger(Pipeline.class);
     private String name;
     private Source source;
     private ObservableOperator<Report, byte[]> decoder;
     private List<Transformation> transformations = new LinkedList<>();
-
+    private Runnable closingCallback = () -> {};
     private Sink sink;
     private BufferConfig bufferConfig = null;
+    private final Logger logger;
 
-    public Pipeline() {
+    public Pipeline(String name) {
+        this.logger = LoggerFactory.getLogger(name);
     }
 
     @Override
@@ -54,6 +59,15 @@ public class Pipeline implements Runnable {
         observableReports.subscribe(this.sink);
 
         this.source.run();
+        try {
+            this.closingCallback.run();
+        } catch (Throwable t) {
+            String message = String.format("At pipeline %s the callback called " +
+                    "right after the pipeline itself has ended its operation " +
+                    "is just crashed. That's wonderful!",
+                    this.getName());
+            logger.error(message, t);
+        }
     }
 
     public String getName() {
@@ -63,16 +77,12 @@ public class Pipeline implements Runnable {
         return this.name;
     }
 
-    Pipeline withName(String name) {
-        this.name = name;
-        return this;
-    }
-
     Pipeline withSource(Source source) {
         if (Objects.nonNull(this.source)) {
             throw new IllegalStateException(this.getName() + ": cannot set the source for a pipeline twice");
         }
         this.source = source
+                .withLogger(logger)
                 .inPipeline(this);
         return this;
     }
@@ -100,8 +110,13 @@ public class Pipeline implements Runnable {
             throw new IllegalStateException(this.getName() + ": cannot set the source for a pipeline twice");
         }
         this.sink = sink
+                .withLogger(logger)
                 .inPipeline(this);
         return this;
     }
 
+    Pipeline withClosingCallback(Runnable closingCallback) {
+        this.closingCallback = closingCallback;
+        return this;
+    }
 }

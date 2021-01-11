@@ -75,7 +75,7 @@ public class Application {
                     }
                     observableConfig
                             .fromYamlInputStream(inputStream)
-                            .subscribe(pipelines::add, error::set);
+                            .subscribe(pipelines::build, error::set);
                     if (Objects.nonNull(error.get())) {
                         logger.error("During pipeline loading an error happened", error.get());
                         return;

@@ -5,6 +5,7 @@ import io.reactivex.rxjava3.annotations.NonNull;
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.core.Observer;
 import org.observertc.webrtc.connector.common.BigQueryService;
+import org.observertc.webrtc.connector.sources.Source;
 import org.observertc.webrtc.connector.sources.notversionedbigquery.NotVersionedBigQuerySource;
 import org.observertc.webrtc.schemas.reports.*;
 import org.slf4j.Logger;
@@ -15,7 +16,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Function;
 
 public abstract class RecordMapperAbstract extends Observable<Report> {
-    private static final Logger logger = LoggerFactory.getLogger(RecordMapperAbstract.class);
+    private static final Logger DEFAULT_LOGGER = LoggerFactory.getLogger(RecordMapperAbstract.class);
     public static final String MIGRATION_MARKER = NotVersionedBigQuerySource.class.getSimpleName();
     public static final String SERVICE_UUID_FIELD_NAME = "serviceUUID";
     public static final String SERVICE_NAME_FIELD_NAME = "serviceName";
@@ -27,6 +28,7 @@ public abstract class RecordMapperAbstract extends Observable<Report> {
     private final ReportType reportType;
     private final int limit = 100000;
     private final Map<String, Integer> fieldMap = new HashMap<>();
+    private Logger logger = DEFAULT_LOGGER;
 
     public RecordMapperAbstract(BigQueryService bigQueryService, String tableName, ReportType reportType) {
         this.bigQueryService = bigQueryService;
@@ -46,9 +48,10 @@ public abstract class RecordMapperAbstract extends Observable<Report> {
             for (FieldValueList row : result.iterateAll()) {
                 Report report = this.makeReport(row);
                 observer.onNext(report);
-                if (this.limit <= ++fetched) {
+                if (10 <= ++fetched) {
                     logger.info("Fetched {} records from table {}", fetched, this.tableName);
                     fetched = 0;
+                    break;
                 }
             }
             logger.info("Fetching records for {} has ended", this.tableName);
@@ -58,6 +61,12 @@ public abstract class RecordMapperAbstract extends Observable<Report> {
         }
         observer.onComplete();
     }
+
+    public RecordMapperAbstract withLogger(Logger logger) {
+        this.logger = logger;
+        return this;
+    }
+
     private List<String> getReportFieldNames() {
         List<String> result = new ArrayList<>();
         result.add(SERVICE_UUID_FIELD_NAME);

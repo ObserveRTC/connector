@@ -6,8 +6,6 @@ import org.observertc.webrtc.connector.sources.Source;
 import org.observertc.webrtc.connector.sources.notversionedbigquery.observabletables.*;
 import org.observertc.webrtc.schemas.reports.Report;
 import org.observertc.webrtc.schemas.reports.ReportType;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.nio.ByteBuffer;
 import java.util.HashMap;
@@ -15,7 +13,6 @@ import java.util.List;
 import java.util.Map;
 
 public class NotVersionedBigQuerySource extends Source {
-    private static final Logger logger = LoggerFactory.getLogger(NotVersionedBigQuerySource.class);
     private final Map<ReportType, String> tableNames;
     private final BigQueryService bigQueryService;
     public NotVersionedBigQuerySource(BigQueryService bigQueryService) {
@@ -41,6 +38,7 @@ public class NotVersionedBigQuerySource extends Source {
                 new Tracks(this.bigQueryService, this.tableNames.get(ReportType.TRACK)),
                 new UserMediaErrors(this.bigQueryService, this.tableNames.get(ReportType.USER_MEDIA_ERROR))
         );
+        sources.forEach(s -> s.withLogger(this.logger));
         var encoder = Report.getEncoder();
         return Observable.concat(sources).map(encoder::encode).map(ByteBuffer::array);
     }

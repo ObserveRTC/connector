@@ -5,19 +5,16 @@ import com.google.cloud.bigquery.InsertAllRequest;
 import com.google.cloud.bigquery.InsertAllResponse;
 import com.google.cloud.bigquery.TableId;
 import io.reactivex.rxjava3.annotations.NonNull;
-import org.observertc.webrtc.connector.adapters.bigquery.Adapter;
 import org.observertc.webrtc.connector.common.BigQueryService;
+import org.observertc.webrtc.connector.databases.bigquery.Adapter;
 import org.observertc.webrtc.connector.sinks.Sink;
 import org.observertc.webrtc.schemas.reports.Report;
 import org.observertc.webrtc.schemas.reports.ReportType;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
 public class BigQuerySink extends Sink {
-    private static final Logger logger = LoggerFactory.getLogger(BigQuerySink.class);
     private final Map<ReportType, Route> routes;
     private final BigQueryService bigQueryService;
 
@@ -38,8 +35,7 @@ public class BigQuerySink extends Sink {
             if (Objects.isNull(requestBuilder)) {
                 String tableName = route.tableName;
                 if (Objects.isNull(tableName)) {
-                    logger.warn("{}: There is no route defined for entry type {}",
-                            this.getPipelineName(),
+                    logger.warn("There is no route defined for entry type {}",
                             reportType);
                     continue;
                 }
@@ -56,7 +52,7 @@ public class BigQuerySink extends Sink {
         }
 
         if (requestbuilders.size() < 1) {
-            logger.info("{}: No entries to send", this.getPipelineName());
+            logger.info("No entries to send");
             return;
         }
 
@@ -72,7 +68,6 @@ public class BigQuerySink extends Sink {
                 // If any of the insertions failed, this lets you inspect the errors
                 for (Map.Entry<Long, List<BigQueryError>> errorEntry : response.getInsertErrors().entrySet()) {
                     logger.error("{}: Table: {}, ErrorEntryKey: {} ErrorResponse: {}",
-                            this.getPipelineName(),
                             entryType,
                             errorEntry.getKey(),
                             String.join(", \n", errorEntry.getValue().stream().map(Object::toString).collect(Collectors.toList()))
@@ -80,8 +75,7 @@ public class BigQuerySink extends Sink {
                     // inspect row error
                 }
             } else {
-                logger.info("{}: {} rows inserted to inserted {}.",
-                        this.getPipelineName(),
+                logger.info("{} rows inserted to inserted {}.",
                         counts.get(entryType),
                         this.routes.get(entryType).tableName
                 );

@@ -6,6 +6,7 @@ import org.apache.kafka.common.serialization.BytesDeserializer;
 import org.apache.kafka.common.serialization.UUIDDeserializer;
 import org.observertc.webrtc.connector.configbuilders.AbstractBuilder;
 import org.observertc.webrtc.connector.configbuilders.Builder;
+import org.observertc.webrtc.connector.configbuilders.ConfigConverter;
 import org.observertc.webrtc.connector.sources.Source;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,7 +26,7 @@ public class KafkaSourceBuilder extends AbstractBuilder implements Builder<Sourc
     public Source build() {
         Config config = this.convertAndValidate(Config.class);
         KafkaSource result = new KafkaSource();
-        Map<String, Object> flattenedProperties = AbstractBuilder.flatten(config.properties, ".");
+        Map<String, Object> flattenedProperties = ConfigConverter.flatten(config.properties, ".");
         this.evaluateProperties(this.sourceName, flattenedProperties);
         flattenedProperties.entrySet().stream().forEach(entry -> result.withProperty(entry.getKey(), entry.getValue()));
 

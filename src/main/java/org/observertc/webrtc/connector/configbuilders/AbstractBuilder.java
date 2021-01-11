@@ -16,8 +16,6 @@
 
 package org.observertc.webrtc.connector.configbuilders;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.observertc.webrtc.connector.decoders.Decoder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -26,8 +24,6 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 import java.util.function.Function;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 /**
@@ -47,8 +43,6 @@ import java.util.stream.Collectors;
  * @since 0.1
  */
 public abstract class AbstractBuilder {
-	private static final String SYSTEM_ENV_PATTERN_REGEX = "\\$\\{([A-Za-z0-9_]+)(?::([^\\}]*))?\\}";
-	private final Pattern systemEnvPattern = Pattern.compile(SYSTEM_ENV_PATTERN_REGEX);
 	private static Logger logger = LoggerFactory.getLogger(AbstractBuilder.class);
 	private static final String BUILDER_CLASS_SUFFIX = "Builder";
 
@@ -59,226 +53,7 @@ public abstract class AbstractBuilder {
 		return className;
 	}
 
-	private ObjectMapper mapper = new ObjectMapper();
-	private Map<String, Object> configs = new HashMap<>();
-
-	/**
-	 * @param original the original map the merge place to
-	 * @param newMap   the newmap we merge to the original one
-	 * @return the original map extended by the newMap
-	 * @see <a href="https://stackoverflow.com/questions/25773567/recursive-merge-of-n-level-maps">source</a>
-	 */
-	public static Map deepMerge(Map original, Map newMap) {
-		if (newMap == null) {
-			return original;
-		} else if (original == null) {
-			original = new HashMap();
-		}
-		for (Object key : newMap.keySet()) {
-			if (newMap.get(key) instanceof Map && original.get(key) instanceof Map) {
-				Map originalChild = (Map) original.get(key);
-				Map newChild = (Map) newMap.get(key);
-				original.put(key, deepMerge(originalChild, newChild));
-			} else if (newMap.get(key) instanceof List && original.get(key) instanceof List) {
-				List originalChild = (List) original.get(key);
-				List newChild = (List) newMap.get(key);
-				for (Object each : newChild) {
-					if (!originalChild.contains(each)) {
-						originalChild.add(each);
-					}
-				}
-			} else {
-				original.put(key, newMap.get(key));
-			}
-		}
-		return original;
-	}
-
-
-	public static Map<String, Object> flatten(Map<String, Object> structured, String delimiter) {
-		Map<String, Object> result = new HashMap<>();
-		Iterator<Map.Entry<String, Object>> it = structured.entrySet().iterator();
-		for (; it.hasNext(); ) {
-			Map.Entry<String, Object> entry = it.next();
-			String key = entry.getKey();
-			Object value = entry.getValue();
-			if (value instanceof Map == false) {
-				result.put(key, value);
-				continue;
-			}
-			flatten((Map<String, Object>) value, delimiter)
-					.entrySet()
-					.stream()
-					.forEach(flattenEntry ->
-							result.put(key.concat(delimiter).concat(flattenEntry.getKey()), flattenEntry.getValue()));
-		}
-		return result;
-	}
-
-	/**
-	 * Constructs an abstract builder
-	 */
-	public AbstractBuilder() {
-	}
-
-	protected <T> T convertAndValidate(Class<T> klass) {
-		// a comment, to not to let the IDE make it in one line
-		return this.convertAndValidate(klass, this.configs);
-	}
-
-	/**
-	 * Converts the provided configuration to the type of object provided as a parameter, and
-	 * validates the conversion.
-	 *
-	 * @param klass The type of the object we want to convert the configuration to
-	 * @param <T>   The type of the result we return after the conversion
-	 * @return An object of the desired type setup with values from the configuration.
-	 * @throws ConstraintViolationException if the validation fails during the conversion.
-	 */
-	protected <T> T convertAndValidate(Class<T> klass, Map<String, Object> configs) {
-		this.checkForSystemEnv(configs);
-		T result = this.mapper.convertValue(configs, klass);
-		ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
-		Validator validator = factory.getValidator();
-		Set<ConstraintViolation<T>> violations = validator.validate(result);
-
-		if (violations != null && !violations.isEmpty()) {
-			StringBuilder sb = new StringBuilder();
-			for (ConstraintViolation<T> constraintViolation : violations) {
-				sb.append(constraintViolation.getMessage())
-						.append(" ");
-			}
-
-			String errorMessage = sb.toString();
-
-			if (logger.isDebugEnabled()) {
-				logger.debug(errorMessage);
-			}
-
-			throw new ConstraintViolationException(violations);
-		}
-		return result;
-	}
-
-	/**
-	 * Checks all values for a configuration may possible have a pattern points to system environments.
-	 * If it does found a pattern: ${ENV} or ${ENV:DEFAULT_VALUE} than it tries to get a
-	 * system variable name ENV (case sensitive try!), if it does not find it,
-	 * it checks if a DEFAULT_VALUE has been set, and assign that.
-	 * <p>
-	 * NOTE: ${HOST:localhost:1} sets the DEFAULT_VALUE to "localhost:1", but for
-	 * IDE parsing reason, or feeling better whatever, you can write `localhost:1`, the
-	 * result will be the same.
-	 */
-
-	private String convertValue(String value) {
-		Matcher matcher = this.systemEnvPattern.matcher(value);
-
-		while (matcher.find()) {
-			String ENV = matcher.group(1);
-			String envValue = System.getenv(ENV);
-			if (envValue == null) {
-				envValue = matcher.group(2);
-				if (envValue != null) {
-					char quote = '`';
-					if (envValue.charAt(0) == quote && envValue.charAt(envValue.length() - 1) == quote) {
-						envValue = envValue.substring(1, envValue.length() - 1);
-					}
-				} else {
-					// It is necessary to assign an empty striing when nothing has been found
-					// because otherwise the subexpr would crash with null.
-					envValue = "";
-				}
-			}
-			Pattern subexpr = Pattern.compile(Pattern.quote(matcher.group(0)));
-			value = subexpr.matcher(value).replaceAll(envValue);
-		}
-		return value;
-	}
-
-	protected Object checkForSystemEnv(Object obj) {
-		if (obj instanceof String) {
-			return this.convertValue((String) obj);
-		}
-		if (obj instanceof List) {
-			List subject = ((List) obj);
-			for (int i = 0; i < subject.size(); ++i) {
-				Object before = subject.get(i);
-				Object after = this.checkForSystemEnv(before);
-				if (!before.equals(after)) {
-					subject.set(i, after);
-				}
-			}
-			return subject;
-		}
-		if (obj instanceof Map) {
-			Map<String, Object> map = (Map<String, Object>) obj;
-			Iterator<Map.Entry<String, Object>> it = map.entrySet().iterator();
-			for (; it.hasNext(); ) {
-				Map.Entry<String, Object> entry = it.next();
-				Object before = entry.getValue();
-				Object after = this.checkForSystemEnv(before);
-				if (Objects.isNull(before)) {
-					if (Objects.nonNull(after)) {
-						entry.setValue(after);
-					}
-				} else if (!before.equals(after)){
-					entry.setValue(after);
-				}
-			}
-			return map;
-		}
-		return obj;
-	}
-
-
-	public <T> T get(String key) {
-		return this.get(key, obj -> (T) obj);
-	}
-
-	/**
-	 * Gets the config belongs to the key, and if it exists, it
-	 * converts it using a converter function provided in the params.
-	 * If the key does not exist it returns null.
-	 *
-	 * @param key       The key we are looking for in the so far provided configurations
-	 * @param converter The converter converts to the desired type of object if the key exists
-	 * @param <T>       The type of the result of the conversion
-	 * @return The result of the convert operation if the key exists, null otherwise
-	 */
-	protected <T> T get(String key, Function<Object, T> converter) {
-		return this.getOrDefault(key, converter, null);
-	}
-
-	/**
-	 * Gets the config belongs to the key, and if it exists, it
-	 * converts it using a converter function provided in the params.
-	 * If the key does not exist it returns the defaultValue.
-	 *
-	 * @param key          The key we are looking for in the so far provided configurations
-	 * @param converter    The converter converts to the desired type of object if the key exists
-	 * @param defaultValue The default value returned if the key does not exist
-	 * @param <T>          The type of the result of the conversion
-	 * @return The result of the convert operation if the key exists, defaultValue otherwise
-	 */
-	protected <T> T getOrDefault(String key, Function<Object, T> converter, T defaultValue) {
-		Object value = this.configs.get(key);
-		if (value == null) {
-			return defaultValue;
-		}
-		T result = converter.apply(value);
-		return result;
-	}
-
-	/**
-	 * Adds a key - value pair to the configuration map
-	 *
-	 * @param key   The key we bound the value to
-	 * @param value The value we store for the corresponding key
-	 */
-	protected void configure(String key, Object value) {
-		this.configs.put(key, value);
-	}
+	private final Map<String, Object> config = new HashMap<>();
 
 	/**
 	 * Gets a klass corresponding to the name of the class
@@ -363,7 +138,6 @@ public abstract class AbstractBuilder {
 
 		Optional<Class<T>> klassHolder = this.getClassFor(className);
 		if (!klassHolder.isPresent()) {
-			logger.info("Class for " + className + " does not exist");
 			return null;
 		}
 		Class<T> klass = klassHolder.get();
@@ -387,6 +161,71 @@ public abstract class AbstractBuilder {
 		return (T) constructed;
 	}
 
+	protected <T> T convertAndValidate(Class<T> klass) {
+		return ConfigConverter.convert(klass, this.config);
+	}
+
+	/**
+	 * Converts the provided configuration to the type of object provided as a parameter, and
+	 * validates the conversion.
+	 *
+	 * @param klass The type of the object we want to convert the configuration to
+	 * @param <T>   The type of the result we return after the conversion
+	 * @return An object of the desired type setup with values from the configuration.
+	 * @throws ConstraintViolationException if the validation fails during the conversion.
+	 */
+	protected <T> T convertAndValidate(Class<T> klass, Map<String, Object> configs) {
+		return ConfigConverter.convert(klass, configs);
+	}
+
+	public <T> T get(String key) {
+		return this.get(key, obj -> (T) obj);
+	}
+
+	/**
+	 * Gets the config belongs to the key, and if it exists, it
+	 * converts it using a converter function provided in the params.
+	 * If the key does not exist it returns null.
+	 *
+	 * @param key       The key we are looking for in the so far provided configurations
+	 * @param converter The converter converts to the desired type of object if the key exists
+	 * @param <T>       The type of the result of the conversion
+	 * @return The result of the convert operation if the key exists, null otherwise
+	 */
+	protected <T> T get(String key, Function<Object, T> converter) {
+		return this.getOrDefault(key, converter, null);
+	}
+
+	/**
+	 * Gets the config belongs to the key, and if it exists, it
+	 * converts it using a converter function provided in the params.
+	 * If the key does not exist it returns the defaultValue.
+	 *
+	 * @param key          The key we are looking for in the so far provided configurations
+	 * @param converter    The converter converts to the desired type of object if the key exists
+	 * @param defaultValue The default value returned if the key does not exist
+	 * @param <T>          The type of the result of the conversion
+	 * @return The result of the convert operation if the key exists, defaultValue otherwise
+	 */
+	protected <T> T getOrDefault(String key, Function<Object, T> converter, T defaultValue) {
+		Object value = this.config.get(key);
+		if (value == null) {
+			return defaultValue;
+		}
+		T result = converter.apply(value);
+		return result;
+	}
+
+	/**
+	 * Adds a key - value pair to the configuration map
+	 *
+	 * @param key   The key we bound the value to
+	 * @param value The value we store for the corresponding key
+	 */
+	protected void configure(String key, Object value) {
+		this.config.put(key, value);
+	}
+
 	/**
 	 * Sets up the value for a configuration provided in the name field.
 	 *
@@ -396,7 +235,7 @@ public abstract class AbstractBuilder {
 	 * @return {@link this} to configure the builder further
 	 */
 	public void withConfiguration(String key, Object value) {
-		this.configs.put(key, value);
+		this.config.put(key, value);
 	}
 
 	public void withConfiguration(Map<String, Object> source) {
@@ -406,15 +245,15 @@ public abstract class AbstractBuilder {
 		if (source.size() < 1) {
 			return;
 		}
-		this.getConfigs().putAll(source);
+		this.getConfig().putAll(source);
 	}
 
-	protected Map<String, Object> getConfigs() {
-		return this.configs;
+	protected Map<String, Object> getConfig() {
+		return this.config;
 	}
 
 	public Object getConfiguration(String key) {
-		return this.configs.get(key);
+		return this.config.get(key);
 	}
 
 }

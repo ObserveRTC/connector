@@ -3,7 +3,7 @@
 // (powered by FernFlower decompiler)
 //
 
-package org.observertc.webrtc.connector.adapters;
+package org.observertc.webrtc.connector.databases;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

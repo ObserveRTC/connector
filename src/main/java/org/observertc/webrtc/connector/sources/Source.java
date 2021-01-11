@@ -11,16 +11,18 @@ import java.util.Objects;
 import java.util.Optional;
 
 public abstract class Source extends Observable<byte[]> implements Runnable {
-    private static final Logger logger = LoggerFactory.getLogger(Source.class);
+    private static final Logger DEFAULT_LOGGER = LoggerFactory.getLogger(Source.class);
     private Optional<Pipeline> pipelineHolder = Optional.empty();
 
     private Observer<? super byte[]> observer = null;
     private Observable<byte[]> source;
+    protected Logger logger = DEFAULT_LOGGER;
 
     @Override
     protected void subscribeActual(@NonNull Observer<? super byte[]> observer) {
         if (Objects.nonNull(this.observer)) {
-            throw new IllegalStateException(this.getPipelineName() + ": for Source " + this.getClass().getSimpleName() + " Cannot have more than one observer to be subscribed to a source.");
+            logger.error("Cannot have more than one observer to be subscribed to a source.");
+            throw new IllegalStateException(this.getClass().getSimpleName() + " is used in a flawful way");
         }
 
         this.observer = observer;
@@ -33,8 +35,7 @@ public abstract class Source extends Observable<byte[]> implements Runnable {
 
     public void start() {
         if (Objects.isNull(this.observer)) {
-            logger.error("{}: No observer has been subscribed for {}, therefore the pipeline cannot run",
-                    this.getPipelineName(),
+            logger.error("No observer has been subscribed for {}, therefore the pipeline cannot run",
                     this.getClass().getSimpleName()
             );
             return;
@@ -44,8 +45,7 @@ public abstract class Source extends Observable<byte[]> implements Runnable {
     }
 
     public void stop() {
-        logger.warn("{}: {} stop method is called, but there is no actual implementation for it. ",
-                this.getPipelineName(),
+        logger.warn("{} stop method is called, but there is no actual implementation for it. ",
                 this.getClass().getSimpleName());
     }
 
@@ -60,11 +60,9 @@ public abstract class Source extends Observable<byte[]> implements Runnable {
         return this;
     }
 
-    protected String getPipelineName() {
-        if (!this.pipelineHolder.isPresent()) {
-            return "Unknown pipeline";
-        }
-        Pipeline pipeline = this.pipelineHolder.get();
-        return pipeline.getName();
+    public Source withLogger(Logger logger) {
+        this.logger.info("Default logger for {} is switched to {}", this.getClass().getSimpleName(), logger.getName());
+        this.logger = logger;
+        return this;
     }
 }

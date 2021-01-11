@@ -1,4 +1,4 @@
-package org.observertc.webrtc.connector.adapters.bigquery;
+package org.observertc.webrtc.connector.databases.bigquery;
 
 import com.google.cloud.bigquery.Schema;
 import org.junit.jupiter.api.Assertions;

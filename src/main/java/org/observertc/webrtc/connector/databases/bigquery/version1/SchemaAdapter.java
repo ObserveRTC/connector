@@ -1,17 +1,17 @@
-package org.observertc.webrtc.connector.adapters.bigquery.version1;
+package org.observertc.webrtc.connector.databases.bigquery.version1;
 
 import com.google.cloud.bigquery.*;
 import org.apache.avro.Schema;
-import org.observertc.webrtc.connector.adapters.AbstractTask;
-import org.observertc.webrtc.connector.adapters.Job;
-import org.observertc.webrtc.connector.adapters.Task;
-import org.observertc.webrtc.connector.adapters.bigquery.Adapter;
-import org.observertc.webrtc.connector.adapters.bigquery.AdapterBuilder;
+import org.observertc.webrtc.connector.databases.AbstractTask;
+import org.observertc.webrtc.connector.databases.Job;
+import org.observertc.webrtc.connector.databases.Task;
+import org.observertc.webrtc.connector.databases.bigquery.Adapter;
+import org.observertc.webrtc.connector.databases.bigquery.AdapterBuilder;
+import org.observertc.webrtc.connector.sinks.Sink;
 import org.observertc.webrtc.schemas.reports.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.time.Instant;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -19,7 +19,7 @@ import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Function;
 
 public class SchemaAdapter extends Job {
-    private static final Logger logger = LoggerFactory.getLogger(SchemaAdapter.class);
+    private static final Logger DEFAULT_LOGGER = LoggerFactory.getLogger(SchemaAdapter.class);
     private static final String CREATE_DATASET_TASK_NAME = "CreateDatasetTask";
     private static final String CREATE_TABLES_TASK_NAME = "CreateTablesTask";
 
@@ -33,6 +33,7 @@ public class SchemaAdapter extends Job {
     private final Map<ReportType, Schema> schemaMap = new HashMap<>();
     private final Map<ReportType, String> tableNames = new HashMap<>();
     private final Map<ReportType, Adapter> adapters = new HashMap<>();
+    private Logger logger = DEFAULT_LOGGER;
 
     public SchemaAdapter(BigQuery bigQuery, String projectId, String datasetId) {
         this.bigQuery = bigQuery;
@@ -75,6 +76,12 @@ public class SchemaAdapter extends Job {
         this.withTask(createDataset)
                 .withTask(createTables, createDataset)
         ;
+    }
+
+    public SchemaAdapter withLogger(Logger logger) {
+        this.logger.info("Default logger for {} is switched to {}", this.getClass().getSimpleName(), logger.getName());
+        this.logger = logger;
+        return this;
     }
 
     public SchemaAdapter withTableName(ReportType reportType, String tableName) {
@@ -217,5 +224,8 @@ public class SchemaAdapter extends Job {
         }
     }
 
+    private void delete() {
+
+    }
 
 }

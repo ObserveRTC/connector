@@ -13,9 +13,11 @@ import java.util.Objects;
 import java.util.Optional;
 
 public abstract class Sink implements Observer<List<Report>> {
-    private static final Logger logger = LoggerFactory.getLogger(Sink.class);
+    private static final Logger DEFAULT_LOGGER = LoggerFactory.getLogger(Sink.class);
     private Optional<Pipeline> pipelineHolder = Optional.empty();
     private Disposable upstream;
+    protected Logger logger = DEFAULT_LOGGER;
+
     @Override
     public void onSubscribe(@NonNull Disposable d) {
         this.upstream = d;
@@ -28,28 +30,26 @@ public abstract class Sink implements Observer<List<Report>> {
                 this.upstream.dispose();
             }
         }
-        logger.warn("Error occurred in pipeline " + this.getPipelineName(), e);
+        logger.warn("Error occurred in pipeline ", e);
     }
 
     @Override
     public void onComplete() {
-        logger.info("Pipeline {} is completed", this.getPipelineName());
+        logger.info("Pipeline is completed");
     }
 
     public Sink inPipeline(Pipeline pipeline) {
         if (Objects.isNull(pipeline)) {
-            logger.warn("{} tried to be assigned with a null pipeline", this.getClass().getSimpleName());
+            logger.warn("tried to be assigned with a null pipeline");
             return this;
         }
         this.pipelineHolder = Optional.of(pipeline);
         return this;
     }
 
-    protected String getPipelineName() {
-        if (!this.pipelineHolder.isPresent()) {
-            return "Unknown pipeline";
-        }
-        Pipeline pipeline = this.pipelineHolder.get();
-        return pipeline.getName();
+    public Sink withLogger(Logger logger) {
+        this.logger.info("Default logger for {} is switched to {}", this.getClass().getSimpleName(), logger.getName());
+        this.logger = logger;
+        return this;
     }
 }

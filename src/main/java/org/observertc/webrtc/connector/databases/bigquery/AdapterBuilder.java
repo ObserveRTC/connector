@@ -1,4 +1,4 @@
-package org.observertc.webrtc.connector.adapters.bigquery;
+package org.observertc.webrtc.connector.databases.bigquery;
 
 import com.google.cloud.bigquery.Field;
 import com.google.cloud.bigquery.LegacySQLTypeName;
