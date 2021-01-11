@@ -1,11 +1,11 @@
 package org.observertc.webrtc.connector.sinks.bigquery;
 
 import io.micronaut.context.annotation.Prototype;
-import org.observertc.webrtc.connector.adapters.bigquery.Adapter;
-import org.observertc.webrtc.connector.adapters.bigquery.version1.SchemaAdapter;
 import org.observertc.webrtc.connector.common.BigQueryService;
 import org.observertc.webrtc.connector.configbuilders.AbstractBuilder;
 import org.observertc.webrtc.connector.configbuilders.Builder;
+import org.observertc.webrtc.connector.databases.bigquery.Adapter;
+import org.observertc.webrtc.connector.databases.bigquery.version1.SchemaAdapter;
 import org.observertc.webrtc.connector.sinks.Sink;
 import org.observertc.webrtc.schemas.reports.ReportType;
 import org.slf4j.Logger;

@@ -1,13 +1,13 @@
 package org.observertc.webrtc.connector.pipelines;
 
 import org.observertc.webrtc.ObjectToString;
+import org.observertc.webrtc.connector.configbuilders.ConfigConverter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.inject.Provider;
 import javax.inject.Singleton;
 import java.util.*;
-import java.util.concurrent.ExecutorService;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
@@ -19,8 +19,9 @@ public class Pipelines {
 
     private final List<PipelineBuilder> builders = new ArrayList<>();
     private final Provider<PipelineBuilder> pipelineBuilderProvider;
-    private final ExecutorService executorService;
+    private final ThreadPoolExecutor executorService;
     private final Map<UUID, Pipeline> scheduled;
+
 
     public Pipelines(
                     PipelinesConfig config,
@@ -33,32 +34,52 @@ public class Pipelines {
 
     }
 
-    public Runnable add(Map<String, Object> configuration) {
-        PipelineBuilder pipelineBuilder = this.pipelineBuilderProvider.get();
-        pipelineBuilder.withConfiguration(configuration);
-        Optional<Pipeline> pipelineHolder = pipelineBuilder.build();
-        if (!pipelineHolder.isPresent()) {
-            logger.warn("Cannot build pipeline for configuration: {}", ObjectToString.toString(configuration));
-            return () -> {
-                logger.warn("A runnable trigger is called for a pipeline, " +
-                        "which was not built. configuration for that pipeline: {}",
-                        ObjectToString.toString(configuration));
-            };
-        }
-        Pipeline pipeline = pipelineHolder.get();
-        this.builders.add(pipelineBuilder);
-        UUID uuid = UUID.randomUUID();
-        this.scheduled.put(uuid, pipeline);
-        Pipelines lock = this;
-        return () -> {
-            synchronized (lock) {
-                Pipeline scheduledPipeline = scheduled.remove(uuid);
-                if (Objects.isNull(scheduledPipeline)) {
-                    logger.warn("There is no scheduled pipeline for uuid {}. Nothing will be started", uuid);
-                    return;
-                }
-                executorService.submit(scheduledPipeline);
+    public Runnable build(Map<String, Object> configuration) {
+        PipelineConfig config = ConfigConverter.convert(PipelineConfig.class, configuration);
+        List<Runnable> replicas = new ArrayList<>();
+        String name = config.name;
+        for (int instances = 1; instances <= config.meta.replicas; ++instances) {
+            if (1 < config.meta.replicas) {
+                config.name = name.concat(String.format("-%d", instances));
             }
+            PipelineBuilder pipelineBuilder = this.pipelineBuilderProvider.get();
+            pipelineBuilder.withConfiguration(config);
+            Optional<Pipeline> pipelineHolder = pipelineBuilder.build();
+            if (!pipelineHolder.isPresent()) {
+                logger.warn("Cannot build pipeline for configuration: {}", ObjectToString.toString(configuration));
+                return () -> {
+                    logger.warn("A runnable trigger is called for a pipeline, " +
+                                    "which was not built. configuration for that pipeline: {}",
+                            ObjectToString.toString(configuration));
+                };
+            }
+            Pipeline pipeline = pipelineHolder.get();
+            this.builders.add(pipelineBuilder);
+            UUID uuid = UUID.randomUUID();
+            this.scheduled.put(uuid, pipeline);
+            Pipelines lock = this;
+            Runnable start = () -> {
+                synchronized (lock) {
+                    Pipeline scheduledPipeline = scheduled.remove(uuid);
+                    if (Objects.isNull(scheduledPipeline)) {
+                        logger.warn("There is no scheduled pipeline for uuid {}. Nothing will be started", uuid);
+                        return;
+                    }
+                    String pipelineName = scheduledPipeline.getName();
+                    scheduledPipeline.withClosingCallback(() -> {
+                        logger.info("{} is ended. total number or running pipelines: {}", pipelineName,
+                                executorService.getActiveCount() - 1);
+                    });
+                    executorService.submit(scheduledPipeline);
+                    logger.info("{} is running. total number or running pipelines: {}", pipelineName,
+                            executorService.getActiveCount());
+                }
+            };
+            replicas.add(start);
+        }
+
+        return () -> {
+            replicas.forEach(Runnable::run);
         };
     }
 
@@ -75,7 +96,16 @@ public class Pipelines {
             Iterator<Map.Entry<UUID, Pipeline>> it = this.scheduled.entrySet().iterator();
             for (; it.hasNext();) {
                 Map.Entry<UUID, Pipeline> entry = it.next();
-                this.executorService.submit(entry.getValue());
+                Pipeline scheduledPipeline = entry.getValue();
+                String pipelineName = scheduledPipeline.getName();
+                scheduledPipeline.withClosingCallback(() -> {
+                    logger.info("{} is ended. total number or running pipelines: {}", pipelineName,
+                            executorService.getActiveCount());
+                });
+
+                executorService.submit(scheduledPipeline);
+                logger.info("{} is running. total number or running pipelines: {}", pipelineName,
+                        executorService.getActiveCount() - 1);
                 it.remove();
             }
         }

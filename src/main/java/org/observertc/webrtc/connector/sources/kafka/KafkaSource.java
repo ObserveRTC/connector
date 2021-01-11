@@ -13,8 +13,6 @@ import reactor.kafka.receiver.ReceiverRecord;
 import java.util.*;
 
 public class KafkaSource extends Source {
-    private static final Logger logger = LoggerFactory.getLogger(KafkaSource.class);
-
     private final Properties properties;
     private String topic;
 

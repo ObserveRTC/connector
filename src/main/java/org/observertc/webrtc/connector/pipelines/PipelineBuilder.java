@@ -1,5 +1,6 @@
 package org.observertc.webrtc.connector.pipelines;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.micronaut.context.annotation.Prototype;
 import io.reactivex.rxjava3.disposables.Disposable;
 import io.reactivex.rxjava3.functions.Function;
@@ -16,12 +17,15 @@ import org.observertc.webrtc.connector.transformations.TransformationBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.validation.constraints.NotNull;
-import java.util.*;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
 
 @Prototype
 public class PipelineBuilder extends AbstractBuilder implements Function<Map<String, Object>, Optional<Pipeline>> {
     private static final Logger logger = LoggerFactory.getLogger(PipelineBuilder.class);
+    protected static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
+
     private Disposable disposable;
 
     public PipelineBuilder() {
@@ -30,15 +34,19 @@ public class PipelineBuilder extends AbstractBuilder implements Function<Map<Str
 
     @Override
     public Optional<Pipeline> apply(Map<String, Object> source) throws Throwable {
-        this.getConfigs().clear();
+        this.getConfig().clear();
         this.withConfiguration(source);
         return this.build();
     }
 
+    public void withConfiguration(PipelineConfig config) {
+        Map<String, Object> map = OBJECT_MAPPER.convertValue(config, Map.class);
+        this.withConfiguration(map);
+    }
+
     public Optional<Pipeline> build() {
-        Config config = this.convertAndValidate(Config.class);
-        Pipeline result = new Pipeline()
-                .withName(config.name);
+        PipelineConfig config = this.convertAndValidate(PipelineConfig.class);
+        Pipeline result = new Pipeline(config.name);
 
         SourceBuilder sourceBuilder = new SourceBuilder();
         sourceBuilder.withConfiguration(config.source);
@@ -83,26 +91,6 @@ public class PipelineBuilder extends AbstractBuilder implements Function<Map<Str
         result.withSink(sink);
 
         return Optional.of(result);
-    }
-
-    public static class Config {
-
-        public String name;
-
-        public MetaConfig meta = new MetaConfig();
-
-        @NotNull
-        public Map<String, Object> source;
-
-        public Map<String, Object> decoder = new HashMap<>();
-
-        public List<Map<String, Object>> transformations = new ArrayList<>();
-
-        public BufferConfig buffer = new BufferConfig();
-
-        @NotNull
-        public Map<String, Object> sink;
-
     }
 
 }
