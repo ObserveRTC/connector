@@ -14,21 +14,20 @@
  * limitations under the License.
  */
 
-package org.observertc.webrtc.connector.sources.notversionedbigquery.observabletables;
+package org.observertc.webrtc.connector.sources.bigquerysources.observabletables;
 
 import com.google.cloud.bigquery.FieldValue;
 import com.google.cloud.bigquery.FieldValueList;
-import io.micronaut.context.annotation.Prototype;
-import org.apache.avro.Protocol;
 import org.observertc.webrtc.connector.common.BigQueryService;
-import org.observertc.webrtc.schemas.reports.*;
+import org.observertc.webrtc.schemas.reports.ICELocalCandidate;
+import org.observertc.webrtc.schemas.reports.ReportType;
+import org.observertc.webrtc.schemas.reports.TransportProtocol;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.function.Function;
 
 public class ICELocalCandidates extends RecordMapperAbstract {
 	private static final Logger logger = LoggerFactory.getLogger(ICELocalCandidates.class);

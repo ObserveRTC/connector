@@ -1,23 +1,21 @@
-package org.observertc.webrtc.connector.sources.notversionedbigquery.observabletables;
+package org.observertc.webrtc.connector.sources.bigquerysources.observabletables;
 
 import com.google.cloud.bigquery.*;
 import io.reactivex.rxjava3.annotations.NonNull;
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.core.Observer;
 import org.observertc.webrtc.connector.common.BigQueryService;
-import org.observertc.webrtc.connector.sources.Source;
-import org.observertc.webrtc.connector.sources.notversionedbigquery.NotVersionedBigQuerySource;
+import org.observertc.webrtc.connector.sources.bigquerysources.BigQuerySources;
 import org.observertc.webrtc.schemas.reports.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.*;
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Function;
 
 public abstract class RecordMapperAbstract extends Observable<Report> {
     private static final Logger DEFAULT_LOGGER = LoggerFactory.getLogger(RecordMapperAbstract.class);
-    public static final String MIGRATION_MARKER = NotVersionedBigQuerySource.class.getSimpleName();
+    public static final String MIGRATION_MARKER = BigQuerySources.class.getSimpleName();
     public static final String SERVICE_UUID_FIELD_NAME = "serviceUUID";
     public static final String SERVICE_NAME_FIELD_NAME = "serviceName";
     public static final String TIMESTAMP_FIELD_NAME = "timestamp";
@@ -27,10 +25,12 @@ public abstract class RecordMapperAbstract extends Observable<Report> {
     private final BigQueryService bigQueryService;
     private final String tableName;
     private final ReportType reportType;
-    private final int limit = 100000;
+    private final int limit = 100;
     private final Map<String, Integer> fieldMap = new HashMap<>();
     private Logger logger = DEFAULT_LOGGER;
     private String forcedMarker = null;
+    private String datasetId = "not set";
+    private String projectId = "not set";
 
     public RecordMapperAbstract(BigQueryService bigQueryService, String tableName, ReportType reportType) {
         this.bigQueryService = bigQueryService;
@@ -45,20 +45,21 @@ public abstract class RecordMapperAbstract extends Observable<Report> {
             TableId tableId = TableId.of(this.bigQueryService.getDatasetId(), this.tableName);
             TableResult result = bigquery.listTableData(tableId, BigQuery.TableDataListOption.pageSize(this.limit));
             this.fieldMap.putAll(this.buildFieldMap(tableId));
-            logger.info("Fetching records for {} has begun", this.tableName);
+            logger.info("{}:{} Fetching records for {} has begun", this.projectId, this.datasetId, this.tableName);
             int fetched = 0;
             for (FieldValueList row : result.iterateAll()) {
                 Report report = this.makeReport(row);
                 observer.onNext(report);
                 if (this.limit <= ++fetched) {
-                    logger.info("Fetched {} records from table {}", fetched, this.tableName);
+                    logger.info("{}:{} Fetched {} records from table {}",  this.projectId, this.datasetId, fetched, this.tableName);
                     fetched = 0;
+                    break;
                 }
             }
-            logger.info("Fetching records for {} has ended", this.tableName);
+            logger.info("{}:{} Fetching records for {} has ended",  this.projectId, this.datasetId, this.tableName);
 
         } catch (Throwable ex) {
-            logger.warn("Migration for {} is stoppped due to exception: {}", this.tableName, ex.getMessage());
+            logger.warn("{}:{} Migration for {} is stoppped due to exception: {}",  this.projectId, this.datasetId, this.tableName, ex.getMessage());
         }
         observer.onComplete();
     }
@@ -97,6 +98,16 @@ public abstract class RecordMapperAbstract extends Observable<Report> {
 
     public RecordMapperAbstract withMarker(String forcedMarker) {
         this.forcedMarker = forcedMarker;
+        return this;
+    }
+
+    public RecordMapperAbstract fromProjectId(String projectId) {
+        this.projectId = projectId;
+        return this;
+    }
+
+    public RecordMapperAbstract fromDatasetId(String datasetId) {
+        this.datasetId = datasetId;
         return this;
     }
 

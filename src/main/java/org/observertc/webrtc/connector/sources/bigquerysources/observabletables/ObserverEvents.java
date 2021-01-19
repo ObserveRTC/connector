@@ -14,12 +14,11 @@
  * limitations under the License.
  */
 
-package org.observertc.webrtc.connector.sources.notversionedbigquery.observabletables;
+package org.observertc.webrtc.connector.sources.bigquerysources.observabletables;
 
 import com.google.cloud.bigquery.FieldValue;
 import com.google.cloud.bigquery.FieldValueList;
 import org.observertc.webrtc.connector.common.BigQueryService;
-import org.observertc.webrtc.schemas.reports.MediaSource;
 import org.observertc.webrtc.schemas.reports.ObserverEventReport;
 import org.observertc.webrtc.schemas.reports.ReportType;
 

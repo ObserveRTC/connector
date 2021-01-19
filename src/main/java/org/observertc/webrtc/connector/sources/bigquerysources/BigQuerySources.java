@@ -1,9 +1,9 @@
-package org.observertc.webrtc.connector.sources.notversionedbigquery;
+package org.observertc.webrtc.connector.sources.bigquerysources;
 
 import io.reactivex.rxjava3.core.Observable;
 import org.observertc.webrtc.connector.common.BigQueryService;
 import org.observertc.webrtc.connector.sources.Source;
-import org.observertc.webrtc.connector.sources.notversionedbigquery.observabletables.*;
+import org.observertc.webrtc.connector.sources.bigquerysources.observabletables.*;
 import org.observertc.webrtc.schemas.reports.Report;
 import org.observertc.webrtc.schemas.reports.ReportType;
 
@@ -13,12 +13,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-public class NotVersionedBigQuerySource extends Source {
+public class BigQuerySources extends Source {
     private final Map<ReportType, String> tableNames;
     private final BigQueryService bigQueryService;
     private String forcedMarker = null;
 
-    public NotVersionedBigQuerySource(BigQueryService bigQueryService) {
+    public BigQuerySources(BigQueryService bigQueryService) {
         this.tableNames = new HashMap<>();
         this.bigQueryService = bigQueryService;
     }
@@ -41,7 +41,11 @@ public class NotVersionedBigQuerySource extends Source {
                 new Tracks(this.bigQueryService, this.tableNames.get(ReportType.TRACK)),
                 new UserMediaErrors(this.bigQueryService, this.tableNames.get(ReportType.USER_MEDIA_ERROR))
         );
-        sources.forEach(s -> s.withLogger(this.logger));
+        sources.forEach(s ->
+                s.withLogger(this.logger)
+                        .fromProjectId(this.bigQueryService.getProjectId())
+                        .fromDatasetId(this.bigQueryService.getDatasetId())
+        );
         if (Objects.nonNull(this.forcedMarker)) {
             sources.forEach(s -> s.withMarker(this.forcedMarker));
         }
@@ -50,12 +54,12 @@ public class NotVersionedBigQuerySource extends Source {
         return Observable.concat(sources).map(encoder::encode).map(ByteBuffer::array);
     }
 
-    NotVersionedBigQuerySource withTableName(ReportType reportType, String tableName) {
+    BigQuerySources withTableName(ReportType reportType, String tableName) {
         this.tableNames.put(reportType, tableName);
         return this;
     }
 
-    NotVersionedBigQuerySource withForcedMarker(String forcedMarker) {
+    BigQuerySources withForcedMarker(String forcedMarker) {
         this.forcedMarker = forcedMarker;
         return this;
     }

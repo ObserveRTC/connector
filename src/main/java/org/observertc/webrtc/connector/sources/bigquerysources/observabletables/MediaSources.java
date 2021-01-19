@@ -14,35 +14,31 @@
  * limitations under the License.
  */
 
-package org.observertc.webrtc.connector.sources.notversionedbigquery.observabletables;
+package org.observertc.webrtc.connector.sources.bigquerysources.observabletables;
 
 import com.google.cloud.bigquery.FieldValue;
 import com.google.cloud.bigquery.FieldValueList;
 import org.observertc.webrtc.connector.common.BigQueryService;
-import org.observertc.webrtc.schemas.reports.RemoteInboundRTP;
+import org.observertc.webrtc.schemas.reports.MediaSource;
 import org.observertc.webrtc.schemas.reports.ReportType;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
-public class RemoteInboundRTPs extends RecordMapperAbstract {
-	private static final Logger logger = LoggerFactory.getLogger(RemoteInboundRTPs.class);
-
+public class MediaSources extends RecordMapperAbstract {
 	public static final String PEER_CONNECTION_UUID_FIELD_NAME = "peerConnectionUUID";
 	public static final String BROWSERID_FIELD_NAME = "browserID";
 	public static final String MEDIA_UNIT_ID_FIELD_NAME = "mediaUnitID";
 	public static final String USER_ID_FIELD_NAME = "userID";
 
-	public static final String SSRC_FIELD_NAME = "SSRC";
-	public static final String RTT_IN_MS_FIELD_NAME = "RTT";
-	public static final String PACKETSLOST_FIELD_NAME = "packetsLost";
-	public static final String JITTER_FIELD_NAME = "jitter";
-	public static final String CODEC_FIELD_NAME = "codec";
+	public static final String MEDIA_SOURCE_ID_FIELD_NAME = "mediaSourceID";
+	public static final String FRAMES_PER_SECOND_FIELD_NAME = "framesPerSecond";
+	public static final String HEIGHT_FIELD_NAME = "height";
+	public static final String WIDTH_FIELD_NAME = "width";
+	public static final String AUDIO_LEVEL_FIELD_NAME = "audioLevel";
 	public static final String MEDIA_TYPE_FIELD_NAME = "mediaType";
-	public static final String TRANSPORT_ID_FIELD_NAME = "transportID";
+	public static final String TOTAL_AUDIO_ENERGY_FIELD_NAME = "totalAudioEnergy";
+	public static final String TOTAL_SAMPLES_DURATION_FIELD_NAME = "totalSamplesDuration";
 
 
 	@Override
@@ -52,44 +48,37 @@ public class RemoteInboundRTPs extends RecordMapperAbstract {
 		result.add(BROWSERID_FIELD_NAME);
 		result.add(MEDIA_UNIT_ID_FIELD_NAME);
 		result.add(USER_ID_FIELD_NAME);
-		result.add(SSRC_FIELD_NAME);
-		result.add(RTT_IN_MS_FIELD_NAME);
-		result.add(PACKETSLOST_FIELD_NAME);
-		result.add(JITTER_FIELD_NAME);
-		result.add(CODEC_FIELD_NAME);
+		result.add(MEDIA_SOURCE_ID_FIELD_NAME);
+		result.add(FRAMES_PER_SECOND_FIELD_NAME);
+		result.add(HEIGHT_FIELD_NAME);
+		result.add(WIDTH_FIELD_NAME);
+		result.add(AUDIO_LEVEL_FIELD_NAME);
 		result.add(MEDIA_TYPE_FIELD_NAME);
-		result.add(TRANSPORT_ID_FIELD_NAME);
+		result.add(TOTAL_AUDIO_ENERGY_FIELD_NAME);
+		result.add(TOTAL_SAMPLES_DURATION_FIELD_NAME);
 		return result;
 	}
-	public RemoteInboundRTPs(BigQueryService bigQueryService, String tableName) {
-		super(bigQueryService, tableName, ReportType.REMOTE_INBOUND_RTP);
+	public MediaSources(BigQueryService bigQueryService, String tableName) {
+		super(bigQueryService, tableName, ReportType.MEDIA_SOURCE);
 	}
-
 	@Override
 	protected Object makePayload(FieldValueList row) {
-		Double RTT = this.getValue(row, RTT_IN_MS_FIELD_NAME, FieldValue::getDoubleValue, null);
-		if (Objects.isNull(RTT)) {
-			RTT = this.getValue(row, "roundTripTime", FieldValue::getDoubleValue, null);
-		}
-		String codecID = this.getValue(row, CODEC_FIELD_NAME, FieldValue::getStringValue, null);
-		if (Objects.isNull(codecID)) {
-			codecID = this.getValue(row, "codecID", FieldValue::getStringValue, null);
-		}
-		var result = RemoteInboundRTP.newBuilder()
+		// String type
+		var result = MediaSource.newBuilder()
 				.setBrowserId(this.getValue(row, BROWSERID_FIELD_NAME, FieldValue::getStringValue, "NOT FOUND"))
 				.setPeerConnectionUUID(this.getValue(row, PEER_CONNECTION_UUID_FIELD_NAME, FieldValue::getStringValue, "NOT FOUND"))
 				.setMediaUnitId(this.getValue(row, MEDIA_UNIT_ID_FIELD_NAME, FieldValue::getStringValue, "NOT FOUND"))
 				.setUserId(this.getValue(row, USER_ID_FIELD_NAME, FieldValue::getStringValue, null))
-				.setSsrc(this.getValue(row, SSRC_FIELD_NAME, FieldValue::getLongValue, null))
-				.setRoundTripTime(RTT)
-				.setPacketsLost(this.getValue(row, PACKETSLOST_FIELD_NAME, this::getInteger, null))
-				.setJitter(this.getValue(row, JITTER_FIELD_NAME, this::getFloat, null))
-				.setCodecID(codecID)
+				.setMediaSourceId(this.getValue(row, MEDIA_SOURCE_ID_FIELD_NAME, FieldValue::getStringValue, null))
+				.setFramesPerSecond(this.getValue(row, FRAMES_PER_SECOND_FIELD_NAME, FieldValue::getDoubleValue, null))
+				.setHeight(this.getValue(row, HEIGHT_FIELD_NAME, FieldValue::getDoubleValue, null))
+				.setWidth(this.getValue(row, WIDTH_FIELD_NAME, FieldValue::getDoubleValue, null))
+				.setAudioLevel(this.getValue(row, AUDIO_LEVEL_FIELD_NAME, this::getFloat, null))
 				.setMediaType(this.getValue(row, MEDIA_TYPE_FIELD_NAME, this::getMediaType, null))
-				.setTransportID(this.getValue(row, TRANSPORT_ID_FIELD_NAME, FieldValue::getStringValue, null))
+				.setTotalAudioEnergy(this.getValue(row, TOTAL_AUDIO_ENERGY_FIELD_NAME, this::getFloat, null))
+				.setTotalSamplesDuration(this.getValue(row, TOTAL_SAMPLES_DURATION_FIELD_NAME, FieldValue::getDoubleValue, null))
 				//
 				;
-
 		return result.build();
 	}
 

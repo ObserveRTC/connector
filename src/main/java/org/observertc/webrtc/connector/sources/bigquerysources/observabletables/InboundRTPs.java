@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.observertc.webrtc.connector.sources.notversionedbigquery.observabletables;
+package org.observertc.webrtc.connector.sources.bigquerysources.observabletables;
 
 import com.google.cloud.bigquery.FieldValue;
 import com.google.cloud.bigquery.FieldValueList;
@@ -26,8 +26,6 @@ import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static org.observertc.webrtc.connector.sources.notversionedbigquery.observabletables.ICECandidatePairs.CANDIDATE_PAIR_ID_FIELD_NAME;
 
 public class InboundRTPs extends RecordMapperAbstract {
 	private static final Logger logger = LoggerFactory.getLogger(InboundRTPs.class);

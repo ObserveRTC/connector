@@ -1,21 +1,21 @@
-package org.observertc.webrtc.connector.sources.notversionedbigquery.observabletables;
+package org.observertc.webrtc.connector.sources.bigquerysources.observabletables;
 
 import com.google.cloud.bigquery.FieldValue;
 import com.google.cloud.bigquery.FieldValueList;
 import org.observertc.webrtc.connector.common.BigQueryService;
-import org.observertc.webrtc.schemas.reports.FinishedCall;
+import org.observertc.webrtc.schemas.reports.InitiatedCall;
 import org.observertc.webrtc.schemas.reports.ReportType;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class FinishedCalls extends RecordMapperAbstract {
+public class InitiatedCalls extends RecordMapperAbstract {
 
     public static final String CALL_UUID_FIELD_NAME = "callUUID";
     public static final String CALL_NAME_FIELD_NAME = "callName";
 
-    public FinishedCalls(BigQueryService bigQueryService, String tableName) {
-        super(bigQueryService, tableName, ReportType.FINISHED_CALL);
+    public InitiatedCalls(BigQueryService bigQueryService, String tableName) {
+        super(bigQueryService, tableName, ReportType.INITIATED_CALL);
     }
 
     @Override
@@ -24,7 +24,7 @@ public class FinishedCalls extends RecordMapperAbstract {
         String callUUID = this.getValue(row, CALL_UUID_FIELD_NAME, FieldValue::getStringValue, "NOT FOUND");
         String callName = this.getValue(row, CALL_NAME_FIELD_NAME, FieldValue::getStringValue, "NOT FOUND");
 
-        var result = FinishedCall.newBuilder()
+        var result = InitiatedCall.newBuilder()
                 .setCallUUID(callName)
                 .setCallUUID(callUUID);
         return result.build();
