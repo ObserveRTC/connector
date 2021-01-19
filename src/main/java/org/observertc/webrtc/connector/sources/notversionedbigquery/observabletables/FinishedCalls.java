@@ -1,5 +1,6 @@
 package org.observertc.webrtc.connector.sources.notversionedbigquery.observabletables;
 
+import com.google.cloud.bigquery.FieldValue;
 import com.google.cloud.bigquery.FieldValueList;
 import org.observertc.webrtc.connector.common.BigQueryService;
 import org.observertc.webrtc.schemas.reports.FinishedCall;
@@ -20,8 +21,8 @@ public class FinishedCalls extends RecordMapperAbstract {
     @Override
     protected Object makePayload(FieldValueList row) {
         // String type
-        String callUUID = row.get(CALL_UUID_FIELD_NAME).getStringValue();
-        String callName = row.get(CALL_NAME_FIELD_NAME).getStringValue();
+        String callUUID = this.getValue(row, CALL_UUID_FIELD_NAME, FieldValue::getStringValue, "NOT FOUND");
+        String callName = this.getValue(row, CALL_NAME_FIELD_NAME, FieldValue::getStringValue, "NOT FOUND");
 
         var result = FinishedCall.newBuilder()
                 .setCallUUID(callName)

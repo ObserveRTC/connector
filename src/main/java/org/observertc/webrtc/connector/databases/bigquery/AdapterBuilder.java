@@ -4,6 +4,7 @@ import com.google.cloud.bigquery.Field;
 import com.google.cloud.bigquery.LegacySQLTypeName;
 import javafx.util.Pair;
 import org.apache.avro.Schema;
+import reactor.util.function.Tuple2;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
@@ -13,7 +14,7 @@ public class AdapterBuilder {
 
     private Schema schema = null;
     private Set<String> excludedFields = new HashSet<>();
-    private Map<String, Pair<Function<String, String>,Function>> fieldResolver = new HashMap<>();
+    private Map<String, MyPair<Function<String, String>,Function>> fieldResolver = new HashMap<>();
     private Map<String, LegacySQLTypeName> explicitFieldTypes = new HashMap<>();
     private Map<String, AdapterBuilder> flatMaps = new HashMap<>();
 
@@ -33,12 +34,12 @@ public class AdapterBuilder {
     public AdapterBuilder mapFieldBy(String fieldName,
                                      Function<String, String> fieldNameResolver,
                                      Function fieldValueResolver) {
-        this.fieldResolver.put(fieldName, new Pair<>(fieldNameResolver, fieldValueResolver));
+        this.fieldResolver.put(fieldName, new MyPair<>(fieldNameResolver, fieldValueResolver));
         return this;
     }
 
     public AdapterBuilder mapFieldBy(String fieldName, Function fieldValueResolver) {
-        this.fieldResolver.put(fieldName, new Pair<>(Function.identity(), fieldValueResolver));
+        this.fieldResolver.put(fieldName, new MyPair<>(Function.identity(), fieldValueResolver));
         return this;
     }
 
@@ -77,9 +78,9 @@ public class AdapterBuilder {
             if (fieldHolder.isPresent()) {
                 fields.add(fieldHolder.get());
             }
-            Pair<Function<String, String>, Function> mapper = this.fieldResolver.get(fieldName);
+            MyPair<Function<String, String>, Function> mapper = this.fieldResolver.get(fieldName);
             if (Objects.nonNull(mapper)) {
-                result.add(fieldName, mapper.getKey(), mapper.getValue());
+                result.add(fieldName, mapper.v1, mapper.v2);
                 continue;
             } else {
                 result.add(fieldName, Function.identity(), convertHolder.get());
@@ -108,13 +109,13 @@ public class AdapterBuilder {
                 if (subType.equals(Schema.Type.NULL)) { // most likely nullable
                     subType = fieldSchema.getTypes().get(1).getType();
                 }
-                Pair<LegacySQLTypeName, Function> tuple= this.mapType(subType);
-                dbType = tuple.getKey();
-                converter = tuple.getValue();
+                MyPair<LegacySQLTypeName, Function> tuple= this.mapType(subType);
+                dbType = tuple.v1;
+                converter = tuple.v2;
             } else {
-                Pair<LegacySQLTypeName, Function> tuple= this.mapType(fieldType);
-                dbType = tuple.getKey();
-                converter = tuple.getValue();
+                MyPair<LegacySQLTypeName, Function> tuple= this.mapType(fieldType);
+                dbType = tuple.v1;
+                converter = tuple.v2;
             }
         }
         convertHolder.set(converter);
@@ -134,25 +135,35 @@ public class AdapterBuilder {
         return Optional.of(result);
     }
 
-    private Pair<LegacySQLTypeName, Function> mapType(Schema.Type source) {
+    private MyPair<LegacySQLTypeName, Function> mapType(Schema.Type source) {
         switch (source) {
             case LONG:
             case INT:
-                return new Pair<>(LegacySQLTypeName.INTEGER, Function.identity());
+                return new MyPair<>(LegacySQLTypeName.INTEGER, Function.identity());
             case BYTES:
-                return new Pair<>(LegacySQLTypeName.BYTES, Function.identity());
+                return new MyPair<>(LegacySQLTypeName.BYTES, Function.identity());
             case BOOLEAN:
-                return new Pair<>(LegacySQLTypeName.BOOLEAN, Function.identity());
+                return new MyPair<>(LegacySQLTypeName.BOOLEAN, Function.identity());
             case STRING:
-                return new Pair<>(LegacySQLTypeName.STRING, Function.identity());
+                return new MyPair<>(LegacySQLTypeName.STRING, Function.identity());
             case ENUM:
                 Function<Enum, String> enumConverter = e -> e.name();
-                return new Pair<>(LegacySQLTypeName.STRING, enumConverter);
+                return new MyPair<>(LegacySQLTypeName.STRING, enumConverter);
             case DOUBLE:
             case FLOAT:
-                return new Pair<>(LegacySQLTypeName.FLOAT, Function.identity());
+                return new MyPair<>(LegacySQLTypeName.FLOAT, Function.identity());
             default:
                 throw new NoSuchElementException("No mapping exists from avro field type of " + source + " and to bigquery");
+        }
+    }
+
+    private static class MyPair<T1, T2> {
+        public final T1 v1;
+        public final T2 v2;
+
+        private MyPair(T1 v1, T2 v2) {
+            this.v1 = v1;
+            this.v2 = v2;
         }
     }
 }

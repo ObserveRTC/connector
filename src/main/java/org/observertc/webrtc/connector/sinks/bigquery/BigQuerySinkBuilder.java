@@ -74,6 +74,7 @@ public class BigQuerySinkBuilder extends AbstractBuilder implements Builder<Sink
                     .withCreateDatasetIfNotExists(config.schemaCheck.createDatasetIfNotExists)
                     .withCreateTableIfNotExists(config.schemaCheck.createTableIfNotExists)
                     .withDeleteTableIfExists(config.schemaCheck.deleteTableIfExists)
+                    .byUsingTimestampResolver(config.useTimestampResolver)
                     ;
             this.mapping.entrySet()
                     .forEach(entry -> schemaCheckerJob.withTableName(entry.getKey(), entry.getValue()));
@@ -97,6 +98,8 @@ public class BigQuerySinkBuilder extends AbstractBuilder implements Builder<Sink
         public String datasetId;
 
         public SchemaCheckConfig schemaCheck = new SchemaCheckConfig();
+
+        public boolean useTimestampResolver = true;
 
         public static class SchemaCheckConfig {
             public boolean enabled = true;

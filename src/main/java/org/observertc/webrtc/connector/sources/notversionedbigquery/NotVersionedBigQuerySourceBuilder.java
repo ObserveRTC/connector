@@ -42,7 +42,7 @@ public class NotVersionedBigQuerySourceBuilder extends AbstractBuilder implement
                 .withTableName(ReportType.OBSERVER_EVENT, config.observerEventTable)
 
                 ;
-
+        result.withForcedMarker(config.forcedMarker);
         return result;
     }
 
@@ -57,6 +57,8 @@ public class NotVersionedBigQuerySourceBuilder extends AbstractBuilder implement
 
         @NotNull
         public String datasetId;
+
+        public String forcedMarker = null;
 
         public String initiatedCallsTable = "InitiatedCalls";
 

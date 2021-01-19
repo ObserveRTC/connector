@@ -3,6 +3,7 @@ package org.observertc.webrtc.connector.sinks;
 import io.reactivex.rxjava3.annotations.NonNull;
 import io.reactivex.rxjava3.core.Observer;
 import io.reactivex.rxjava3.disposables.Disposable;
+import org.observertc.webrtc.connector.common.RestartPolicy;
 import org.observertc.webrtc.connector.pipelines.Pipeline;
 import org.observertc.webrtc.schemas.reports.Report;
 import org.slf4j.Logger;
@@ -17,6 +18,7 @@ public abstract class Sink implements Observer<List<Report>> {
     private Optional<Pipeline> pipelineHolder = Optional.empty();
     private Disposable upstream;
     protected Logger logger = DEFAULT_LOGGER;
+    private RestartPolicy restartPolicy = RestartPolicy.Never;
 
     @Override
     public void onSubscribe(@NonNull Disposable d) {

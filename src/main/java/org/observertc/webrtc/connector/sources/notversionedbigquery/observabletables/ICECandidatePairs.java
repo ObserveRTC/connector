@@ -26,6 +26,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class ICECandidatePairs extends RecordMapperAbstract {
 	private static final Logger logger = LoggerFactory.getLogger(ICECandidatePairs.class);
@@ -85,6 +86,11 @@ public class ICECandidatePairs extends RecordMapperAbstract {
 
 	@Override
 	protected Object makePayload(FieldValueList row) {
+		Integer consentRequestsSent = this.getValue(row, CONSENT_REQUESTS_SENT_FIELD_NAME, this::getInteger, null);
+		if (Objects.isNull(consentRequestsSent)) {
+			consentRequestsSent = this.getValue(row, "consentRequestsSent", this::getInteger, null);
+		}
+		//
 		var result = ICECandidatePair.newBuilder()
 				.setBrowserId(this.getValue(row, BROWSERID_FIELD_NAME, FieldValue::getStringValue, "NOT FOUND"))
 				.setPeerConnectionUUID(this.getValue(row, PEER_CONNECTION_UUID_FIELD_NAME, FieldValue::getStringValue, "NOT FOUND"))
@@ -100,7 +106,7 @@ public class ICECandidatePairs extends RecordMapperAbstract {
 				.setAvailableOutgoingBitrate(this.getValue(row, AVAILABLE_OUTGOING_BITRATE_FIELD_NAME, this::getInteger, null))
 				.setBytesReceived(this.getValue(row, BYTES_RECEIVED_FIELD_NAME, FieldValue::getLongValue, null))
 				.setBytesSent(this.getValue(row, BYTES_SENT_FIELD_NAME, FieldValue::getLongValue, null))
-				.setConsentRequestsSent(this.getValue(row, CONSENT_REQUESTS_SENT_FIELD_NAME, this::getInteger, null))
+				.setConsentRequestsSent(consentRequestsSent)
 				.setCurrentRoundTripTime(this.getValue(row, CURRENT_ROUND_TRIP_TIME_FIELD_NAME, FieldValue::getDoubleValue, null))
 				.setPriority(this.getValue(row, PRIORITY_FIELD_NAME, FieldValue::getLongValue, null))
 				.setRequestsReceived(this.getValue(row, REQUESTS_RECEIVED_FIELD_NAME, this::getInteger, null))

@@ -34,6 +34,7 @@ public class SchemaAdapter extends Job {
     private final Map<ReportType, String> tableNames = new HashMap<>();
     private final Map<ReportType, Adapter> adapters = new HashMap<>();
     private Logger logger = DEFAULT_LOGGER;
+    private boolean useTimestampResolver = true;
 
     public SchemaAdapter(BigQuery bigQuery, String projectId, String datasetId) {
         this.bigQuery = bigQuery;
@@ -89,6 +90,11 @@ public class SchemaAdapter extends Job {
         return this;
     }
 
+    public SchemaAdapter byUsingTimestampResolver(boolean value) {
+        this.useTimestampResolver = value;
+        return this;
+    }
+
     public Map<ReportType, Adapter> getAdapters() {
         return this.adapters;
     }
@@ -115,9 +121,15 @@ public class SchemaAdapter extends Job {
 
 
     private AdapterBuilder makeBaseAdapterBuilder() {
-        Function<Long, Long> resolver = epoch -> {
-            return epoch / 1000L;
-        };
+        Function<Long, Long> resolver;
+        if (this.useTimestampResolver) {
+            resolver = epoch -> {
+                return epoch / 1000L;
+            };
+        } else {
+            resolver = Function.identity();
+        }
+
         AdapterBuilder result = new AdapterBuilder()
                 .forSchema(Report.getClassSchema())
                 .excludeFields("version")

@@ -1,5 +1,6 @@
 package org.observertc.webrtc.connector.sources;
 
+import org.observertc.webrtc.connector.common.RestartPolicy;
 import org.observertc.webrtc.connector.configbuilders.AbstractBuilder;
 import org.observertc.webrtc.connector.configbuilders.Builder;
 import org.slf4j.Logger;
@@ -10,6 +11,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
 /**
@@ -38,9 +40,18 @@ public class SourceBuilder extends AbstractBuilder {
             return null;
         }
         Builder<Source> builder = (Builder<Source>) concreteSourceBuilderHolder.get();
-
+        AtomicReference<String> restartPolicyErrorMessage = new AtomicReference<>();
+        Optional<RestartPolicy> restartPolicyHolder = RestartPolicy.getValueFromString(config.restartPolicy, restartPolicyErrorMessage);
+        RestartPolicy restartPolicy;
+        if (!restartPolicyHolder.isPresent()) {
+            restartPolicy = RestartPolicy.Never;
+            logger.warn("Restart policy {} cannot be converted to enum ({}). The default is used ({}).",
+                    config.restartPolicy, restartPolicyErrorMessage.get(), restartPolicy.name());
+        } else {
+            restartPolicy = restartPolicyHolder.get();
+        }
         builder.withConfiguration(config.config);
-        Source result = builder.build();
+        Source result = builder.build().withRestartPolicy(restartPolicy);
         return result;
     }
 
@@ -48,6 +59,8 @@ public class SourceBuilder extends AbstractBuilder {
 
         @NotNull
         public String type;
+
+        public String restartPolicy = RestartPolicy.Never.name();
 
         @NotNull
         public Map<String, Object> config;

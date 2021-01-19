@@ -3,6 +3,7 @@ package org.observertc.webrtc.connector.sources;
 import io.reactivex.rxjava3.annotations.NonNull;
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.core.Observer;
+import org.observertc.webrtc.connector.common.RestartPolicy;
 import org.observertc.webrtc.connector.pipelines.Pipeline;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,6 +18,7 @@ public abstract class Source extends Observable<byte[]> implements Runnable {
     private Observer<? super byte[]> observer = null;
     private Observable<byte[]> source;
     protected Logger logger = DEFAULT_LOGGER;
+    private RestartPolicy restartPolicy = RestartPolicy.Never;
 
     @Override
     protected void subscribeActual(@NonNull Observer<? super byte[]> observer) {
@@ -63,6 +65,11 @@ public abstract class Source extends Observable<byte[]> implements Runnable {
     public Source withLogger(Logger logger) {
         this.logger.info("Default logger for {} is switched to {}", this.getClass().getSimpleName(), logger.getName());
         this.logger = logger;
+        return this;
+    }
+
+    public Source withRestartPolicy(RestartPolicy restartPolicy) {
+        this.restartPolicy = restartPolicy;
         return this;
     }
 }

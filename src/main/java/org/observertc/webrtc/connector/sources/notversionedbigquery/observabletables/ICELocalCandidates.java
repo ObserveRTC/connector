@@ -18,6 +18,7 @@ package org.observertc.webrtc.connector.sources.notversionedbigquery.observablet
 
 import com.google.cloud.bigquery.FieldValue;
 import com.google.cloud.bigquery.FieldValueList;
+import io.micronaut.context.annotation.Prototype;
 import org.apache.avro.Protocol;
 import org.observertc.webrtc.connector.common.BigQueryService;
 import org.observertc.webrtc.schemas.reports.*;
@@ -26,6 +27,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.function.Function;
 
 public class ICELocalCandidates extends RecordMapperAbstract {
@@ -68,6 +70,18 @@ public class ICELocalCandidates extends RecordMapperAbstract {
 
 	@Override
 	protected Object makePayload(FieldValueList row) {
+		TransportProtocol protocol;
+		String protocolStr = this.getValue(row, PROTOCOL_TYPE_FIELD_NAME, FieldValue::getStringValue, null);
+		if (Objects.isNull(protocolStr)) {
+			protocolStr = this.getValue(row, "protocol", FieldValue::getStringValue, null);
+			if (Objects.nonNull(protocolStr)) {
+				protocol = TransportProtocol.valueOf(protocolStr);
+			} else {
+				protocol = TransportProtocol.UNKNOWN;
+			}
+		} else {
+			protocol = TransportProtocol.valueOf(protocolStr);
+		}
 		var result = ICELocalCandidate.newBuilder()
 				.setBrowserId(this.getValue(row, BROWSERID_FIELD_NAME, FieldValue::getStringValue, "NOT FOUND"))
 				.setPeerConnectionUUID(this.getValue(row, PEER_CONNECTION_UUID_FIELD_NAME, FieldValue::getStringValue, "NOT FOUND"))
@@ -79,7 +93,7 @@ public class ICELocalCandidates extends RecordMapperAbstract {
 				.setIpLSH(this.getValue(row, IP_LSH_FIELD_NAME, FieldValue::getStringValue, null))
 				.setNetworkType(this.getValue(row, NETWORK_TYPE_FIELD_NAME, this::getNetworkType, null))
 				.setPriority(this.getValue(row, PRIORITY_FIELD_NAME, FieldValue::getLongValue, null))
-				.setProtocol(this.getValue(row, PROTOCOL_TYPE_FIELD_NAME, this::getTransportProtocol, null))
+				.setProtocol(protocol)
 				//
 				;
 

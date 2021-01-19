@@ -19,7 +19,6 @@ package org.observertc.webrtc.connector.sources.notversionedbigquery.observablet
 import com.google.cloud.bigquery.FieldValue;
 import com.google.cloud.bigquery.FieldValueList;
 import org.observertc.webrtc.connector.common.BigQueryService;
-import org.observertc.webrtc.schemas.reports.InboundRTP;
 import org.observertc.webrtc.schemas.reports.RemoteInboundRTP;
 import org.observertc.webrtc.schemas.reports.ReportType;
 import org.slf4j.Logger;
@@ -27,6 +26,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class RemoteInboundRTPs extends RecordMapperAbstract {
 	private static final Logger logger = LoggerFactory.getLogger(RemoteInboundRTPs.class);
@@ -67,16 +67,24 @@ public class RemoteInboundRTPs extends RecordMapperAbstract {
 
 	@Override
 	protected Object makePayload(FieldValueList row) {
+		Double RTT = this.getValue(row, RTT_IN_MS_FIELD_NAME, FieldValue::getDoubleValue, null);
+		if (Objects.isNull(RTT)) {
+			RTT = this.getValue(row, "roundTripTime", FieldValue::getDoubleValue, null);
+		}
+		String codecID = this.getValue(row, CODEC_FIELD_NAME, FieldValue::getStringValue, null);
+		if (Objects.isNull(codecID)) {
+			codecID = this.getValue(row, "codecID", FieldValue::getStringValue, null);
+		}
 		var result = RemoteInboundRTP.newBuilder()
 				.setBrowserId(this.getValue(row, BROWSERID_FIELD_NAME, FieldValue::getStringValue, "NOT FOUND"))
 				.setPeerConnectionUUID(this.getValue(row, PEER_CONNECTION_UUID_FIELD_NAME, FieldValue::getStringValue, "NOT FOUND"))
 				.setMediaUnitId(this.getValue(row, MEDIA_UNIT_ID_FIELD_NAME, FieldValue::getStringValue, "NOT FOUND"))
 				.setUserId(this.getValue(row, USER_ID_FIELD_NAME, FieldValue::getStringValue, null))
 				.setSsrc(this.getValue(row, SSRC_FIELD_NAME, FieldValue::getLongValue, null))
-				.setRoundTripTime(this.getValue(row, RTT_IN_MS_FIELD_NAME, FieldValue::getDoubleValue, null))
+				.setRoundTripTime(RTT)
 				.setPacketsLost(this.getValue(row, PACKETSLOST_FIELD_NAME, this::getInteger, null))
 				.setJitter(this.getValue(row, JITTER_FIELD_NAME, this::getFloat, null))
-				.setCodecID(this.getValue(row, CODEC_FIELD_NAME, FieldValue::getStringValue, null))
+				.setCodecID(codecID)
 				.setMediaType(this.getValue(row, MEDIA_TYPE_FIELD_NAME, this::getMediaType, null))
 				.setTransportID(this.getValue(row, TRANSPORT_ID_FIELD_NAME, FieldValue::getStringValue, null))
 				//

@@ -25,6 +25,7 @@ import org.observertc.webrtc.schemas.reports.ReportType;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class DetachedPeerConnections extends RecordMapperAbstract {
 	public static final String CALL_UUID_FIELD_NAME = "callUUID";
@@ -60,10 +61,13 @@ public class DetachedPeerConnections extends RecordMapperAbstract {
 		String mediaUnitId = this.getValue(row, MEDIA_UNIT_ID_FIELD_NAME, FieldValue::getStringValue, "NOT FOUND");
 		String userid = this.getValue(row, USER_ID_FIELD_NAME, FieldValue::getStringValue, null);
 		String timezone = this.getValue(row, TIMEZONE_FIELD_NAME, FieldValue::getStringValue, null);
+		if (Objects.isNull(timezone)) {
+			timezone = this.getValue(row, "timeZoneId", FieldValue::getStringValue, null);
+		}
 
 		var result = DetachedPeerConnection.newBuilder()
-				.setCallUUID(callName)
 				.setCallUUID(callUUID)
+				.setCallName(callName)
 				.setBrowserId(browserId)
 				.setPeerConnectionUUID(pcUUID)
 				.setMediaUnitId(mediaUnitId)

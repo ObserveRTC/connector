@@ -11,10 +11,13 @@ import java.nio.ByteBuffer;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 public class NotVersionedBigQuerySource extends Source {
     private final Map<ReportType, String> tableNames;
     private final BigQueryService bigQueryService;
+    private String forcedMarker = null;
+
     public NotVersionedBigQuerySource(BigQueryService bigQueryService) {
         this.tableNames = new HashMap<>();
         this.bigQueryService = bigQueryService;
@@ -39,12 +42,21 @@ public class NotVersionedBigQuerySource extends Source {
                 new UserMediaErrors(this.bigQueryService, this.tableNames.get(ReportType.USER_MEDIA_ERROR))
         );
         sources.forEach(s -> s.withLogger(this.logger));
+        if (Objects.nonNull(this.forcedMarker)) {
+            sources.forEach(s -> s.withMarker(this.forcedMarker));
+        }
+
         var encoder = Report.getEncoder();
         return Observable.concat(sources).map(encoder::encode).map(ByteBuffer::array);
     }
 
     NotVersionedBigQuerySource withTableName(ReportType reportType, String tableName) {
         this.tableNames.put(reportType, tableName);
+        return this;
+    }
+
+    NotVersionedBigQuerySource withForcedMarker(String forcedMarker) {
+        this.forcedMarker = forcedMarker;
         return this;
     }
 }

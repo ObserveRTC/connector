@@ -8,4 +8,5 @@ public class MetaConfig {
 
     @Min(1)
     public int replicas = 1;
+
 }

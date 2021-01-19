@@ -21,6 +21,7 @@ public abstract class RecordMapperAbstract extends Observable<Report> {
     public static final String SERVICE_UUID_FIELD_NAME = "serviceUUID";
     public static final String SERVICE_NAME_FIELD_NAME = "serviceName";
     public static final String TIMESTAMP_FIELD_NAME = "timestamp";
+    public static final String MARKER_FIELD_NAME = "marker";
 
     public static final int MIGRATED_REPORT_VERSION = 1;
     private final BigQueryService bigQueryService;
@@ -29,6 +30,7 @@ public abstract class RecordMapperAbstract extends Observable<Report> {
     private final int limit = 100000;
     private final Map<String, Integer> fieldMap = new HashMap<>();
     private Logger logger = DEFAULT_LOGGER;
+    private String forcedMarker = null;
 
     public RecordMapperAbstract(BigQueryService bigQueryService, String tableName, ReportType reportType) {
         this.bigQueryService = bigQueryService;
@@ -48,10 +50,9 @@ public abstract class RecordMapperAbstract extends Observable<Report> {
             for (FieldValueList row : result.iterateAll()) {
                 Report report = this.makeReport(row);
                 observer.onNext(report);
-                if (10 <= ++fetched) {
+                if (this.limit <= ++fetched) {
                     logger.info("Fetched {} records from table {}", fetched, this.tableName);
                     fetched = 0;
-                    break;
                 }
             }
             logger.info("Fetching records for {} has ended", this.tableName);
@@ -75,10 +76,11 @@ public abstract class RecordMapperAbstract extends Observable<Report> {
         result.addAll(this.getPayloadFieldNames());
         return result;
     }
-
+    protected Schema schema;
     private Map<String, Integer> buildFieldMap(TableId tableId){
         Map<String, Integer> result = new HashMap<>();
-        FieldList fieldList = this.bigQueryService.getBigQuery().getTable(tableId).getDefinition().getSchema().getFields();
+        this.schema = this.bigQueryService.getBigQuery().getTable(tableId).getDefinition().getSchema();
+        FieldList fieldList = schema.getFields();
         List<String> fieldNames = this.getReportFieldNames();
         for (String fieldName : fieldNames) {
             int index;
@@ -91,6 +93,11 @@ public abstract class RecordMapperAbstract extends Observable<Report> {
             result.put(fieldName, index);
         }
         return result;
+    }
+
+    public RecordMapperAbstract withMarker(String forcedMarker) {
+        this.forcedMarker = forcedMarker;
+        return this;
     }
 
     protected<T> T getValue(FieldValueList row, String fieldName, Function<FieldValue, T> converter, T defaultValue) {
@@ -116,8 +123,14 @@ public abstract class RecordMapperAbstract extends Observable<Report> {
         String serviceUUID = this.getValue(row, SERVICE_UUID_FIELD_NAME, FieldValue::getStringValue, "NOT FOUND");
         String serviceName = this.getValue(row, SERVICE_NAME_FIELD_NAME, FieldValue::getStringValue, "NOT FOUND");
         Long timestamp = this.getValue(row, TIMESTAMP_FIELD_NAME, FieldValue::getLongValue, 0L);
-
         Object payload = this.makePayload(row);
+        String marker;
+        if (Objects.nonNull(this.forcedMarker)) {
+            marker = this.forcedMarker;
+        } else {
+            marker = this.getValue(row, MARKER_FIELD_NAME, FieldValue::getStringValue, null);
+        }
+
         var result = Report.newBuilder()
                 .setVersion(MIGRATED_REPORT_VERSION)
                 .setType(this.reportType)
@@ -125,7 +138,7 @@ public abstract class RecordMapperAbstract extends Observable<Report> {
                 .setServiceName(serviceName)
                 .setTimestamp(timestamp)
                 .setPayload(payload)
-                .setMarker(MIGRATION_MARKER);
+                .setMarker(marker);
 
         return result.build();
     }
@@ -201,4 +214,6 @@ public abstract class RecordMapperAbstract extends Observable<Report> {
             return null;
         }
     }
+
+
 }

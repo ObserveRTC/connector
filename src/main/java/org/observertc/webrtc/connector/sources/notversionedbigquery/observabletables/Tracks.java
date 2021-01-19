@@ -25,6 +25,7 @@ import org.observertc.webrtc.schemas.reports.UserMediaError;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class Tracks extends RecordMapperAbstract {
 	public static final String PEER_CONNECTION_UUID_FIELD_NAME = "peerConnectionUUID";
@@ -92,6 +93,11 @@ public class Tracks extends RecordMapperAbstract {
 	@Override
 	protected Object makePayload(FieldValueList row) {
 		// String type
+		// totalSamplesDuration
+		Double samplesDuration = this.getValue(row, TOTAL_SAMPLES_DURATION_FIELD_NAME, FieldValue::getDoubleValue, null);
+		if (Objects.isNull(samplesDuration)) {
+			samplesDuration = this.getValue(row, "samplesDuration", FieldValue::getDoubleValue, null);
+		}
 		var result = Track.newBuilder()
 				.setBrowserId(this.getValue(row, BROWSERID_FIELD_NAME, FieldValue::getStringValue, "NOT FOUND"))
 				.setPeerConnectionUUID(this.getValue(row, PEER_CONNECTION_UUID_FIELD_NAME, FieldValue::getStringValue, "NOT FOUND"))
@@ -114,7 +120,7 @@ public class Tracks extends RecordMapperAbstract {
 				.setRemoteSource(this.getValue(row, REMOTE_SOURCE_FIELD_NAME, FieldValue::getBooleanValue, null))
 				.setRemovedSamplesForAcceleration(this.getValue(row, REMOVED_SAMPLES_FOR_ACCELERATION_FIELD_NAME, this::getInteger, null))
 				.setSilentConcealedSamples(this.getValue(row, SILENT_CONCEALED_SAMPLES_FIELD_NAME, this::getInteger, null))
-				.setSamplesDuration(this.getValue(row, TOTAL_SAMPLES_DURATION_FIELD_NAME, FieldValue::getDoubleValue, null))
+				.setSamplesDuration(samplesDuration)
 				.setTotalSamplesReceived(this.getValue(row, TOTAL_SAMPLES_RECEIVED_FIELD_NAME, this::getInteger, null))
 				.setMediaSourceID(this.getValue(row, MEDIA_SOURCE_ID_FIELD_NAME, FieldValue::getStringValue, null))
 				//
