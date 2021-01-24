@@ -17,9 +17,7 @@ import org.observertc.webrtc.connector.transformations.TransformationBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 
 @Prototype
 public class PipelineBuilder extends AbstractBuilder implements Function<Map<String, Object>, Optional<Pipeline>> {
@@ -67,6 +65,9 @@ public class PipelineBuilder extends AbstractBuilder implements Function<Map<Str
         }
         result.withDecoder(decoderHolder.get());
 
+        Map<Integer, List<Transformation>> orderedTransformations = new HashMap<>();
+        List<Integer> indexes = new ArrayList<>();
+        Integer lastInsertedIndex = 0;
         for (Map<String, Object> transformationConfig : config.transformations) {
             TransformationBuilder transformationBuilder = new TransformationBuilder();
             transformationBuilder.withConfiguration(transformationConfig);
@@ -76,7 +77,21 @@ public class PipelineBuilder extends AbstractBuilder implements Function<Map<Str
                 continue;
             }
             Transformation transformation = transformationOptional.get();
-            result.withTransformation(transformation);
+            lastInsertedIndex = (Integer) transformationConfig.getOrDefault(TransformationBuilder.ORDER_FIELD_NAME, lastInsertedIndex + 1);
+            List<Transformation> transformations = orderedTransformations.get(lastInsertedIndex);
+            if (Objects.isNull(transformations)) {
+                transformations = new LinkedList<>();
+                orderedTransformations.put(lastInsertedIndex, transformations);
+                indexes.add(lastInsertedIndex);
+            }
+            transformations.add(transformation);
+        }
+        indexes.sort(Integer::compareTo);
+        for (Integer index : indexes) {
+            List<Transformation> transformations = orderedTransformations.get(index);
+            for (Transformation transformation : transformations) {
+                result.withTransformation(transformation);
+            }
         }
 
         result.withBuffer(config.buffer);

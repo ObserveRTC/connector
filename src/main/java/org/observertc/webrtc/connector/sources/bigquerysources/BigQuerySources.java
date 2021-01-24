@@ -41,11 +41,7 @@ public class BigQuerySources extends Source {
                 new Tracks(this.bigQueryService, this.tableNames.get(ReportType.TRACK)),
                 new UserMediaErrors(this.bigQueryService, this.tableNames.get(ReportType.USER_MEDIA_ERROR))
         );
-        sources.forEach(s ->
-                s.withLogger(this.logger)
-                        .fromProjectId(this.bigQueryService.getProjectId())
-                        .fromDatasetId(this.bigQueryService.getDatasetId())
-        );
+
         if (Objects.nonNull(this.forcedMarker)) {
             sources.forEach(s -> s.withMarker(this.forcedMarker));
         }

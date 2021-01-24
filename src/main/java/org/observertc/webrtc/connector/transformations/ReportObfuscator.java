@@ -360,11 +360,10 @@ public class ReportObfuscator extends Transformation {
                 if (Objects.nonNull(peerConnectionUUID)) {
                     peerConnectionUUID = obfuscateUUIDSource(peerConnectionUUID);
                 }
-                String portNum = payload.getIpLSH();
-                Integer port = 0;
-                if (Objects.nonNull(portNum)) {
+                Integer port = payload.getPort();
+                if (Objects.nonNull(port)) {
                     try {
-                        port = 31 * Integer.parseInt(portNum) % ABC.length();
+                        port = 31 * port % ABC.length();
                     } catch (NumberFormatException e) {
                         port = new Random().nextInt();
                     }
@@ -397,11 +396,10 @@ public class ReportObfuscator extends Transformation {
                 if (Objects.nonNull(peerConnectionUUID)) {
                     peerConnectionUUID = obfuscateUUIDSource(peerConnectionUUID);
                 }
-                String portNum = payload.getIpLSH();
-                Integer port = 0;
-                if (Objects.nonNull(portNum)) {
+                Integer port = payload.getPort();
+                if (Objects.nonNull(port)) {
                     try {
-                        port = 31 * Integer.parseInt(portNum) % ABC.length();
+                        port = 31 * port % ABC.length();
                     } catch (NumberFormatException e) {
                         port = new Random().nextInt();
                     }

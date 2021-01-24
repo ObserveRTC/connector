@@ -82,4 +82,5 @@ public abstract class Transformation implements ObservableOperator<Report, Repor
     }
 
     protected abstract Optional<Report> transform(Report report) throws Throwable;
+
 }

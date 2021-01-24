@@ -25,12 +25,10 @@ public abstract class RecordMapperAbstract extends Observable<Report> {
     private final BigQueryService bigQueryService;
     private final String tableName;
     private final ReportType reportType;
-    private final int limit = 100;
+    private final int limit = 1000000;
     private final Map<String, Integer> fieldMap = new HashMap<>();
     private Logger logger = DEFAULT_LOGGER;
     private String forcedMarker = null;
-    private String datasetId = "not set";
-    private String projectId = "not set";
 
     public RecordMapperAbstract(BigQueryService bigQueryService, String tableName, ReportType reportType) {
         this.bigQueryService = bigQueryService;
@@ -38,28 +36,30 @@ public abstract class RecordMapperAbstract extends Observable<Report> {
         this.reportType = reportType;
     }
 
+
     @Override
     protected void subscribeActual(@NonNull Observer<? super Report> observer) {
+        String projectId = this.bigQueryService.getProjectId();
+        String datasetId = this.bigQueryService.getDatasetId();
+        BigQuery bigquery = this.bigQueryService.getBigQuery();
         try {
-            BigQuery bigquery = BigQueryOptions.getDefaultInstance().getService();
             TableId tableId = TableId.of(this.bigQueryService.getDatasetId(), this.tableName);
             TableResult result = bigquery.listTableData(tableId, BigQuery.TableDataListOption.pageSize(this.limit));
             this.fieldMap.putAll(this.buildFieldMap(tableId));
-            logger.info("{}:{} Fetching records for {} has begun", this.projectId, this.datasetId, this.tableName);
+            logger.info("{}:{} Fetching records for {} has begun", projectId, datasetId, this.tableName);
             int fetched = 0;
             for (FieldValueList row : result.iterateAll()) {
                 Report report = this.makeReport(row);
                 observer.onNext(report);
                 if (this.limit <= ++fetched) {
-                    logger.info("{}:{} Fetched {} records from table {}",  this.projectId, this.datasetId, fetched, this.tableName);
+                    logger.info("{}:{} Fetched {} records from table {}",  projectId, datasetId, fetched, this.tableName);
                     fetched = 0;
-                    break;
                 }
             }
-            logger.info("{}:{} Fetching records for {} has ended",  this.projectId, this.datasetId, this.tableName);
+            logger.info("{}:{} Fetching records for {} has ended",  projectId, datasetId, this.tableName);
 
         } catch (Throwable ex) {
-            logger.warn("{}:{} Migration for {} is stoppped due to exception: {}",  this.projectId, this.datasetId, this.tableName, ex.getMessage());
+            logger.warn("{}:{} Migration for {} is stoppped due to exception: {}",  projectId, datasetId, this.tableName, ex.getMessage());
         }
         observer.onComplete();
     }
@@ -98,16 +98,6 @@ public abstract class RecordMapperAbstract extends Observable<Report> {
 
     public RecordMapperAbstract withMarker(String forcedMarker) {
         this.forcedMarker = forcedMarker;
-        return this;
-    }
-
-    public RecordMapperAbstract fromProjectId(String projectId) {
-        this.projectId = projectId;
-        return this;
-    }
-
-    public RecordMapperAbstract fromDatasetId(String datasetId) {
-        this.datasetId = datasetId;
         return this;
     }
 

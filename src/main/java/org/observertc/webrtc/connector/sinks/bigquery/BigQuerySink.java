@@ -75,8 +75,10 @@ public class BigQuerySink extends Sink {
                     // inspect row error
                 }
             } else {
-                logger.info("{} rows inserted to inserted {}.",
+                logger.info("{} rows inserted to inserted {}:{}.{}.",
                         counts.get(entryType),
+                        this.bigQueryService.getProjectId(),
+                        this.bigQueryService.getDatasetId(),
                         this.routes.get(entryType).tableName
                 );
             }

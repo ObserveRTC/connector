@@ -3,7 +3,6 @@ package org.observertc.webrtc.connector.transformations;
 import io.micronaut.context.annotation.Prototype;
 import org.observertc.webrtc.connector.configbuilders.AbstractBuilder;
 import org.observertc.webrtc.connector.configbuilders.Builder;
-import org.observertc.webrtc.connector.decoders.DecoderBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,7 +15,7 @@ import java.util.Optional;
  */
 @Prototype
 public class TransformationBuilder extends AbstractBuilder {
-
+    public static final String ORDER_FIELD_NAME = "order";
     private static final Logger logger = LoggerFactory.getLogger(TransformationBuilder.class);
 
     public TransformationBuilder() {
@@ -24,7 +23,7 @@ public class TransformationBuilder extends AbstractBuilder {
     }
 
     public Optional<Transformation> build() {
-        DecoderBuilder.Config config = this.convertAndValidate(DecoderBuilder.Config.class);
+        TransformationBuilder.Config config = this.convertAndValidate(TransformationBuilder.Config.class);
 
         String builderClassName = AbstractBuilder.getBuilderClassName(config.type);
         Optional<Builder> builderHolder = this.tryInvoke(builderClassName);
@@ -44,6 +43,8 @@ public class TransformationBuilder extends AbstractBuilder {
     public static class Config {
 
         public String type;
+
+        public Integer order = null;
 
         public Map<String, Object> config;
 
