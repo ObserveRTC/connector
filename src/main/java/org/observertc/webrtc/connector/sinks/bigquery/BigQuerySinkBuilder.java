@@ -43,6 +43,8 @@ public class BigQuerySinkBuilder extends AbstractBuilder implements Builder<Sink
         this.mapping.put(ReportType.USER_MEDIA_ERROR, config.userMediaErrorsTable);
         this.mapping.put(ReportType.TRACK, config.trackReportsTable);
         this.mapping.put(ReportType.OBSERVER_EVENT, config.observerEventTable);
+        this.mapping.put(ReportType.MEDIA_DEVICE, config.mediaDeviceTable);
+        this.mapping.put(ReportType.CLIENT_DETAILS, config.clientDetailsTable);
         BigQueryService bigQueryService = new BigQueryService(config.projectId, config.datasetId, config.credentialFile);
 
         Map<ReportType, Adapter> adapters = this.runSchemaAdapter(bigQueryService, config);
@@ -138,6 +140,10 @@ public class BigQuerySinkBuilder extends AbstractBuilder implements Builder<Sink
         public String userMediaErrorsTable = "UserMediaErrors";
 
         public String observerEventTable = "ObserverEventReports";
+
+        public String mediaDeviceTable = "MediaDevices";
+
+        public String clientDetailsTable = "ClientDetails";
 
     }
 }

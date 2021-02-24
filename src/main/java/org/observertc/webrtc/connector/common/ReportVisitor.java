@@ -49,6 +49,10 @@ public interface ReportVisitor<T> extends Function<Report, T> {
                 return this.visitICELocalCandidateReport(report, (ICELocalCandidate) report.getPayload());
             case ICE_REMOTE_CANDIDATE:
                 return this.visitICERemoteCandidateReport(report, (ICERemoteCandidate) report.getPayload());
+            case MEDIA_DEVICE:
+                return this.visitMediaDeviceReport(report, (MediaDevice) report.getPayload());
+            case CLIENT_DETAILS:
+                return this.visitClientDetailsReport(report, (ClientDetails) report.getPayload());
             default:
                 return this.visitUnrecognizedReport(report);
         }
@@ -85,6 +89,10 @@ public interface ReportVisitor<T> extends Function<Report, T> {
     T visitUnrecognizedReport(Report report);
 
     T visitExtensionReport(Report report, ExtensionReport payload);
+
+    T visitClientDetailsReport(Report report, ClientDetails payload);
+
+    T visitMediaDeviceReport(Report report, MediaDevice payload);
 
     T visitUnknownType(Report report);
 

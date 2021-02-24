@@ -25,10 +25,11 @@ public abstract class RecordMapperAbstract extends Observable<Report> {
     private final BigQueryService bigQueryService;
     private final String tableName;
     private final ReportType reportType;
-    private final int limit = 1000000;
+    private final int limit = 500000;
     private final Map<String, Integer> fieldMap = new HashMap<>();
     private Logger logger = DEFAULT_LOGGER;
     private String forcedMarker = null;
+    protected Schema schema;
 
     public RecordMapperAbstract(BigQueryService bigQueryService, String tableName, ReportType reportType) {
         this.bigQueryService = bigQueryService;
@@ -77,7 +78,8 @@ public abstract class RecordMapperAbstract extends Observable<Report> {
         result.addAll(this.getPayloadFieldNames());
         return result;
     }
-    protected Schema schema;
+    private Function<FieldValue, Long> timestampResolver;
+
     private Map<String, Integer> buildFieldMap(TableId tableId){
         Map<String, Integer> result = new HashMap<>();
         this.schema = this.bigQueryService.getBigQuery().getTable(tableId).getDefinition().getSchema();
@@ -92,6 +94,18 @@ public abstract class RecordMapperAbstract extends Observable<Report> {
                 continue;
             }
             result.put(fieldName, index);
+        }
+        var timestampField = fieldList.get(TIMESTAMP_FIELD_NAME);
+        if (Objects.nonNull(timestampField)) {
+            var type = timestampField.getType();
+            if (type.equals(LegacySQLTypeName.TIMESTAMP)) {
+                this.timestampResolver = fieldValue -> {
+                    Long timestamp = fieldValue.getTimestampValue(); // returns microsec since epoch
+                    return timestamp / 1000; // we need millis since epoch
+                };
+            } else {
+                this.timestampResolver = FieldValue::getLongValue;
+            }
         }
         return result;
     }
@@ -108,12 +122,19 @@ public abstract class RecordMapperAbstract extends Observable<Report> {
         }
         FieldValue fieldValue = row.get(index);
         try {
+            if (Objects.isNull(fieldValue)) {
+                return defaultValue;
+            }
+            if (Objects.isNull(fieldValue.getValue())) {
+                return defaultValue;
+            }
             T result = converter.apply(fieldValue);
             if (Objects.isNull(result)) {
                 return defaultValue;
             }
             return result;
         } catch (Throwable t) {
+            logger.warn("Something went wrong in conversion for field {}, fieldValue {}", fieldName, fieldValue, t);
             return defaultValue;
         }
     }
@@ -123,7 +144,7 @@ public abstract class RecordMapperAbstract extends Observable<Report> {
     protected Report makeReport(FieldValueList row) {
         String serviceUUID = this.getValue(row, SERVICE_UUID_FIELD_NAME, FieldValue::getStringValue, "NOT FOUND");
         String serviceName = this.getValue(row, SERVICE_NAME_FIELD_NAME, FieldValue::getStringValue, "NOT FOUND");
-        Long timestamp = this.getValue(row, TIMESTAMP_FIELD_NAME, FieldValue::getLongValue, 0L);
+        Long timestamp = this.getValue(row, TIMESTAMP_FIELD_NAME, this.timestampResolver, 0L);
         Object payload = this.makePayload(row);
         String marker;
         if (Objects.nonNull(this.forcedMarker)) {

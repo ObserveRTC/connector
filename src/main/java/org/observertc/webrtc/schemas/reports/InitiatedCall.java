@@ -15,8 +15,8 @@ import org.apache.avro.message.SchemaStore;
 /** Initial Call Report payload. Contains information about a call initiated by a client */
 @org.apache.avro.specific.AvroGenerated
 public class InitiatedCall extends org.apache.avro.specific.SpecificRecordBase implements org.apache.avro.specific.SpecificRecord {
-  private static final long serialVersionUID = -4454150732927543663L;
-  public static final org.apache.avro.Schema SCHEMA$ = new org.apache.avro.Schema.Parser().parse("{\"type\":\"record\",\"name\":\"InitiatedCall\",\"namespace\":\"org.observertc.webrtc.schemas.reports\",\"doc\":\"Initial Call Report payload. Contains information about a call initiated by a client\",\"fields\":[{\"name\":\"callUUID\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"}},{\"name\":\"callName\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}],\"default\":null}]}");
+  private static final long serialVersionUID = -3423803663014697791L;
+  public static final org.apache.avro.Schema SCHEMA$ = new org.apache.avro.Schema.Parser().parse("{\"type\":\"record\",\"name\":\"InitiatedCall\",\"namespace\":\"org.observertc.webrtc.schemas.reports\",\"doc\":\"Initial Call Report payload. Contains information about a call initiated by a client\",\"fields\":[{\"name\":\"callUUID\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"}},{\"name\":\"callName\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}],\"default\":null},{\"name\":\"mediaUnitId\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}],\"default\":null}]}");
   public static org.apache.avro.Schema getClassSchema() { return SCHEMA$; }
 
   private static SpecificData MODEL$ = new SpecificData();
@@ -74,6 +74,7 @@ public class InitiatedCall extends org.apache.avro.specific.SpecificRecordBase i
 
    private java.lang.String callUUID;
    private java.lang.String callName;
+   private java.lang.String mediaUnitId;
 
   /**
    * Default constructor.  Note that this does not initialize fields
@@ -86,10 +87,12 @@ public class InitiatedCall extends org.apache.avro.specific.SpecificRecordBase i
    * All-args constructor.
    * @param callUUID The new value for callUUID
    * @param callName The new value for callName
+   * @param mediaUnitId The new value for mediaUnitId
    */
-  public InitiatedCall(java.lang.String callUUID, java.lang.String callName) {
+  public InitiatedCall(java.lang.String callUUID, java.lang.String callName, java.lang.String mediaUnitId) {
     this.callUUID = callUUID;
     this.callName = callName;
+    this.mediaUnitId = mediaUnitId;
   }
 
   public org.apache.avro.specific.SpecificData getSpecificData() { return MODEL$; }
@@ -99,6 +102,7 @@ public class InitiatedCall extends org.apache.avro.specific.SpecificRecordBase i
     switch (field$) {
     case 0: return callUUID;
     case 1: return callName;
+    case 2: return mediaUnitId;
     default: throw new IndexOutOfBoundsException("Invalid index: " + field$);
     }
   }
@@ -109,6 +113,7 @@ public class InitiatedCall extends org.apache.avro.specific.SpecificRecordBase i
     switch (field$) {
     case 0: callUUID = value$ != null ? value$.toString() : null; break;
     case 1: callName = value$ != null ? value$.toString() : null; break;
+    case 2: mediaUnitId = value$ != null ? value$.toString() : null; break;
     default: throw new IndexOutOfBoundsException("Invalid index: " + field$);
     }
   }
@@ -129,6 +134,16 @@ public class InitiatedCall extends org.apache.avro.specific.SpecificRecordBase i
    */
   public java.lang.String getCallName() {
     return callName;
+  }
+
+
+
+  /**
+   * Gets the value of the 'mediaUnitId' field.
+   * @return The value of the 'mediaUnitId' field.
+   */
+  public java.lang.String getMediaUnitId() {
+    return mediaUnitId;
   }
 
 
@@ -176,6 +191,7 @@ public class InitiatedCall extends org.apache.avro.specific.SpecificRecordBase i
 
     private java.lang.String callUUID;
     private java.lang.String callName;
+    private java.lang.String mediaUnitId;
 
     /** Creates a new Builder */
     private Builder() {
@@ -196,6 +212,10 @@ public class InitiatedCall extends org.apache.avro.specific.SpecificRecordBase i
         this.callName = data().deepCopy(fields()[1].schema(), other.callName);
         fieldSetFlags()[1] = other.fieldSetFlags()[1];
       }
+      if (isValidValue(fields()[2], other.mediaUnitId)) {
+        this.mediaUnitId = data().deepCopy(fields()[2].schema(), other.mediaUnitId);
+        fieldSetFlags()[2] = other.fieldSetFlags()[2];
+      }
     }
 
     /**
@@ -211,6 +231,10 @@ public class InitiatedCall extends org.apache.avro.specific.SpecificRecordBase i
       if (isValidValue(fields()[1], other.callName)) {
         this.callName = data().deepCopy(fields()[1].schema(), other.callName);
         fieldSetFlags()[1] = true;
+      }
+      if (isValidValue(fields()[2], other.mediaUnitId)) {
+        this.mediaUnitId = data().deepCopy(fields()[2].schema(), other.mediaUnitId);
+        fieldSetFlags()[2] = true;
       }
     }
 
@@ -294,6 +318,46 @@ public class InitiatedCall extends org.apache.avro.specific.SpecificRecordBase i
       return this;
     }
 
+    /**
+      * Gets the value of the 'mediaUnitId' field.
+      * @return The value.
+      */
+    public java.lang.String getMediaUnitId() {
+      return mediaUnitId;
+    }
+
+
+    /**
+      * Sets the value of the 'mediaUnitId' field.
+      * @param value The value of 'mediaUnitId'.
+      * @return This builder.
+      */
+    public org.observertc.webrtc.schemas.reports.InitiatedCall.Builder setMediaUnitId(java.lang.String value) {
+      validate(fields()[2], value);
+      this.mediaUnitId = value;
+      fieldSetFlags()[2] = true;
+      return this;
+    }
+
+    /**
+      * Checks whether the 'mediaUnitId' field has been set.
+      * @return True if the 'mediaUnitId' field has been set, false otherwise.
+      */
+    public boolean hasMediaUnitId() {
+      return fieldSetFlags()[2];
+    }
+
+
+    /**
+      * Clears the value of the 'mediaUnitId' field.
+      * @return This builder.
+      */
+    public org.observertc.webrtc.schemas.reports.InitiatedCall.Builder clearMediaUnitId() {
+      mediaUnitId = null;
+      fieldSetFlags()[2] = false;
+      return this;
+    }
+
     @Override
     @SuppressWarnings("unchecked")
     public InitiatedCall build() {
@@ -301,6 +365,7 @@ public class InitiatedCall extends org.apache.avro.specific.SpecificRecordBase i
         InitiatedCall record = new InitiatedCall();
         record.callUUID = fieldSetFlags()[0] ? this.callUUID : (java.lang.String) defaultValue(fields()[0]);
         record.callName = fieldSetFlags()[1] ? this.callName : (java.lang.String) defaultValue(fields()[1]);
+        record.mediaUnitId = fieldSetFlags()[2] ? this.mediaUnitId : (java.lang.String) defaultValue(fields()[2]);
         return record;
       } catch (org.apache.avro.AvroMissingFieldException e) {
         throw e;
@@ -343,6 +408,14 @@ public class InitiatedCall extends org.apache.avro.specific.SpecificRecordBase i
       out.writeString(this.callName);
     }
 
+    if (this.mediaUnitId == null) {
+      out.writeIndex(0);
+      out.writeNull();
+    } else {
+      out.writeIndex(1);
+      out.writeString(this.mediaUnitId);
+    }
+
   }
 
   @Override public void customDecode(org.apache.avro.io.ResolvingDecoder in)
@@ -359,8 +432,15 @@ public class InitiatedCall extends org.apache.avro.specific.SpecificRecordBase i
         this.callName = in.readString();
       }
 
+      if (in.readIndex() != 1) {
+        in.readNull();
+        this.mediaUnitId = null;
+      } else {
+        this.mediaUnitId = in.readString();
+      }
+
     } else {
-      for (int i = 0; i < 2; i++) {
+      for (int i = 0; i < 3; i++) {
         switch (fieldOrder[i].pos()) {
         case 0:
           this.callUUID = in.readString();
@@ -372,6 +452,15 @@ public class InitiatedCall extends org.apache.avro.specific.SpecificRecordBase i
             this.callName = null;
           } else {
             this.callName = in.readString();
+          }
+          break;
+
+        case 2:
+          if (in.readIndex() != 1) {
+            in.readNull();
+            this.mediaUnitId = null;
+          } else {
+            this.mediaUnitId = in.readString();
           }
           break;
 

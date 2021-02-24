@@ -84,6 +84,22 @@ public class ReportGenerator {
         };
     }
 
+    public Supplier<Report> emptyReportWithTimestamp(ReportType reportType, Long timestamp) {
+        return () -> {
+            String serviceName = provideServiceName();
+            Report result = Report.newBuilder()
+                    .setServiceUUID(UUID.randomUUID().toString())
+                    .setServiceName(serviceName)
+                    .setType(reportType)
+                    .setTimestamp(timestamp)
+                    .setPayload(new Object())
+                    .setVersion(1)
+                    .setMarker("marker")
+                    .build();
+            return result;
+        };
+    }
+
     private Report makeReport(ReportType reportType, Object payload) {
         String serviceName = provideServiceName();
         Report result = Report.newBuilder()

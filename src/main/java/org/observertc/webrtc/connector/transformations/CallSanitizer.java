@@ -245,6 +245,16 @@ public class CallSanitizer extends Transformation {
             public Boolean visitUnknownType(Report report) {
                 return true;
             }
+
+            @Override
+            public Boolean visitClientDetailsReport(Report report, ClientDetails payload) {
+                return true;
+            }
+
+            @Override
+            public Boolean visitMediaDeviceReport(Report report, MediaDevice payload) {
+                return true;
+            }
         };
     }
 }

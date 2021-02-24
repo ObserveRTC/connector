@@ -9,12 +9,15 @@ import org.observertc.webrtc.schemas.reports.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.function.Function;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Prototype
 public class FilterBuilder extends AbstractBuilder implements Builder<Transformation> {
-
+    private static final Pattern TIME_REGEX_PATTERN = Pattern.compile("^from (\\d{4}-\\d{2}-\\d{2}) until (\\d{4}-\\d{2}-\\d{2})$");
     private static final Logger logger = LoggerFactory.getLogger(FilterBuilder.class);
 
     @Override
@@ -26,7 +29,8 @@ public class FilterBuilder extends AbstractBuilder implements Builder<Transforma
                 this.makeAllowanceFilter(Report::getType, str -> ReportType.valueOf(str), config.reportType),
                 this.makeAllowanceFilter(Report::getServiceName, Function.identity(), config.serviceName),
                 this.makeAllowanceFilter(Report::getServiceUUID, Function.identity(), config.serviceUUIDs),
-                this.makeAllowanceFilter(Report::getMarker, Function.identity(), config.marker)
+                this.makeAllowanceFilter(Report::getMarker, Function.identity(), config.marker),
+                this.makeTimeRangeAllowanceFilter(Report::getTimestamp, config.timestamps)
         ).forEach(result::addPredicate);
 
         if (!config.nullableCallNames) {
@@ -36,23 +40,91 @@ public class FilterBuilder extends AbstractBuilder implements Builder<Transforma
         return result;
     }
 
+    private Predicate<Report> makeTimeRangeAllowanceFilter(Function<Report, Long> extractor, Config.AllowanceConfig config) {
+        Function<List<String>,  java.util.function.Predicate<Long>> setup = subjects -> {
+            java.util.function.Predicate result = null;
+            for (String subject : subjects) {
+                Matcher mather = TIME_REGEX_PATTERN.matcher(subject);
+                if (!mather.matches() || mather.groupCount() < 2) {
+                    logger.warn("Cannot interpret time range interval {}", subject);
+                    continue;
+                }
+                SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+                long fromEpoch, untilEpoch;
+                try {
+                    String from = mather.group(1);
+                    String until = mather.group(2);
+                    fromEpoch = df.parse(from).toInstant().toEpochMilli();
+                    untilEpoch = df.parse(until).toInstant().toEpochMilli();
+                } catch (Exception ex) {
+                    logger.warn("Cannot interpret time range interval {}", subject, ex);
+                    continue;
+                }
+                java.util.function.Predicate<Long> predicate = timestamp -> {
+//                        logger.info("Report with timestamp {} will be{}allowed",
+//                                Instant.ofEpochMilli(timestamp).toString(),
+//                                (fromEpoch <= timestamp && timestamp <= untilEpoch) ? " " : " not "
+//                                );
+                        return fromEpoch <= timestamp && timestamp <= untilEpoch;
+                };
+                if (Objects.isNull(result)) {
+                    result = predicate;
+                } else {
+                    result = result.or(predicate);
+                }
+            }
+            return result;
+        };
+        java.util.function.Predicate<Long> includes = setup.apply(config.including);
+        java.util.function.Predicate<Long> excludes = setup.apply(config.excluding);
+        if (Objects.isNull(includes) && Objects.isNull(excludes)) {
+            return report -> true;
+        }
+
+        if (Objects.isNull(includes)) {
+            return this.makeAllowanceFilter(extractor, excludes::test, null);
+        }
+        if (Objects.isNull(excludes)) {
+            return this.makeAllowanceFilter(extractor, null,  includes::test);
+        }
+        return this.makeAllowanceFilter(extractor, includes::test, excludes::test);
+    }
+
     private<T> Predicate<Report> makeAllowanceFilter(Function<Report, T> extractor, Function<String, T> converter, Config.AllowanceConfig config) {
         Set<T> includes = this.collect(converter, config.including);
         Set<T> excludes = this.collect(converter, config.excluding);
         if (includes.size() < 1 && excludes.size() < 1) {
-            return reportType -> true;
+            return report -> true;
         }
-        Predicate<Report> checkExclusion = report -> !excludes.contains(extractor.apply(report));
-        Predicate<Report> checkInclusion = report -> includes.contains(extractor.apply(report));
         if (includes.size() < 1){
-            return checkExclusion;
+            return this.makeAllowanceFilter(extractor, excludes::contains, null);
         }
 
         if (excludes.size() < 1) {
-            return checkInclusion;
+            return this.makeAllowanceFilter(extractor, null, includes::contains);
+        }
+        return this.makeAllowanceFilter(extractor, excludes::contains, includes::contains);
+    }
+
+    private<T> Predicate<Report> makeAllowanceFilter(Function<Report, T> extractor, Function<T, Boolean> excMatcher, Function<T, Boolean> incMatcher) {
+        if (Objects.isNull(excMatcher) && Objects.isNull(incMatcher)){
+            return report -> true;
+        }
+        if (Objects.isNull(excMatcher)){
+            return report -> {
+                T value = extractor.apply(report);
+                return Objects.nonNull(value) && incMatcher.apply(value);
+            };
+        }
+        if (Objects.isNull(incMatcher)){
+            return report -> {
+                T value = extractor.apply(report);
+                return Objects.nonNull(value) && !excMatcher.apply(value);
+            };
         }
         return report -> {
-            return checkInclusion.test(report) && checkExclusion.test(report);
+            T value = extractor.apply(report);
+            return Objects.nonNull(value) && incMatcher.apply(value) && !excMatcher.apply(value);
         };
     }
 
@@ -77,6 +149,16 @@ public class FilterBuilder extends AbstractBuilder implements Builder<Transforma
     private ReportVisitor<Boolean> makeNonNullCallNameFilter() {
 
         return new ReportVisitor<Boolean>() {
+            @Override
+            public Boolean visitClientDetailsReport(Report report, ClientDetails payload) {
+                return Objects.nonNull(payload.getCallName());
+            }
+
+            @Override
+            public Boolean visitMediaDeviceReport(Report report, MediaDevice payload) {
+                return Objects.nonNull(payload.getCallName());
+            }
+
             @Override
             public Boolean visitTrackReport(Report report, Track payload) {
                 return Objects.nonNull(payload.getCallName());
@@ -172,8 +254,9 @@ public class FilterBuilder extends AbstractBuilder implements Builder<Transforma
         public AllowanceConfig marker = new AllowanceConfig();
         public AllowanceConfig serviceName = new AllowanceConfig();
         public AllowanceConfig serviceUUIDs = new AllowanceConfig();
+        public AllowanceConfig timestamps = new AllowanceConfig();
 
-        public class AllowanceConfig {
+        public static class AllowanceConfig {
             public List<String> including = new ArrayList<>();
             public List<String> excluding = new ArrayList<>();
         }
