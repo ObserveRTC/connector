@@ -4,13 +4,16 @@ import io.reactivex.rxjava3.annotations.NonNull;
 import io.reactivex.rxjava3.disposables.Disposable;
 import org.observertc.webrtc.connector.sinks.Sink;
 import org.observertc.webrtc.schemas.reports.Report;
+import org.observertc.webrtc.schemas.reports.ReportType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.validation.constraints.NotNull;
 import java.io.*;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 public class FileSink extends Sink {
 
@@ -20,6 +23,11 @@ public class FileSink extends Sink {
     private volatile int seqNum = 0;
     private String digitsFormat = "%05d";
     private int maxRetry = 1;
+    private volatile int createdFileNum = 0;
+    private boolean onlyOnePerReportType = false;
+
+    private Set<ReportType> reportedTypes = new HashSet<>();
+    private int maxFileNum;
 
     @Override
     public void onSubscribe(@NotNull Disposable d) {
@@ -29,8 +37,28 @@ public class FileSink extends Sink {
 
     @Override
     public void onNext(@NonNull List<Report> reports) {
+        boolean maxFileReached = false;
+        boolean reportsAdded = false;
         for (Report report : reports) {
+            if (0 < this.maxFileNum && this.maxFileNum < this.createdFileNum) {
+                maxFileReached = true;
+                continue;
+            }
+            if (this.onlyOnePerReportType) {
+                if (this.reportedTypes.contains(report.getType())) {
+                    continue;
+                }
+                this.reportedTypes.add(report.getType());
+            }
             this.write(report);
+            reportsAdded = true;
+        }
+
+        if (maxFileReached) {
+            logger.info("Maximum number of file has been reached to be written, yet reports are coming");
+        }
+        if (0 < reports.size() && !reportsAdded) {
+            logger.info("There were reports arrived, yet none of them are written into file");
         }
     }
 
@@ -79,6 +107,7 @@ public class FileSink extends Sink {
         try {
             byte[] bytes = report.toByteBuffer().array();
             outputStream.write(bytes);
+            ++this.createdFileNum;
         } catch (IOException e) {
             logger.warn("Exception occurred during serialization", e);
             return;
@@ -98,5 +127,15 @@ public class FileSink extends Sink {
             }
 
         }
+    }
+
+    FileSink withOnlyOnePerReportType(boolean onlyOnePerReportType) {
+        this.onlyOnePerReportType = onlyOnePerReportType;
+        return this;
+    }
+
+    public FileSink withMaxFileNum(int maxFileNum) {
+        this.maxFileNum = maxFileNum;
+        return this;
     }
 }
