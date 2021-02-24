@@ -52,7 +52,8 @@ public class ReportObfuscator extends Transformation {
             return Optional.empty();
         }
         builder.setPayload(payload);
-        return Optional.of(builder.build());
+        Report result = builder.build();
+        return Optional.of(result);
     }
 
     private void baseChange(Report.Builder builder, final Report original) {
@@ -115,10 +116,15 @@ public class ReportObfuscator extends Transformation {
                 if (Objects.nonNull(peerConnectionUUID)) {
                     peerConnectionUUID = obfuscateUUIDSource(peerConnectionUUID);
                 }
+                String mediaUnitId = payload.getMediaUnitId();
+                if (Objects.nonNull(mediaUnitId)) {
+                    mediaUnitId = digestAZ(mediaUnitId);
+                }
                 Track newPayload = Track.newBuilder(payload)
                         .setCallName(callName)
                         .setUserId(userId)
                         .setPeerConnectionUUID(peerConnectionUUID)
+                        .setMediaUnitId(mediaUnitId)
                         .build();
                 return newPayload;
             }
@@ -161,11 +167,16 @@ public class ReportObfuscator extends Transformation {
                 if (Objects.nonNull(peerConnectionUUID)) {
                     peerConnectionUUID = obfuscateUUIDSource(peerConnectionUUID);
                 }
+                String mediaUnitId = payload.getMediaUnitId();
+                if (Objects.nonNull(mediaUnitId)) {
+                    mediaUnitId = digestAZ(mediaUnitId);
+                }
                 JoinedPeerConnection newPayload = JoinedPeerConnection.newBuilder(payload)
                         .setCallName(callName)
                         .setPeerConnectionUUID(peerConnectionUUID)
                         .setUserId(userId)
                         .setPeerConnectionUUID(peerConnectionUUID)
+                        .setMediaUnitId(mediaUnitId)
                         .build();
                 return newPayload;
             }
@@ -184,10 +195,15 @@ public class ReportObfuscator extends Transformation {
                 if (Objects.nonNull(peerConnectionUUID)) {
                     peerConnectionUUID = obfuscateUUIDSource(peerConnectionUUID);
                 }
+                String mediaUnitId = payload.getMediaUnitId();
+                if (Objects.nonNull(mediaUnitId)) {
+                    mediaUnitId = digestAZ(mediaUnitId);
+                }
                 DetachedPeerConnection newPayload = DetachedPeerConnection.newBuilder(payload)
                         .setCallName(callName)
                         .setPeerConnectionUUID(peerConnectionUUID)
                         .setUserId(userId)
+                        .setMediaUnitId(mediaUnitId)
                         .build();
                 return newPayload;
             }
@@ -206,10 +222,15 @@ public class ReportObfuscator extends Transformation {
                 if (Objects.nonNull(peerConnectionUUID)) {
                     peerConnectionUUID = obfuscateUUIDSource(peerConnectionUUID);
                 }
+                String mediaUnitId = payload.getMediaUnitId();
+                if (Objects.nonNull(mediaUnitId)) {
+                    mediaUnitId = digestAZ(mediaUnitId);
+                }
                 InboundRTP newPayload = InboundRTP.newBuilder(payload)
                         .setCallName(callName)
                         .setPeerConnectionUUID(peerConnectionUUID)
                         .setUserId(userId)
+                        .setMediaUnitId(mediaUnitId)
                         .build();
                 return newPayload;
             }
@@ -228,10 +249,15 @@ public class ReportObfuscator extends Transformation {
                 if (Objects.nonNull(peerConnectionUUID)) {
                     peerConnectionUUID = obfuscateUUIDSource(peerConnectionUUID);
                 }
+                String mediaUnitId = payload.getMediaUnitId();
+                if (Objects.nonNull(mediaUnitId)) {
+                    mediaUnitId = digestAZ(mediaUnitId);
+                }
                 OutboundRTP newPayload = OutboundRTP.newBuilder(payload)
                         .setCallName(callName)
                         .setPeerConnectionUUID(peerConnectionUUID)
                         .setUserId(userId)
+                        .setMediaUnitId(mediaUnitId)
                         .build();
                 return newPayload;
             }
@@ -250,10 +276,15 @@ public class ReportObfuscator extends Transformation {
                 if (Objects.nonNull(peerConnectionUUID)) {
                     peerConnectionUUID = obfuscateUUIDSource(peerConnectionUUID);
                 }
+                String mediaUnitId = payload.getMediaUnitId();
+                if (Objects.nonNull(mediaUnitId)) {
+                    mediaUnitId = digestAZ(mediaUnitId);
+                }
                 RemoteInboundRTP newPayload = RemoteInboundRTP.newBuilder(payload)
                         .setCallName(callName)
                         .setPeerConnectionUUID(peerConnectionUUID)
                         .setUserId(userId)
+                        .setMediaUnitId(mediaUnitId)
                         .build();
                 return newPayload;
             }
@@ -272,10 +303,15 @@ public class ReportObfuscator extends Transformation {
                 if (Objects.nonNull(peerConnectionUUID)) {
                     peerConnectionUUID = obfuscateUUIDSource(peerConnectionUUID);
                 }
+                String mediaUnitId = payload.getMediaUnitId();
+                if (Objects.nonNull(mediaUnitId)) {
+                    mediaUnitId = digestAZ(mediaUnitId);
+                }
                 MediaSource newPayload = MediaSource.newBuilder(payload)
                         .setCallName(callName)
                         .setPeerConnectionUUID(peerConnectionUUID)
                         .setUserId(userId)
+                        .setMediaUnitId(mediaUnitId)
                         .build();
                 return newPayload;
             }
@@ -294,10 +330,15 @@ public class ReportObfuscator extends Transformation {
                 if (Objects.nonNull(peerConnectionUUID)) {
                     peerConnectionUUID = obfuscateUUIDSource(peerConnectionUUID);
                 }
+                String mediaUnitId = payload.getMediaUnitId();
+                if (Objects.nonNull(mediaUnitId)) {
+                    mediaUnitId = digestAZ(mediaUnitId);
+                }
                 ObserverEventReport newPayload = ObserverEventReport.newBuilder(payload)
                         .setCallName(callName)
                         .setPeerConnectionUUID(peerConnectionUUID)
                         .setUserId(userId)
+                        .setMediaUnitId(mediaUnitId)
                         .build();
                 return newPayload;
             }
@@ -316,10 +357,15 @@ public class ReportObfuscator extends Transformation {
                 if (Objects.nonNull(peerConnectionUUID)) {
                     peerConnectionUUID = obfuscateUUIDSource(peerConnectionUUID);
                 }
+                String mediaUnitId = payload.getMediaUnitId();
+                if (Objects.nonNull(mediaUnitId)) {
+                    mediaUnitId = digestAZ(mediaUnitId);
+                }
                 UserMediaError newPayload = UserMediaError.newBuilder(payload)
                         .setCallName(callName)
                         .setPeerConnectionUUID(peerConnectionUUID)
                         .setUserId(userId)
+                        .setMediaUnitId(mediaUnitId)
                         .build();
                 return newPayload;
             }
@@ -338,10 +384,15 @@ public class ReportObfuscator extends Transformation {
                 if (Objects.nonNull(peerConnectionUUID)) {
                     peerConnectionUUID = obfuscateUUIDSource(peerConnectionUUID);
                 }
+                String mediaUnitId = payload.getMediaUnitId();
+                if (Objects.nonNull(mediaUnitId)) {
+                    mediaUnitId = digestAZ(mediaUnitId);
+                }
                 ICECandidatePair newPayload = ICECandidatePair.newBuilder(payload)
                         .setCallName(callName)
                         .setPeerConnectionUUID(peerConnectionUUID)
                         .setUserId(userId)
+                        .setMediaUnitId(mediaUnitId)
                         .build();
                 return newPayload;
             }
@@ -359,6 +410,10 @@ public class ReportObfuscator extends Transformation {
                 String peerConnectionUUID = payload.getPeerConnectionUUID();
                 if (Objects.nonNull(peerConnectionUUID)) {
                     peerConnectionUUID = obfuscateUUIDSource(peerConnectionUUID);
+                }
+                String mediaUnitId = payload.getMediaUnitId();
+                if (Objects.nonNull(mediaUnitId)) {
+                    mediaUnitId = digestAZ(mediaUnitId);
                 }
                 Integer port = payload.getPort();
                 if (Objects.nonNull(port)) {
@@ -378,6 +433,7 @@ public class ReportObfuscator extends Transformation {
                         .setUserId(userId)
                         .setIpLSH(ipLSH)
                         .setPort(port)
+                        .setMediaUnitId(mediaUnitId)
                         .build();
                 return newPayload;
             }
@@ -408,12 +464,17 @@ public class ReportObfuscator extends Transformation {
                 if (Objects.nonNull(ipLSH)) {
                     ipLSH = digestAZ(ipLSH);
                 }
+                String mediaUnitId = payload.getMediaUnitId();
+                if (Objects.nonNull(mediaUnitId)) {
+                    mediaUnitId = digestAZ(mediaUnitId);
+                }
                 ICERemoteCandidate newPayload = ICERemoteCandidate.newBuilder(payload)
                         .setCallName(callName)
                         .setPeerConnectionUUID(peerConnectionUUID)
                         .setUserId(userId)
                         .setPort(port)
                         .setIpLSH(ipLSH)
+                        .setMediaUnitId(mediaUnitId)
                         .build();
                 return newPayload;
             }
@@ -437,10 +498,69 @@ public class ReportObfuscator extends Transformation {
                 if (Objects.nonNull(peerConnectionUUID)) {
                     peerConnectionUUID = obfuscateUUIDSource(peerConnectionUUID);
                 }
+                String mediaUnitId = payload.getMediaUnitId();
+                if (Objects.nonNull(mediaUnitId)) {
+                    mediaUnitId = digestAZ(mediaUnitId);
+                }
                 ExtensionReport newPayload = ExtensionReport.newBuilder(payload)
                         .setCallName(callName)
                         .setUserId(userId)
                         .setPeerConnectionUUID(peerConnectionUUID)
+                        .setMediaUnitId(mediaUnitId)
+                        .build();
+                return newPayload;
+            }
+
+            @Override
+            public Object visitClientDetailsReport(Report report, ClientDetails payload) {
+                String callName = payload.getCallName();
+                if (Objects.nonNull(callName)) {
+                    callName = digestAZ(callName);
+                }
+                String userId = payload.getUserId();
+                if (Objects.nonNull(userId)) {
+                    userId = digestAZ(userId);
+                }
+                String peerConnectionUUID = payload.getPeerConnectionUUID();
+                if (Objects.nonNull(peerConnectionUUID)) {
+                    peerConnectionUUID = obfuscateUUIDSource(peerConnectionUUID);
+                }
+                String mediaUnitId = payload.getMediaUnitId();
+                if (Objects.nonNull(mediaUnitId)) {
+                    mediaUnitId = digestAZ(mediaUnitId);
+                }
+                ClientDetails newPayload = ClientDetails.newBuilder(payload)
+                        .setCallName(callName)
+                        .setUserId(userId)
+                        .setPeerConnectionUUID(peerConnectionUUID)
+                        .setMediaUnitId(mediaUnitId)
+                        .build();
+                return newPayload;
+            }
+
+            @Override
+            public Object visitMediaDeviceReport(Report report, MediaDevice payload) {
+                String callName = payload.getCallName();
+                if (Objects.nonNull(callName)) {
+                    callName = digestAZ(callName);
+                }
+                String userId = payload.getUserId();
+                if (Objects.nonNull(userId)) {
+                    userId = digestAZ(userId);
+                }
+                String peerConnectionUUID = payload.getPeerConnectionUUID();
+                if (Objects.nonNull(peerConnectionUUID)) {
+                    peerConnectionUUID = obfuscateUUIDSource(peerConnectionUUID);
+                }
+                String mediaUnitId = payload.getMediaUnitId();
+                if (Objects.nonNull(mediaUnitId)) {
+                    mediaUnitId = digestAZ(mediaUnitId);
+                }
+                MediaDevice newPayload = MediaDevice.newBuilder(payload)
+                        .setCallName(callName)
+                        .setUserId(userId)
+                        .setPeerConnectionUUID(peerConnectionUUID)
+                        .setMediaUnitId(mediaUnitId)
                         .build();
                 return newPayload;
             }

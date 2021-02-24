@@ -7,7 +7,6 @@ import org.observertc.webrtc.connector.databases.Job;
 import org.observertc.webrtc.connector.databases.Task;
 import org.observertc.webrtc.connector.databases.bigquery.Adapter;
 import org.observertc.webrtc.connector.databases.bigquery.AdapterBuilder;
-import org.observertc.webrtc.connector.sinks.Sink;
 import org.observertc.webrtc.schemas.reports.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -55,6 +54,8 @@ public class SchemaAdapter extends Job {
         this.schemaMap.put(ReportType.TRACK, Track.getClassSchema());
         this.schemaMap.put(ReportType.MEDIA_SOURCE, MediaSource.getClassSchema());
         this.schemaMap.put(ReportType.USER_MEDIA_ERROR, UserMediaError.getClassSchema());
+        this.schemaMap.put(ReportType.MEDIA_DEVICE, MediaDevice.getClassSchema());
+        this.schemaMap.put(ReportType.CLIENT_DETAILS, ClientDetails.getClassSchema());
 
         Task createDataset = this.makeCreateDatasetTask();
         Task createTables = this.createTables(
@@ -72,7 +73,9 @@ public class SchemaAdapter extends Job {
                 ReportType.ICE_REMOTE_CANDIDATE,
                 ReportType.TRACK,
                 ReportType.MEDIA_SOURCE,
-                ReportType.USER_MEDIA_ERROR
+                ReportType.USER_MEDIA_ERROR,
+                ReportType.MEDIA_DEVICE,
+                ReportType.CLIENT_DETAILS
         );
         this.withTask(createDataset)
                 .withTask(createTables, createDataset)

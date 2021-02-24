@@ -34,6 +34,10 @@
         "name" : "callName",
         "type" : [ "null", "string" ],
         "default" : null
+      }, {
+        "name" : "mediaUnitId",
+        "type" : [ "null", "string" ],
+        "default" : null
       } ]
     }, {
       "type" : "record",
@@ -44,6 +48,10 @@
         "type" : "string"
       }, {
         "name" : "callName",
+        "type" : [ "null", "string" ],
+        "default" : null
+      }, {
+        "name" : "mediaUnitId",
         "type" : [ "null", "string" ],
         "default" : null
       } ]
@@ -920,6 +928,110 @@
         "name" : "message",
         "type" : "string"
       } ]
+    }, {
+      "type" : "record",
+      "name" : "MediaDevice",
+      "doc" : "Client media device details.",
+      "fields" : [ {
+        "name" : "mediaUnitId",
+        "type" : [ "null", "string" ],
+        "default" : null
+      }, {
+        "name" : "peerConnectionUUID",
+        "type" : "string"
+      }, {
+        "name" : "callName",
+        "type" : [ "null", "string" ],
+        "default" : null
+      }, {
+        "name" : "userId",
+        "type" : [ "null", "string" ],
+        "default" : null
+      }, {
+        "name" : "browserId",
+        "type" : [ "null", "string" ],
+        "default" : null
+      }, {
+        "name" : "deviceId",
+        "type" : "string"
+      }, {
+        "name" : "groupId",
+        "type" : [ "null", "string" ],
+        "default" : null
+      }, {
+        "name" : "kind",
+        "type" : {
+          "type" : "enum",
+          "name" : "MediaDeviceKind",
+          "doc" : "Media device kind",
+          "symbols" : [ "VIDEO_INPUT", "AUDIO_INPUT", "AUDIO_OUTPUT", "UNKNOWN", "NULL" ]
+        },
+        "default" : "unknown"
+      }, {
+        "name" : "label",
+        "type" : [ "null", "string" ],
+        "default" : null
+      } ]
+    }, {
+      "type" : "record",
+      "name" : "ClientDetails",
+      "doc" : "General browser details of a client to understand more about about the platform, browser version where webrtc is running.",
+      "fields" : [ {
+        "name" : "mediaUnitId",
+        "type" : [ "null", "string" ],
+        "default" : null
+      }, {
+        "name" : "peerConnectionUUID",
+        "type" : "string"
+      }, {
+        "name" : "callName",
+        "type" : [ "null", "string" ],
+        "default" : null
+      }, {
+        "name" : "userId",
+        "type" : [ "null", "string" ],
+        "default" : null
+      }, {
+        "name" : "browserId",
+        "type" : [ "null", "string" ],
+        "default" : null
+      }, {
+        "name" : "browserName",
+        "type" : [ "null", "string" ],
+        "default" : null
+      }, {
+        "name" : "browserVersion",
+        "type" : [ "null", "string" ],
+        "default" : null
+      }, {
+        "name" : "engineName",
+        "type" : [ "null", "string" ],
+        "default" : null
+      }, {
+        "name" : "engineVersion",
+        "type" : [ "null", "string" ],
+        "default" : null
+      }, {
+        "name" : "osName",
+        "type" : [ "null", "string" ],
+        "default" : null
+      }, {
+        "name" : "osVersion",
+        "type" : [ "null", "string" ],
+        "default" : null
+      }, {
+        "name" : "platformType",
+        "type" : [ "null", "string" ],
+        "default" : null
+      }, {
+        "name" : "platformVendor",
+        "type" : [ "null", "string" ],
+        "default" : null
+      }, {
+        "name" : "platformModel",
+        "type" : [ "null", "string" ],
+        "default" : null
+      } ]
     } ],
     "default" : null
   }, {
@@ -928,7 +1040,7 @@
       "type" : "enum",
       "name" : "ReportType",
       "doc" : "The type of the report",
-      "symbols" : [ "UNKNOWN", "INITIATED_CALL", "FINISHED_CALL", "JOINED_PEER_CONNECTION", "DETACHED_PEER_CONNECTION", "INBOUND_RTP", "REMOTE_INBOUND_RTP", "OUTBOUND_RTP", "MEDIA_SOURCE", "TRACK", "ICE_CANDIDATE_PAIR", "ICE_REMOTE_CANDIDATE", "ICE_LOCAL_CANDIDATE", "USER_MEDIA_ERROR", "EXTENSION", "OBSERVER_EVENT" ]
+      "symbols" : [ "UNKNOWN", "INITIATED_CALL", "FINISHED_CALL", "JOINED_PEER_CONNECTION", "DETACHED_PEER_CONNECTION", "INBOUND_RTP", "REMOTE_INBOUND_RTP", "OUTBOUND_RTP", "MEDIA_SOURCE", "TRACK", "ICE_CANDIDATE_PAIR", "ICE_REMOTE_CANDIDATE", "ICE_LOCAL_CANDIDATE", "USER_MEDIA_ERROR", "EXTENSION", "OBSERVER_EVENT", "MEDIA_DEVICE", "CLIENT_DETAILS" ]
     },
     "default" : "UNKNOWN"
   } ]
