@@ -1,5 +1,9 @@
 WebRTC-Observer Report Connector Service
 ===
+![Build](https://github.com/ObserveRTC/connector/actions/workflows/build.yml/badge.svg)
+![Test](https://github.com/ObserveRTC/connector/actions/workflows/test.yml/badge.svg)
+
+
 WebRTC applications integrated with [observer.js](https://github.com/ObserveRTC/integrations) 
 forward their reports to the [WebRTC-Observer](https://github.com/ObserveRTC/webrtc-observer) service.
 WebRTC-Observer creates [Reports](https://observertc.org/docs/references/reports/).

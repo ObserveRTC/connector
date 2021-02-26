@@ -2,9 +2,7 @@ package org.observertc.webrtc.connector.databases.bigquery;
 
 import com.google.cloud.bigquery.Field;
 import com.google.cloud.bigquery.LegacySQLTypeName;
-import javafx.util.Pair;
 import org.apache.avro.Schema;
-import reactor.util.function.Tuple2;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
