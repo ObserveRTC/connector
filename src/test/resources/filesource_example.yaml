@@ -1,0 +1,4 @@
+# FileSource must have a path to a directory
+# it can read from. It should be a valid directory,
+# otherwise the builder cannot build the source
+path: "./"

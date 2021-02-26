@@ -68,11 +68,12 @@ public class ReportGenerator {
             String callName = null;
             if (0 < callNames.length) {
                 int index = rand.nextInt(serviceNames.size());
-                callName = callNames[index];
+                callName = callNames[Math.min(index, callNames.length - 1)];
             }
             JoinedPeerConnection finishedCall = JoinedPeerConnection.newBuilder()
                     .setCallUUID(UUID.randomUUID().toString())
                     .setCallName(callName)
+                    .setPeerConnectionUUID(UUID.randomUUID().toString())
                     .build();
             return makeReport(ReportType.JOINED_PEER_CONNECTION, finishedCall);
         };
