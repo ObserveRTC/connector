@@ -61,6 +61,7 @@ dependencies {
     // https://mvnrepository.com/artifact/org.hibernate/hibernate-validator
     implementation("io.micronaut.beanvalidation:micronaut-hibernate-validator:3.0.0")
 
+    implementation group: 'org.jooq', name: 'jooq', version: '3.14.8'
 
     testCompile "org.testcontainers:kafka:1.15.1"
 }

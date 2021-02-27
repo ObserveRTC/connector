@@ -5,7 +5,7 @@ import org.observertc.webrtc.connector.common.BigQueryService;
 import org.observertc.webrtc.connector.configbuilders.AbstractBuilder;
 import org.observertc.webrtc.connector.configbuilders.Builder;
 import org.observertc.webrtc.connector.databases.bigquery.Adapter;
-import org.observertc.webrtc.connector.databases.bigquery.version1.SchemaAdapter;
+import org.observertc.webrtc.connector.databases.bigquery.version1.BigQuerySchemaMapper;
 import org.observertc.webrtc.connector.sinks.Sink;
 import org.observertc.webrtc.schemas.reports.ReportType;
 import org.slf4j.Logger;
@@ -70,13 +70,13 @@ public class BigQuerySinkBuilder extends AbstractBuilder implements Builder<Sink
     }
 
     private Map<ReportType, Adapter> runSchemaAdapter(BigQueryService bigQueryService, Config config) {
-        try (SchemaAdapter schemaCheckerJob = new SchemaAdapter(bigQueryService.getBigQuery(), config.projectId, config.datasetId)) {
+        try (BigQuerySchemaMapper schemaCheckerJob = new BigQuerySchemaMapper(bigQueryService.getBigQuery(), config.projectId, config.datasetId)) {
             schemaCheckerJob
-                    .withSchemaCheckEnabled(config.schemaCheck.enabled)
-                    .withCreateDatasetIfNotExists(config.schemaCheck.createDatasetIfNotExists)
-                    .withCreateTableIfNotExists(config.schemaCheck.createTableIfNotExists)
-                    .withDeleteTableIfExists(config.schemaCheck.deleteTableIfExists)
                     .byUsingTimestampResolver(config.useTimestampResolver)
+                    .withSchemaCheckEnabled(config.schemaCheck.enabled)
+                    .createDatasetIfNotExists(config.schemaCheck.createDatasetIfNotExists)
+                    .createTableIfNotExists(config.schemaCheck.createTableIfNotExists)
+
                     ;
             this.mapping.entrySet()
                     .forEach(entry -> schemaCheckerJob.withTableName(entry.getKey(), entry.getValue()));
@@ -109,8 +109,6 @@ public class BigQuerySinkBuilder extends AbstractBuilder implements Builder<Sink
             public boolean createDatasetIfNotExists = true;
 
             public boolean createTableIfNotExists = true;
-
-            public String deleteTableIfExists = null;
         }
 
         public String initiatedCallsTable = "InitiatedCalls";

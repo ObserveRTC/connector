@@ -39,13 +39,13 @@ public class Adapter implements Function<SpecificRecordBase, Map<String, Object>
         return result;
     }
 
-    Adapter add(String fieldName, Function<String, String> fieldAdapter, Function valueAdapter) {
+    public Adapter add(String fieldName, Function<String, String> fieldAdapter, Function valueAdapter) {
         Mapping mapping = new Mapping(fieldAdapter, valueAdapter);
         this.mappings.put(fieldName, mapping);
         return this;
     }
 
-    Adapter add(String fieldName, Adapter adapter) {
+    public Adapter add(String fieldName, Adapter adapter) {
         this.adapters.put(fieldName, adapter);
         return this;
     }
