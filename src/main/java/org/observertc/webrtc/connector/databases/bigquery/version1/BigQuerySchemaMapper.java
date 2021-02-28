@@ -4,12 +4,9 @@ import com.google.cloud.bigquery.*;
 import org.apache.avro.Schema;
 import org.observertc.webrtc.connector.databases.ReportMapper;
 import org.observertc.webrtc.connector.databases.SchemaMapperAbstract;
-import org.observertc.webrtc.connector.databases.bigquery.ReportMapperBuilder;
-import org.observertc.webrtc.schemas.reports.Report;
 import org.observertc.webrtc.schemas.reports.ReportType;
 
 import java.util.*;
-import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Function;
 
 public class BigQuerySchemaMapper extends SchemaMapperAbstract {
