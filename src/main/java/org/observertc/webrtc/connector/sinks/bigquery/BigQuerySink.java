@@ -6,7 +6,7 @@ import com.google.cloud.bigquery.InsertAllResponse;
 import com.google.cloud.bigquery.TableId;
 import io.reactivex.rxjava3.annotations.NonNull;
 import org.observertc.webrtc.connector.common.BigQueryService;
-import org.observertc.webrtc.connector.databases.bigquery.Adapter;
+import org.observertc.webrtc.connector.databases.ReportMapper;
 import org.observertc.webrtc.connector.sinks.Sink;
 import org.observertc.webrtc.schemas.reports.Report;
 import org.observertc.webrtc.schemas.reports.ReportType;
@@ -31,7 +31,7 @@ public class BigQuerySink extends Sink {
             ReportType reportType = report.getType();
             InsertAllRequest.Builder requestBuilder = requestbuilders.get(reportType);
             Route route = this.routes.get(reportType);
-            Adapter adapter = route.adapter;
+            ReportMapper adapter = route.adapter;
             if (Objects.isNull(requestBuilder)) {
                 String tableName = route.tableName;
                 if (Objects.isNull(tableName)) {
@@ -85,7 +85,7 @@ public class BigQuerySink extends Sink {
         }
     }
 
-    BigQuerySink withRoute(ReportType reportType, String tableName, Adapter adapter) {
+    BigQuerySink withRoute(ReportType reportType, String tableName, ReportMapper adapter) {
         Route route = new Route(tableName, adapter);
         this.routes.put(reportType, route);
         return this;
@@ -93,9 +93,9 @@ public class BigQuerySink extends Sink {
 
     private class Route {
         public final String tableName;
-        public final Adapter adapter;
+        public final ReportMapper adapter;
 
-        private Route(String tableName, Adapter adapter) {
+        private Route(String tableName, ReportMapper adapter) {
             this.tableName = tableName;
             this.adapter = adapter;
         }

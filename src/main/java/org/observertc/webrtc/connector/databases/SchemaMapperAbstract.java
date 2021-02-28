@@ -10,16 +10,19 @@ import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Consumer;
 
 public abstract class SchemaMapperAbstract extends Job {
     private static final Logger DEFAULT_LOGGER = LoggerFactory.getLogger(SchemaMapperAbstract.class);
     private static final String CREATE_DATASET_TASK_NAME = "CreateDatasetTask";
     private static final String CREATE_TABLES_TASK_NAME = "CreateTablesTask";
+    private static final String CREATE_SCHEMA_ADAPTERS_TASK_NAME = "CreateSchemaAdaptersTask";
 
     private boolean createDatasetIfNotExists = false;
     private boolean createTableIfNotExists = false;
     private boolean schemaCheckIsEnabled = true;
     private final Map<ReportType, Schema> schemaMap = new HashMap<>();
+    private final Map<ReportType, ReportMapper> reportMappers = new HashMap<>();
     protected Logger logger = DEFAULT_LOGGER;
 
     public SchemaMapperAbstract() {
@@ -45,7 +48,9 @@ public abstract class SchemaMapperAbstract extends Job {
         ReportType[] types = this.schemaMap.keySet().toArray(new ReportType[0]);
         Task createDataset = this.makeCreateDatasetTask();
         Task createTables = this.createTables(types);
+        Task createSchemaAdapters = this.createSchemaAdapters(types);
         this.withTask(createDataset)
+                .withTask(createSchemaAdapters, createDataset)
                 .withTask(createTables, createDataset)
         ;
     }
@@ -71,10 +76,38 @@ public abstract class SchemaMapperAbstract extends Job {
         return this;
     }
 
+    protected boolean getFlagCreateDatasetIfNotExists() {
+        return this.createDatasetIfNotExists;
+    }
+
+    protected boolean getFlagCreateTableIfNotExists() {
+        return this.createTableIfNotExists;
+    }
+
+    public ReportMapper getReportMapper(ReportType reportType) {
+        return this.reportMappers.get(reportType);
+    }
+
     protected abstract boolean isDatabaseExists();
     protected abstract boolean isTableExistsForReportType(ReportType reportType, Schema schema);
     protected abstract void createDatabase();
     protected abstract void createTableForReportType(ReportType reportType, Schema schema);
+
+    protected abstract ReportMapper makeReportMapper(ReportType reportType, Schema schema);
+
+    private Task createSchemaAdapters(ReportType... types) {
+        return new AbstractTask(CREATE_SCHEMA_ADAPTERS_TASK_NAME) {
+            @Override
+            protected void execute() {
+                for (ReportType type : types) {
+                    Schema schema = schemaMap.get(type);
+                    ReportMapper reportMapper = makeReportMapper(type, schema);
+                    reportMappers.put(type, reportMapper);
+                }
+
+            }
+        };
+    }
 
     private Task createTables(ReportType... types) {
         return new AbstractTask(CREATE_TABLES_TASK_NAME) {
@@ -86,6 +119,7 @@ public abstract class SchemaMapperAbstract extends Job {
                 for (ReportType type : types) {
                     Schema schema = schemaMap.get(type);
                     if (isTableExistsForReportType(type, schema)) {
+                        logger.info("Table for report type {} already exists", type);
                         continue;
                     }
                     if (!createTableIfNotExists) {
@@ -117,4 +151,41 @@ public abstract class SchemaMapperAbstract extends Job {
             }
         };
     }
+
+    protected void schemaFieldWalker(Schema schema, Consumer<FieldInfo> evaluator) {
+        for (Schema.Field field : schema.getFields()) {
+            String fieldName = field.name();
+            Schema fieldSchema = field.schema();
+            Schema.Type fieldType = fieldSchema.getType();
+            if (fieldType.equals(Schema.Type.UNION) && fieldSchema.getTypes().size() == 2) {
+                // these are most likely types of the avro schema where null union with the actual type
+                Schema subSchema = fieldSchema.getTypes().get(0);
+                if (subSchema.getType().equals(Schema.Type.NULL)) { // most likely nullable
+                    subSchema = fieldSchema.getTypes().get(1);
+                }
+                FieldInfo fieldInfo = new FieldInfo(subSchema, true, fieldName);
+                evaluator.accept(fieldInfo);
+            } else {
+                FieldInfo fieldInfo = new FieldInfo(fieldSchema, true, fieldName);
+                evaluator.accept(fieldInfo);
+            }
+        }
+    }
+
+    public Map<ReportType, ReportMapper> getReportMappers() {
+        return this.reportMappers;
+    };
+
+    protected class FieldInfo {
+        public final Schema schema;
+        public final boolean embedded;
+        public final String fieldName;
+
+        FieldInfo(Schema schema, boolean embedded, String fieldName) {
+            this.schema = schema;
+            this.embedded = embedded;
+            this.fieldName = fieldName;
+        }
+    }
+
 }

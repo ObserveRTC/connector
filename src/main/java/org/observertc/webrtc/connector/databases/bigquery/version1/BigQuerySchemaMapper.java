@@ -2,17 +2,13 @@ package org.observertc.webrtc.connector.databases.bigquery.version1;
 
 import com.google.cloud.bigquery.*;
 import org.apache.avro.Schema;
+import org.observertc.webrtc.connector.databases.ReportMapper;
 import org.observertc.webrtc.connector.databases.SchemaMapperAbstract;
-import org.observertc.webrtc.connector.databases.bigquery.Adapter;
-import org.observertc.webrtc.connector.databases.bigquery.AdapterBuilder;
+import org.observertc.webrtc.connector.databases.bigquery.ReportMapperBuilder;
 import org.observertc.webrtc.schemas.reports.Report;
 import org.observertc.webrtc.schemas.reports.ReportType;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Function;
 
@@ -21,7 +17,6 @@ public class BigQuerySchemaMapper extends SchemaMapperAbstract {
     private final String projectId;
     private final String datasetId;
     private final Map<ReportType, String> tableNames = new HashMap<>();
-    private final Map<ReportType, Adapter> adapters = new HashMap<>();
     private boolean useTimestampResolver = true;
 
     public BigQuerySchemaMapper(BigQuery bigQuery, String projectId, String datasetId) {
@@ -38,30 +33,6 @@ public class BigQuerySchemaMapper extends SchemaMapperAbstract {
     public BigQuerySchemaMapper withTableName(ReportType reportType, String tableName) {
         this.tableNames.put(reportType, tableName);
         return this;
-    }
-
-    public Map<ReportType, Adapter> getAdapters() {
-        return this.adapters;
-    }
-
-    private AdapterBuilder makeBaseAdapterBuilder() {
-        Function<Long, Long> resolver;
-        if (this.useTimestampResolver) {
-            resolver = epoch -> {
-                return epoch / 1000L;
-            };
-        } else {
-            resolver = Function.identity();
-        }
-
-        AdapterBuilder result = new AdapterBuilder()
-                .forSchema(Report.getClassSchema())
-                .excludeFields("version")
-                .excludeFields("type")
-                .explicitTypeMapping("timestamp", LegacySQLTypeName.TIMESTAMP)
-                .mapFieldBy("timestamp", resolver)
-                ;
-        return result;
     }
 
     @Override
@@ -94,15 +65,28 @@ public class BigQuerySchemaMapper extends SchemaMapperAbstract {
 
     @Override
     protected void createTableForReportType(ReportType reportType, Schema schema) {
-        AdapterBuilder subAdapterBuilder = new AdapterBuilder()
-                .forSchema(schema)
-                ;
-        AdapterBuilder adapterBuilder = makeBaseAdapterBuilder()
-                .flatMap("payload", subAdapterBuilder);
-        AtomicReference<com.google.cloud.bigquery.Schema> schemaHolder = new AtomicReference<>(null);
-        Adapter adapter = adapterBuilder.build(schemaHolder);
-        this.adapters.put(reportType, adapter);
-        com.google.cloud.bigquery.Schema bgSchema = schemaHolder.get();
+        List<Field> bgFields = new LinkedList<>();
+        bgFields.add(Field.newBuilder("serviceUUID", LegacySQLTypeName.STRING).setMode(Field.Mode.REQUIRED).build());
+        bgFields.add(Field.newBuilder("serviceName", LegacySQLTypeName.STRING).setMode(Field.Mode.NULLABLE).build());
+        bgFields.add(Field.newBuilder("timestamp", LegacySQLTypeName.TIMESTAMP).setMode(Field.Mode.REQUIRED).build());
+        bgFields.add(Field.newBuilder("marker", LegacySQLTypeName.STRING).setMode(Field.Mode.NULLABLE).build());
+        this.schemaFieldWalker(schema, avroFieldInfo -> {
+            Field.Mode mode;
+            if (avroFieldInfo.embedded || avroFieldInfo.schema.isNullable()) {
+                mode = Field.Mode.NULLABLE;
+            } else {
+                mode = Field.Mode.REQUIRED;
+            }
+            LegacySQLTypeName bgFieldType = convertTypLegacySQLType(avroFieldInfo.schema.getType());
+            com.google.cloud.bigquery.Field bgField = Field.newBuilder(
+                    avroFieldInfo.fieldName,
+                    bgFieldType
+            ).setMode(mode)
+                    .setDescription(avroFieldInfo.schema.getDoc())
+                    .build();
+            bgFields.add(bgField);
+        });
+        com.google.cloud.bigquery.Schema bgSchema = com.google.cloud.bigquery.Schema.of(bgFields);
         if (Objects.isNull(bgSchema)) {
             return;
         }
@@ -115,6 +99,61 @@ public class BigQuerySchemaMapper extends SchemaMapperAbstract {
             logger.info("Table {} is successfully created", tableId.getTable());
         } catch (BigQueryException e) {
             logger.error("Error during table creation. Table: " + tableId.getTable(), e);
+        }
+    }
+
+    @Override
+    protected ReportMapper makeReportMapper(ReportType reportType, Schema schema) {
+        ReportMapper reportMapper = new ReportMapper();
+        reportMapper
+                .add("serviceUUID", Function.identity(),Function.identity())
+                .add("serviceName", Function.identity(),Function.identity())
+                .add("marker", Function.identity(),Function.identity())
+                .<Long, Long>add("timestamp", Function.identity(), epochInMillis -> epochInMillis / 1000L);
+        ReportMapper payloadMapper = new ReportMapper();
+        this.schemaFieldWalker(schema, avroFieldInfo -> {
+            Function valueAdapter = makeValueAdapter(avroFieldInfo.schema.getType());
+            payloadMapper.add(avroFieldInfo.fieldName, Function.identity(), valueAdapter);
+        });
+        reportMapper.add("payload", payloadMapper);
+        return reportMapper;
+    }
+
+    private LegacySQLTypeName convertTypLegacySQLType(Schema.Type type) {
+        switch (type) {
+            case LONG:
+            case INT:
+                return LegacySQLTypeName.INTEGER;
+            case BYTES:
+                return LegacySQLTypeName.BYTES;
+            case BOOLEAN:
+                return LegacySQLTypeName.BOOLEAN;
+            case ENUM:
+            case STRING:
+                return LegacySQLTypeName.STRING;
+            case DOUBLE:
+            case FLOAT:
+                return LegacySQLTypeName.FLOAT;
+            default:
+                throw new NoSuchElementException("No mapping exists from avro field type of " + type + " and to bigquery");
+        }
+    }
+
+    private Function makeValueAdapter(Schema.Type type) {
+        switch (type) {
+            case LONG:
+            case INT:
+            case BYTES:
+            case BOOLEAN:
+            case STRING:
+            case DOUBLE:
+            case FLOAT:
+                return Function.identity();
+            case ENUM:
+                Function<Enum, String> enumConverter = e -> e.name();
+                return enumConverter;
+            default:
+                throw new NoSuchElementException("No mapping exists from avro field type of " + type + " and to bigquery");
         }
     }
 }
