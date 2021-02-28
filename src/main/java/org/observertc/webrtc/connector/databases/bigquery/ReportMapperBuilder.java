@@ -3,20 +3,21 @@ package org.observertc.webrtc.connector.databases.bigquery;
 import com.google.cloud.bigquery.Field;
 import com.google.cloud.bigquery.LegacySQLTypeName;
 import org.apache.avro.Schema;
+import org.observertc.webrtc.connector.databases.ReportMapper;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Function;
 
-public class AdapterBuilder {
+public class ReportMapperBuilder {
 
     private Schema schema = null;
     private Set<String> excludedFields = new HashSet<>();
     private Map<String, MyPair<Function<String, String>,Function>> fieldResolver = new HashMap<>();
     private Map<String, LegacySQLTypeName> explicitFieldTypes = new HashMap<>();
-    private Map<String, AdapterBuilder> flatMaps = new HashMap<>();
+    private Map<String, ReportMapperBuilder> flatMaps = new HashMap<>();
 
-    public AdapterBuilder excludeFields(String... fieldNames) {
+    public ReportMapperBuilder excludeFields(String... fieldNames) {
         for (int i = 0; i < fieldNames.length; ++i) {
             String fieldName = fieldNames[i].toLowerCase();
             this.excludedFields.add(fieldName);
@@ -24,47 +25,47 @@ public class AdapterBuilder {
         return this;
     }
 
-    public AdapterBuilder explicitTypeMapping(String fieldName, LegacySQLTypeName legacySQLTypeName) {
+    public ReportMapperBuilder explicitTypeMapping(String fieldName, LegacySQLTypeName legacySQLTypeName) {
         this.explicitFieldTypes.put(fieldName, legacySQLTypeName);
         return this;
     }
 
-    public AdapterBuilder mapFieldBy(String fieldName,
-                                     Function<String, String> fieldNameResolver,
-                                     Function fieldValueResolver) {
+    public ReportMapperBuilder mapFieldBy(String fieldName,
+                                          Function<String, String> fieldNameResolver,
+                                          Function fieldValueResolver) {
         this.fieldResolver.put(fieldName, new MyPair<>(fieldNameResolver, fieldValueResolver));
         return this;
     }
 
-    public AdapterBuilder mapFieldBy(String fieldName, Function fieldValueResolver) {
+    public ReportMapperBuilder mapFieldBy(String fieldName, Function fieldValueResolver) {
         this.fieldResolver.put(fieldName, new MyPair<>(Function.identity(), fieldValueResolver));
         return this;
     }
 
 
-    public AdapterBuilder flatMap(String fieldName, AdapterBuilder adapterBuilder) {
-        this.flatMaps.put(fieldName, adapterBuilder);
+    public ReportMapperBuilder flatMap(String fieldName, ReportMapperBuilder reportMapperBuilder) {
+        this.flatMaps.put(fieldName, reportMapperBuilder);
         return this;
     }
 
-    public AdapterBuilder forSchema(Schema schema) {
+    public ReportMapperBuilder forSchema(Schema schema) {
         this.schema = schema;
         return this;
     }
 
-    public Adapter build(AtomicReference<com.google.cloud.bigquery.Schema> schemaHolder) {
-        Adapter result = new Adapter();
+    public ReportMapper build(AtomicReference<com.google.cloud.bigquery.Schema> schemaHolder) {
+        ReportMapper result = new ReportMapper();
         List<Field> fields = new ArrayList<>();
         for (Schema.Field field : this.schema.getFields()) {
             String fieldName = field.name();
             if (this.excludedFields.contains(fieldName)) {
                 continue;
             }
-            AdapterBuilder adapterBuilder = this.flatMaps.get(fieldName);
-            if (Objects.nonNull(adapterBuilder)) {
+            ReportMapperBuilder reportMapperBuilder = this.flatMaps.get(fieldName);
+            if (Objects.nonNull(reportMapperBuilder)) {
                 AtomicReference<com.google.cloud.bigquery.Schema> subSchemaHolder = new AtomicReference<>();
-                Adapter adapter = adapterBuilder.build(subSchemaHolder);
-                result.add(fieldName, adapter);
+                ReportMapper reportMapper = reportMapperBuilder.build(subSchemaHolder);
+                result.add(fieldName, reportMapper);
                 com.google.cloud.bigquery.Schema subSchema = subSchemaHolder.get();
                 if (Objects.nonNull(subSchema)) {
                     subSchema.getFields().stream().forEach(fields::add);

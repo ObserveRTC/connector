@@ -4,7 +4,7 @@ import io.micronaut.context.annotation.Prototype;
 import org.observertc.webrtc.connector.common.BigQueryService;
 import org.observertc.webrtc.connector.configbuilders.AbstractBuilder;
 import org.observertc.webrtc.connector.configbuilders.Builder;
-import org.observertc.webrtc.connector.databases.bigquery.Adapter;
+import org.observertc.webrtc.connector.databases.ReportMapper;
 import org.observertc.webrtc.connector.databases.bigquery.version1.BigQuerySchemaMapper;
 import org.observertc.webrtc.connector.sinks.Sink;
 import org.observertc.webrtc.schemas.reports.ReportType;
@@ -47,7 +47,7 @@ public class BigQuerySinkBuilder extends AbstractBuilder implements Builder<Sink
         this.mapping.put(ReportType.CLIENT_DETAILS, config.clientDetailsTable);
         BigQueryService bigQueryService = new BigQueryService(config.projectId, config.datasetId, config.credentialFile);
 
-        Map<ReportType, Adapter> adapters = this.runSchemaAdapter(bigQueryService, config);
+        Map<ReportType, ReportMapper> adapters = this.runSchemaAdapter(bigQueryService, config);
         if (Objects.isNull(adapters)) {
             logger.error("The schema cannot be built, because it does not have adapters");
             return null;
@@ -69,7 +69,7 @@ public class BigQuerySinkBuilder extends AbstractBuilder implements Builder<Sink
         return result;
     }
 
-    private Map<ReportType, Adapter> runSchemaAdapter(BigQueryService bigQueryService, Config config) {
+    private Map<ReportType, ReportMapper> runSchemaAdapter(BigQueryService bigQueryService, Config config) {
         try (BigQuerySchemaMapper schemaCheckerJob = new BigQuerySchemaMapper(bigQueryService.getBigQuery(), config.projectId, config.datasetId)) {
             schemaCheckerJob
                     .byUsingTimestampResolver(config.useTimestampResolver)
@@ -81,7 +81,7 @@ public class BigQuerySinkBuilder extends AbstractBuilder implements Builder<Sink
             this.mapping.entrySet()
                     .forEach(entry -> schemaCheckerJob.withTableName(entry.getKey(), entry.getValue()));
             schemaCheckerJob.run();
-            return schemaCheckerJob.getAdapters();
+            return schemaCheckerJob.getReportMappers();
         } catch (Exception e) {
             logger.error("Error occured during schema checking process", e);
             return null;
