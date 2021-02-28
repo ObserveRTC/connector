@@ -62,6 +62,8 @@ dependencies {
     implementation("io.micronaut.beanvalidation:micronaut-hibernate-validator:3.0.0")
 
     implementation group: 'org.jooq', name: 'jooq', version: '3.14.8'
+    runtime("io.micronaut.sql:micronaut-jdbc-hikari")
+    implementation group: 'mysql', name: 'mysql-connector-java', version: '8.0.19'
 
     testCompile "org.testcontainers:kafka:1.15.1"
 }
