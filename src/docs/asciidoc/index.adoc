@@ -1,13 +1,11 @@
-= Your Project
-author@example.org
+= ObserveRTC Developer Manual: WebRTC Report Connector Service
+balazs@observertc.org
 
-Write a short introduction about your project
+The service is built to process {WebRTC-Reports}[TODO: Link].
 
 == Build
 
-Explain what it requires and how to build the project. For example:
-
-This project requires Java 8 (min) and you can build it executing the following command:
+This project requires Java 11 (min) and you can build it executing the following command:
 
 [source,console]
 ----
@@ -33,4 +31,11 @@ Alice <-- Bob: another authentication Response
 Remember you can include piece of code extracted from your project using the `include` directive
 
     include::{sourcedir}/com/mycompany/service/MyService.java[tags=init]
+
+== Pipeline Configurations
+
+The connector executes pipelines under the hood, where each pipeline
+describes a sequential set of operations should have applied on the consumes data.
+
+An example configuration for a pipeline is given below:
 
