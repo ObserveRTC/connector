@@ -11,3 +11,17 @@ micronaut:
         descriptions: true
         step: PT1M
 
+connector:
+  pipelines:
+    - name: "MyPipeline"
+      source:
+        type: FileSource
+        config:
+          path: "src/test/resources/observer-0.6.5/testfiles"
+      decoder:
+        type: AvroDecoder
+      buffer:
+        maxItems: 100
+        maxWaitingTimeInS: 10
+      sink:
+        type: LoggerSink
