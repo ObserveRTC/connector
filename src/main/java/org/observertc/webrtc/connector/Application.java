@@ -12,10 +12,7 @@ import org.slf4j.LoggerFactory;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.time.temporal.ChronoUnit;
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class Application {
@@ -23,11 +20,14 @@ public class Application {
     private static final String INITIAL_WAIT_IN_S = "INITIAL_WAITING_TIME_IN_S";
     public static ApplicationContext context;
 
+
+
     public static void main(String[] args) {
         Sleeper.makeFromSystemEnv(INITIAL_WAIT_IN_S, ChronoUnit.SECONDS).run();
         context = Micronaut.run(Application.class, args);
         List<String> configFiles = getPipelineConfigFiles();
-        load(configFiles);
+        ConnectorConfig connectorConfig = context.getBean(ConnectorConfig.class);
+        load(configFiles, connectorConfig.pipelines);
     }
 
     private static List<String> getPipelineConfigFiles() {
@@ -51,9 +51,12 @@ public class Application {
         return result;
     }
 
-    private static void load(List<String> paths) {
+    private static void load(List<String> paths, List<Map<String, Object>> pipelineConfigs) {
         ObservableConfig observableConfig = context.getBean(ObservableConfig.class);
         Pipelines pipelines = context.getBean(Pipelines.class);
+        if (Objects.nonNull(pipelineConfigs)) {
+            pipelineConfigs.forEach(pipelines::build);
+        }
         AtomicReference<Throwable> error = new AtomicReference<>(null);
         if (Objects.nonNull(paths)) {
             for (String configPath : paths) {
@@ -89,4 +92,6 @@ public class Application {
         }
         pipelines.startAll();
     }
+
+
 }
