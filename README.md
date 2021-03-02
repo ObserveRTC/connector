@@ -1,111 +1,84 @@
 WebRTC-Observer Report Connector Service
-===
+==
 ![Build](https://github.com/ObserveRTC/connector/actions/workflows/build.yml/badge.svg)
 ![Test](https://github.com/ObserveRTC/connector/actions/workflows/test.yml/badge.svg)
 
+This service is designed to consume [WebRTC-Reports](https://observertc.org/docs/references/reports/), 
+transform and forward them into databases. 
 
-WebRTC applications integrated with [observer.js](https://github.com/ObserveRTC/integrations) 
-forward their reports to the [WebRTC-Observer](https://github.com/ObserveRTC/webrtc-observer) service.
-WebRTC-Observer creates [Reports](https://observertc.org/docs/references/reports/).
+## Dependencies
 
-This service is designed to forward the reports to data warehouses.
+Describe any dependencies that must be installed for this software to work.
+This includes programming languages, databases or other storage mechanisms, build tools, frameworks, and so forth.
+If specific versions of other software are required, or known not to work, call that out.
 
-## Quick Start
+## Installation
 
-You can deploy the service by using [docker](https://github.com/ObserveRTC/docker-webrtc-observer) 
-or [helm](https://github.com/ObserveRTC/helm). 
-To forward the Reports from Observer to your warehouse, 
-you need to configure a pipeline through a yaml file. 
-An example configuration is given in the [docker](https://github.com/ObserveRTC/docker-webrtc-observer) 
-deployment.
+Please read [INSTALL](INSTALL.md) instructions.   
 
-## Configurations
-Under the hood the service creates a simple pipeline 
-with three chained components: Source, Evaluator, Sink. 
-Different sources, and sinks may have different configurations. 
-In the following examples are given in a [yaml](https://www.yaml.io/) format.
+## Configuration
 
-Each pipeline has the following configuration structure:
+The application uses the [micronaut](micronaut.io) framework, 
+the configuration is fetched from that.
+
+## Usage
+
+The service executes pipelines. 
+Pipelines can be setup by giving JSON or YAML configurations.
+One example for a pipeline configuration is given below:
 
 ```yaml
-name: "The name of my pipeline"
+name: "MyPipeline"
 source:
-  type: SourceType
-  # SourceType specific configurations
-  config: {}
-mapper:
-  # Evaluator configurations
-sink:
-  type: SinkType
-  config: {}
-    # SinkType specific configurations
-```
-
-### Sources
-
-Under the `source` property
-the following configurations you can apply:
-
-#### Kafka
-```yaml
-  type: KafkaSource
+  type: FileSource
   config:
-    # The topic your pipeline will read the data from
-    topic: "reports"
-    
-    # The kafka configuration properties listed in https://kafka.apache.org/0100/documentation.html
-    properties:
-      bootstrap.servers: localhost:9092
-      group.id: "MyGroup"
+    path: "path/to/avro_files"
+decoder:
+  type: AvroDecoder
+buffer:
+  maxItems: 100
+  maxWaitingTimeInS: 10
+sink:
+  type: LoggerSink
 ```
+This pipeline can be saved into a `test-pipeline.yaml`, from 
+which the connector can manifest an actual pipeline 
+by parsing it from `PIPELINE_CONFIG_FILES` env variables.
 
 
-### Evaluators
+## How to test the software
 
-Under the `mapper` property 
-the following configurations you can change
+The service uses `gradle` to build and test.
+To simply run tests: `gradle test`
 
-```yaml
-    # determines the number of Entries the mapper 
-    # holds in the buffer before it sends to the sink
-    bufferThresholdNum: 10000 # <- default
-    # determines the number of seconds the mapper 
-    # wait up until it sends the list of Entries anyway 
-    # regardless if it reached the number defined as threshold or not. 
-    bufferThresholdInS: 30 # <- default
-```
+## Known issues
 
-### Sinks
+TBD
 
-#### BigQuery
+## Getting help
 
-```yaml
-type: BigQuerySink
-config:
-  # The IAM credential you obtain from Google BigQuery Service to access 
-  # your datawarehouse through the API in a JSON format
-  credentialFile: "myCredentials.json"
-  
-  # The id of the project the credential belongs to
-  projectId: "myProject"
-  
-  # The dataset you want to dump your stats
-  datasetId: "WebRTCTry"
-  
-  # Configuration related to create the schema automatically 
-  # for you if it does not exists
-  schemaCheck:
-    enabled: True
-    createTableIfNotExists: True
-    createDatasetIfNotExists: True
-```
+If you have questions, concerns, bug reports, etc, please file an issue in this repository's Issue Tracker.
 
-## Compatibility Map
+## Getting involved
 
-| Report-Connector | v0.2 |
-| ---------------- | ----------- |
-| Reactor Kafka    | 1.3.1       |
+We currently focusing on the following areas of development this service:
+ * Better documentation
+ * Improve test coverage
+ * Add new type of sink components
 
-## Develop and contribute
+If you would like to contribute, first of all many thanks, 
+second of all, please read [CONTRIBUTING](CONTRIBUTING.md) guidline.
 
-TBD 
+----
+
+## Open source licensing info
+
+1. [LICENSE](LICENSE)
+
+----
+
+## Credits and references
+
+1. Projects that inspired you
+2. Related projects
+3. Books, papers, talks, or other sources that have meaningful impact or influence on this project
