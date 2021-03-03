@@ -9,10 +9,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.function.Consumer;
 
-public abstract class SchemaMapperAbstract extends Job {
+public abstract class SchemaMapperAbstract extends Job implements SchemaMapper {
     private static final Logger DEFAULT_LOGGER = LoggerFactory.getLogger(SchemaMapperAbstract.class);
     private static final String CREATE_DATASET_TASK_NAME = "CreateDatasetTask";
     private static final String CREATE_TABLES_TASK_NAME = "CreateTablesTask";
@@ -31,7 +33,6 @@ public abstract class SchemaMapperAbstract extends Job {
         this.schemaMap.put(ReportType.JOINED_PEER_CONNECTION, JoinedPeerConnection.getClassSchema());
         this.schemaMap.put(ReportType.DETACHED_PEER_CONNECTION, DetachedPeerConnection.getClassSchema());
         this.schemaMap.put(ReportType.OBSERVER_EVENT, ObserverEventReport.getClassSchema());
-        this.schemaMap.put(ReportType.EXTENSION, ExtensionReport.getClassSchema());
         this.schemaMap.put(ReportType.INBOUND_RTP, InboundRTP.getClassSchema());
         this.schemaMap.put(ReportType.OUTBOUND_RTP, OutboundRTP.getClassSchema());
         this.schemaMap.put(ReportType.REMOTE_INBOUND_RTP, RemoteInboundRTP.getClassSchema());
@@ -45,10 +46,9 @@ public abstract class SchemaMapperAbstract extends Job {
         this.schemaMap.put(ReportType.CLIENT_DETAILS, ClientDetails.getClassSchema());
         this.schemaMap.put(ReportType.EXTENSION, ExtensionReport.getClassSchema());
 
-        ReportType[] types = this.schemaMap.keySet().toArray(new ReportType[0]);
         Task createDataset = this.makeCreateDatasetTask();
-        Task createTables = this.createTables(types);
-        Task createSchemaAdapters = this.createSchemaAdapters(types);
+        Task createTables = this.createTables(this.schemaMap.keySet());
+        Task createSchemaAdapters = this.createSchemaAdapters(this.schemaMap.keySet());
         this.withTask(createDataset)
                 .withTask(createSchemaAdapters, createDataset)
                 .withTask(createTables, createDataset)
@@ -95,7 +95,7 @@ public abstract class SchemaMapperAbstract extends Job {
 
     protected abstract ReportMapper makeReportMapper(ReportType reportType, Schema schema);
 
-    private Task createSchemaAdapters(ReportType... types) {
+    private Task createSchemaAdapters(Set<ReportType> types) {
         return new AbstractTask(CREATE_SCHEMA_ADAPTERS_TASK_NAME) {
             @Override
             protected void execute() {
@@ -109,7 +109,7 @@ public abstract class SchemaMapperAbstract extends Job {
         };
     }
 
-    private Task createTables(ReportType... types) {
+    private Task createTables(Set<ReportType> types) {
         return new AbstractTask(CREATE_TABLES_TASK_NAME) {
             @Override
             protected void execute() {

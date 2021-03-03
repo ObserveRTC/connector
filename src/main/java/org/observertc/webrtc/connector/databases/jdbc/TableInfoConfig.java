@@ -1,5 +1,7 @@
 package org.observertc.webrtc.connector.databases.jdbc;
 
+import org.observertc.webrtc.ObjectToString;
+
 import javax.validation.constraints.NotNull;
 
 public class TableInfoConfig {
@@ -16,5 +18,10 @@ public class TableInfoConfig {
     public String autoIncrementPrimaryKeyName = "recordid";
 
     public String[] primaryKeyColumns = null;
+
+    @Override
+    public String toString() {
+        return ObjectToString.toString(this);
+    }
 
 }

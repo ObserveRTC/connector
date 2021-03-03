@@ -10,7 +10,10 @@ import org.observertc.webrtc.connector.sinks.Sink;
 import org.observertc.webrtc.schemas.reports.Report;
 import org.observertc.webrtc.schemas.reports.ReportType;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
@@ -33,10 +36,10 @@ public class JDBCSink extends Sink {
             Map<String, Object> recordValues = route.mapper.apply(report);
             if (Objects.isNull(insertValuesStepN)) {
                 var insertSetStep = context.insertInto(route.table);
-                insertValuesStepN = insertSetStep.columns(route.fields);
+                insertValuesStepN = insertSetStep.columns(route.fields.toArray(new Field[0]));
                 batch.put(reportType, insertValuesStepN);
             }
-            var values = Arrays.stream(route.fields).map(f -> recordValues.get(f.getName())).collect(Collectors.toList());
+            var values = route.fields.stream().map(f -> recordValues.get(f.getName())).collect(Collectors.toList());
             insertValuesStepN.values(values);
         }
 
@@ -51,18 +54,18 @@ public class JDBCSink extends Sink {
         }
     }
 
-    JDBCSink withRoute(ReportType reportType, Table<?> table, ReportMapper adapter) {
-        JDBCSink.Route route = new JDBCSink.Route(table, adapter, table.fields());
+    JDBCSink withRoute(ReportType reportType, Table<?> table, ReportMapper adapter, List<Field> fields) {
+        JDBCSink.Route route = new JDBCSink.Route(table, adapter, fields);
         this.routes.put(reportType, route);
         return this;
     }
 
     private class Route {
-        public final Field[] fields;
+        public final List<Field> fields;
         public final Table<?> table;
         public final ReportMapper mapper;
 
-        private Route(Table<?> table, ReportMapper mapper, Field[] fields) {
+        private Route(Table<?> table, ReportMapper mapper, List<Field> fields) {
             this.table = table;
             this.mapper = mapper;
             this.fields = fields;
