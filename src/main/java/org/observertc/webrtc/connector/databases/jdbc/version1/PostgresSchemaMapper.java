@@ -16,15 +16,15 @@ import java.util.function.Supplier;
 
 import static org.jooq.impl.DSL.constraint;
 
-public class PSQLSchemaMapper extends SchemaMapperAbstract implements JOOQSchemaMapper {
-    private static final Logger DEFAULT_LOGGER = LoggerFactory.getLogger(PSQLSchemaMapper.class);
+public class PostgresSchemaMapper extends SchemaMapperAbstract implements JOOQSchemaMapper {
+    private static final Logger DEFAULT_LOGGER = LoggerFactory.getLogger(PostgresSchemaMapper.class);
 
     private final Map<ReportType, TableInfoConfig> tableConfigs = new HashMap<>();
     private Logger logger = DEFAULT_LOGGER;
     private final Supplier<DSLContext> contextSupplier;
     private Map<ReportType, Table<?>> tables = null;
 
-    public PSQLSchemaMapper(Supplier<DSLContext> contextSupplier) {
+    public PostgresSchemaMapper(Supplier<DSLContext> contextSupplier) {
         super();
         this.contextSupplier = contextSupplier;
 //        DSLContextProvider contextProvider = Application.context.getBean(DSLContextProvider.class);
@@ -57,7 +57,7 @@ public class PSQLSchemaMapper extends SchemaMapperAbstract implements JOOQSchema
         throw new RuntimeException("Create Database in PSQL with JOOQ is not supported currently!");
     }
 
-    public PSQLSchemaMapper addTableConfig(ReportType reportType, TableInfoConfig tableInfoConfig) {
+    public PostgresSchemaMapper addTableConfig(ReportType reportType, TableInfoConfig tableInfoConfig) {
         this.tableConfigs.put(reportType, tableInfoConfig);
         return this;
     }

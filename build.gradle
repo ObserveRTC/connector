@@ -62,14 +62,15 @@ dependencies {
     implementation("io.micronaut.beanvalidation:micronaut-hibernate-validator:3.0.0")
 
     implementation group: 'org.jooq', name: 'jooq', version: '3.14.8'
-    runtime("io.micronaut.sql:micronaut-jdbc-hikari")
-
+    compile("io.micronaut.sql:micronaut-jdbc-hikari")
 
     implementation group: 'mysql', name: 'mysql-connector-java', version: '8.0.19'
 
     implementation group: 'org.postgresql', name: 'postgresql', version: '9.3-1100-jdbc4'
 //    implementation group: 'com.amazon.redshift', name: 'redshift-jdbc42', version: '1.2.43.1067'
 
+    testCompile "org.testcontainers:mysql:1.15.2"
+    testCompile "org.testcontainers:postgresql:1.15.2"
     testCompile "org.testcontainers:kafka:1.15.1"
 }
 

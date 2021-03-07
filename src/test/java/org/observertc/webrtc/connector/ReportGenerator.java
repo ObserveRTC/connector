@@ -2,12 +2,14 @@ package org.observertc.webrtc.connector;
 
 import org.observertc.webrtc.schemas.reports.*;
 
+import javax.inject.Singleton;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 import java.util.UUID;
 import java.util.function.Supplier;
 
+@Singleton
 public class ReportGenerator {
     private static final List<String> serviceNames = Arrays.asList(
             "myVideoServiceCompany",

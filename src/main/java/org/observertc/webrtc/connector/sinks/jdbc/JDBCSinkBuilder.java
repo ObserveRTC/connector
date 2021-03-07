@@ -1,4 +1,4 @@
-package org.observertc.webrtc.connector.sinks.jdbcsink;
+package org.observertc.webrtc.connector.sinks.jdbc;
 
 import io.micronaut.context.annotation.Prototype;
 import org.jooq.DSLContext;
@@ -14,7 +14,7 @@ import org.observertc.webrtc.connector.databases.ReportMapper;
 import org.observertc.webrtc.connector.databases.jdbc.TableInfoConfig;
 import org.observertc.webrtc.connector.databases.jdbc.version1.JOOQSchemaMapper;
 import org.observertc.webrtc.connector.databases.jdbc.version1.MYSQLSchemaMapper;
-import org.observertc.webrtc.connector.databases.jdbc.version1.PSQLSchemaMapper;
+import org.observertc.webrtc.connector.databases.jdbc.version1.PostgresSchemaMapper;
 import org.observertc.webrtc.connector.sinks.Sink;
 import org.observertc.webrtc.schemas.reports.ReportType;
 import org.slf4j.Logger;
@@ -72,7 +72,7 @@ public class JDBCSinkBuilder extends AbstractBuilder implements Builder<Sink> {
             logger.error("Cannot beam (up) datasource. JDBCSink cannot be built");
             return null;
         }
-        JOOQSchemaMapper jooqSchemaMapper = this.makeSchemaMapperFor(dialect, config.database, datasource);
+        JOOQSchemaMapper jooqSchemaMapper = JOOQSchemaMapper.makeSchemaMapperFor(dialect, config.database, datasource);
         Map<ReportType, ReportMapper> reportMappers = this.runSchemaAdapter(jooqSchemaMapper, config);
         if (Objects.isNull(reportMappers)) {
             logger.error("The schema cannot be built, because it does not have mappers");
@@ -142,18 +142,6 @@ public class JDBCSinkBuilder extends AbstractBuilder implements Builder<Sink> {
         } catch (Exception e) {
             logger.error("Error occured during schema checking process", e);
             return null;
-        }
-    }
-
-    private JOOQSchemaMapper makeSchemaMapperFor(SQLDialect dialect, String databaseName, DataSource dataSource) {
-        var context = DSL.using(dataSource, dialect);
-        switch (dialect) {
-            case MYSQL:
-                return new MYSQLSchemaMapper(() -> context, databaseName);
-            case POSTGRES:
-                return new PSQLSchemaMapper(() -> context);
-            default:
-                throw new RuntimeException("Schema Mapper is not implemented for SQL Dialect " + dialect.getName());
         }
     }
 

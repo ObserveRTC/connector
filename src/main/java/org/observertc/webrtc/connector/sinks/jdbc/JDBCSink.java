@@ -1,4 +1,4 @@
-package org.observertc.webrtc.connector.sinks.jdbcsink;
+package org.observertc.webrtc.connector.sinks.jdbc;
 
 import io.reactivex.rxjava3.annotations.NonNull;
 import org.jooq.DSLContext;
