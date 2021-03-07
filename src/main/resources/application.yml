@@ -11,17 +11,17 @@ micronaut:
         descriptions: true
         step: PT1M
 
-connector:
-  pipelines:
-    - name: "ExmaplePipeline"
-      source:
-        type: FileSource
-        config:
-          path: src/test/resources/observer-0.6.5/testfiles
-      sink:
-        type: LoggerSink
-        config:
-          detailedLogs: True
+connector: {}
+#  pipelines:
+#    - name: "ExmaplePipeline"
+#      source:
+#        type: FileSource
+#        config:
+#          path: src/test/resources/observer-0.6.5/testfiles
+#      sink:
+#        type: LoggerSink
+#        config:
+#          detailedLogs: True
 #    - name: "mysql-pipeline"
 #      meta:
 #        replicas: 1
