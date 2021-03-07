@@ -7,7 +7,6 @@ import org.observertc.webrtc.connector.databases.SchemaMapperAbstract;
 import org.observertc.webrtc.schemas.reports.ReportType;
 
 import java.util.*;
-import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Function;
 
 public class BigQuerySchemaMapper extends SchemaMapperAbstract {
