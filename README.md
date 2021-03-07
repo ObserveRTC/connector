@@ -82,3 +82,12 @@ second of all, please read [CONTRIBUTING](CONTRIBUTING.md) guidline.
 1. Projects that inspired you
 2. Related projects
 3. Books, papers, talks, or other sources that have meaningful impact or influence on this project
+
+## Observer Compatibility
+
+
+| observer :arrow_down: connector:arrow_forward: | 0.1.6 | 0.1.5 | 0.1.4 |
+|------------------------------------------------|-------|-------|-------|
+| 0.7.0                                          | :ok:  | :ok:  | :x:   |
+| 0.6.5                                          | :ok:  | :ok:  | :x:   |
+| 0.6.4                                          | :x:   | :x:   | :ok:  |
