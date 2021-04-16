@@ -11,67 +11,68 @@ micronaut:
         descriptions: true
         step: PT1M
 
-connector:
-  pipelines:
-    - name: "mysql-pipeline"
-      meta:
-        replicas: 1
-      source:
-        type: FileSource
-        config:
-          path: src/test/resources/observer-0.6.5/testfiles
-      decoder:
-        type: AvroDecoder
-      buffer:
-        maxItems: 100
-        maxWaitingTimeInS: 10
-      sink:
-        type: JDBCSink
-        config:
-          datasource: "mysql"
-          SQLDialect: "MYSQL"
-          schemaCheck:
-            enabled: True
-            createTableIfNotExists: True
-            createDatasetIfNotExists: True
-    - name: "postgres-pipeline"
-      meta:
-        replicas: 1
-      source:
-        type: FileSource
-        config:
-          path: src/test/resources/observer-0.6.5/testfiles
-      decoder:
-        type: AvroDecoder
-      buffer:
-        maxItems: 100
-        maxWaitingTimeInS: 10
-      sink:
-        type: JDBCSink
-        config:
-          datasource: "postgres"
-          SQLDialect: "POSTGRES"
-          schemaCheck:
-            enabled: True
-            createTableIfNotExists: True
-            createDatasetIfNotExists: True
-
+connector: {}
+#  pipelines:
+#    - name: "ExmaplePipeline"
+#      source:
+#        type: FileSource
+#        config:
+#          path: src/test/resources/observer-0.6.5/testfiles
+#      sink:
+#        type: LoggerSink
+#        config:
+#          detailedLogs: True
+#    - name: "mysql-pipeline"
+#      meta:
+#        replicas: 1
+#      source:
+#        type: FileSource
+#        config:
+#          path: src/test/resources/observer-0.6.5/testfiles
+#      decoder:
+#        type: AvroDecoder
+#      buffer:
+#        maxItems: 100
+#        maxWaitingTimeInS: 10
+#      sink:
+#        type: JDBCSink
+#        config:
+#          datasource: "mysql"
+#          SQLDialect: "MYSQL"
+#          schemaCheck:
+#            enabled: True
+#            createTableIfNotExists: True
+#            createDatasetIfNotExists: True
+#    - name: "postgres-pipeline"
+#      meta:
+#        replicas: 1
+#      source:
+#        type: FileSource
+#        config:
+#          path: src/test/resources/observer-0.6.5/testfiles
+#      decoder:
+#        type: AvroDecoder
+#      buffer:
+#        maxItems: 100
+#        maxWaitingTimeInS: 10
+#      sink:
+#        type: JDBCSink
+#        config:
+#          datasource: "postgres"
+#          SQLDialect: "POSTGRES"
+#          schemaCheck:
+#            enabled: True
+#            createTableIfNotExists: True
+#            createDatasetIfNotExists: True
 
 #datasources:
-#  default:
-#    url: "jdbc:mysql://localhost:3306/observertc3?serverTimezone=EET&useLegacyDatetimeCode=false"
-#    username: root
+#  mysql:
+#    url: "jdbc:mysql://localhost:3306/mywebrtc?serverTimezone=EET&useLegacyDatetimeCode=false"
+#    username: user
 #    password: "password"
 #    driverClassName: com.mysql.cj.jdbc.Driver
-
-datasources:
-  mysql:
-    url: "jdbc:mysql://localhost:3306/mywebrtc?serverTimezone=EET&useLegacyDatetimeCode=false"
-    username: user
-    password: "password"
-    driverClassName: com.mysql.cj.jdbc.Driver
-  postgres:
-    url: "jdbc:postgresql://localhost:5432/webrtc3"
-    username: postgres
-    password: "changeme"
-    driverClassName: org.postgresql.Driver
+#  postgres:
+#    url: "jdbc:postgresql://localhost:5432/webrtc3"
+#    username: postgres
+#    password: "changeme"
+#    driverClassName: org.postgresql.Driver

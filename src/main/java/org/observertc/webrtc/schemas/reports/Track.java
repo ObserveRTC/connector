@@ -15,8 +15,8 @@ import org.apache.avro.message.SchemaStore;
 /** Track payloadContains information about the Track the Peer Connection uses */
 @org.apache.avro.specific.AvroGenerated
 public class Track extends org.apache.avro.specific.SpecificRecordBase implements org.apache.avro.specific.SpecificRecord {
-  private static final long serialVersionUID = 3517934143522671809L;
-  public static final org.apache.avro.Schema SCHEMA$ = new org.apache.avro.Schema.Parser().parse("{\"type\":\"record\",\"name\":\"Track\",\"namespace\":\"org.observertc.webrtc.schemas.reports\",\"doc\":\"Track payloadContains information about the Track the Peer Connection uses\",\"fields\":[{\"name\":\"mediaUnitId\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}],\"default\":null},{\"name\":\"callName\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}],\"default\":null},{\"name\":\"userId\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}],\"default\":null},{\"name\":\"browserId\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}],\"default\":null},{\"name\":\"peerConnectionUUID\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"}},{\"name\":\"trackId\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}],\"default\":null},{\"name\":\"concealedSamples\",\"type\":[\"null\",\"int\"],\"default\":null},{\"name\":\"concealmentEvents\",\"type\":[\"null\",\"int\"],\"default\":null},{\"name\":\"detached\",\"type\":[\"null\",\"boolean\"],\"default\":null},{\"name\":\"ended\",\"type\":[\"null\",\"boolean\"],\"default\":null},{\"name\":\"framesDecoded\",\"type\":[\"null\",\"int\"],\"default\":null},{\"name\":\"framesDropped\",\"type\":[\"null\",\"int\"],\"default\":null},{\"name\":\"framesSent\",\"type\":[\"null\",\"int\"],\"default\":null},{\"name\":\"framesReceived\",\"type\":[\"null\",\"int\"],\"default\":null},{\"name\":\"hugeFramesSent\",\"type\":[\"null\",\"int\"],\"default\":null},{\"name\":\"insertedSamplesForDeceleration\",\"type\":[\"null\",\"int\"],\"default\":null},{\"name\":\"jitterBufferDelay\",\"type\":[\"null\",\"double\"],\"default\":null},{\"name\":\"jitterBufferEmittedCount\",\"type\":[\"null\",\"int\"],\"default\":null},{\"name\":\"mediaSourceID\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}],\"default\":null},{\"name\":\"mediaType\",\"type\":{\"type\":\"enum\",\"name\":\"MediaType\",\"doc\":\"State of the Media\",\"symbols\":[\"AUDIO\",\"VIDEO\",\"UNKNOWN\",\"NULL\"]},\"default\":\"UNKNOWN\"},{\"name\":\"remoteSource\",\"type\":[\"null\",\"boolean\"],\"default\":null},{\"name\":\"removedSamplesForAcceleration\",\"type\":[\"null\",\"int\"],\"default\":null},{\"name\":\"samplesDuration\",\"type\":[\"null\",\"double\"],\"default\":null},{\"name\":\"silentConcealedSamples\",\"type\":[\"null\",\"int\"],\"default\":null},{\"name\":\"totalSamplesReceived\",\"type\":[\"null\",\"int\"],\"default\":null}]}");
+  private static final long serialVersionUID = 3702266432314906121L;
+  public static final org.apache.avro.Schema SCHEMA$ = new org.apache.avro.Schema.Parser().parse("{\"type\":\"record\",\"name\":\"Track\",\"namespace\":\"org.observertc.webrtc.schemas.reports\",\"doc\":\"Track payloadContains information about the Track the Peer Connection uses\",\"fields\":[{\"name\":\"mediaUnitId\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}],\"default\":null},{\"name\":\"callName\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}],\"default\":null},{\"name\":\"userId\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}],\"default\":null},{\"name\":\"browserId\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}],\"default\":null},{\"name\":\"peerConnectionUUID\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"}},{\"name\":\"trackId\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}],\"default\":null},{\"name\":\"concealedSamples\",\"type\":[\"null\",\"int\"],\"default\":null},{\"name\":\"concealmentEvents\",\"type\":[\"null\",\"int\"],\"default\":null},{\"name\":\"detached\",\"type\":[\"null\",\"boolean\"],\"default\":null},{\"name\":\"ended\",\"type\":[\"null\",\"boolean\"],\"default\":null},{\"name\":\"framesDecoded\",\"type\":[\"null\",\"int\"],\"default\":null},{\"name\":\"framesDropped\",\"type\":[\"null\",\"int\"],\"default\":null},{\"name\":\"framesSent\",\"type\":[\"null\",\"int\"],\"default\":null},{\"name\":\"framesReceived\",\"type\":[\"null\",\"int\"],\"default\":null},{\"name\":\"hugeFramesSent\",\"type\":[\"null\",\"int\"],\"default\":null},{\"name\":\"frameWidth\",\"type\":[\"null\",\"int\"],\"default\":null},{\"name\":\"frameHeight\",\"type\":[\"null\",\"int\"],\"default\":null},{\"name\":\"insertedSamplesForDeceleration\",\"type\":[\"null\",\"int\"],\"default\":null},{\"name\":\"jitterBufferDelay\",\"type\":[\"null\",\"double\"],\"default\":null},{\"name\":\"jitterBufferEmittedCount\",\"type\":[\"null\",\"int\"],\"default\":null},{\"name\":\"mediaSourceID\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}],\"default\":null},{\"name\":\"mediaType\",\"type\":{\"type\":\"enum\",\"name\":\"MediaType\",\"doc\":\"State of the Media\",\"symbols\":[\"AUDIO\",\"VIDEO\",\"UNKNOWN\",\"NULL\"]},\"default\":\"UNKNOWN\"},{\"name\":\"remoteSource\",\"type\":[\"null\",\"boolean\"],\"default\":null},{\"name\":\"removedSamplesForAcceleration\",\"type\":[\"null\",\"int\"],\"default\":null},{\"name\":\"samplesDuration\",\"type\":[\"null\",\"double\"],\"default\":null},{\"name\":\"silentConcealedSamples\",\"type\":[\"null\",\"int\"],\"default\":null},{\"name\":\"totalSamplesReceived\",\"type\":[\"null\",\"int\"],\"default\":null}]}");
   public static org.apache.avro.Schema getClassSchema() { return SCHEMA$; }
 
   private static SpecificData MODEL$ = new SpecificData();
@@ -87,6 +87,8 @@ public class Track extends org.apache.avro.specific.SpecificRecordBase implement
    private java.lang.Integer framesSent;
    private java.lang.Integer framesReceived;
    private java.lang.Integer hugeFramesSent;
+   private java.lang.Integer frameWidth;
+   private java.lang.Integer frameHeight;
    private java.lang.Integer insertedSamplesForDeceleration;
    private java.lang.Double jitterBufferDelay;
    private java.lang.Integer jitterBufferEmittedCount;
@@ -122,6 +124,8 @@ public class Track extends org.apache.avro.specific.SpecificRecordBase implement
    * @param framesSent The new value for framesSent
    * @param framesReceived The new value for framesReceived
    * @param hugeFramesSent The new value for hugeFramesSent
+   * @param frameWidth The new value for frameWidth
+   * @param frameHeight The new value for frameHeight
    * @param insertedSamplesForDeceleration The new value for insertedSamplesForDeceleration
    * @param jitterBufferDelay The new value for jitterBufferDelay
    * @param jitterBufferEmittedCount The new value for jitterBufferEmittedCount
@@ -133,7 +137,7 @@ public class Track extends org.apache.avro.specific.SpecificRecordBase implement
    * @param silentConcealedSamples The new value for silentConcealedSamples
    * @param totalSamplesReceived The new value for totalSamplesReceived
    */
-  public Track(java.lang.String mediaUnitId, java.lang.String callName, java.lang.String userId, java.lang.String browserId, java.lang.String peerConnectionUUID, java.lang.String trackId, java.lang.Integer concealedSamples, java.lang.Integer concealmentEvents, java.lang.Boolean detached, java.lang.Boolean ended, java.lang.Integer framesDecoded, java.lang.Integer framesDropped, java.lang.Integer framesSent, java.lang.Integer framesReceived, java.lang.Integer hugeFramesSent, java.lang.Integer insertedSamplesForDeceleration, java.lang.Double jitterBufferDelay, java.lang.Integer jitterBufferEmittedCount, java.lang.String mediaSourceID, org.observertc.webrtc.schemas.reports.MediaType mediaType, java.lang.Boolean remoteSource, java.lang.Integer removedSamplesForAcceleration, java.lang.Double samplesDuration, java.lang.Integer silentConcealedSamples, java.lang.Integer totalSamplesReceived) {
+  public Track(java.lang.String mediaUnitId, java.lang.String callName, java.lang.String userId, java.lang.String browserId, java.lang.String peerConnectionUUID, java.lang.String trackId, java.lang.Integer concealedSamples, java.lang.Integer concealmentEvents, java.lang.Boolean detached, java.lang.Boolean ended, java.lang.Integer framesDecoded, java.lang.Integer framesDropped, java.lang.Integer framesSent, java.lang.Integer framesReceived, java.lang.Integer hugeFramesSent, java.lang.Integer frameWidth, java.lang.Integer frameHeight, java.lang.Integer insertedSamplesForDeceleration, java.lang.Double jitterBufferDelay, java.lang.Integer jitterBufferEmittedCount, java.lang.String mediaSourceID, org.observertc.webrtc.schemas.reports.MediaType mediaType, java.lang.Boolean remoteSource, java.lang.Integer removedSamplesForAcceleration, java.lang.Double samplesDuration, java.lang.Integer silentConcealedSamples, java.lang.Integer totalSamplesReceived) {
     this.mediaUnitId = mediaUnitId;
     this.callName = callName;
     this.userId = userId;
@@ -149,6 +153,8 @@ public class Track extends org.apache.avro.specific.SpecificRecordBase implement
     this.framesSent = framesSent;
     this.framesReceived = framesReceived;
     this.hugeFramesSent = hugeFramesSent;
+    this.frameWidth = frameWidth;
+    this.frameHeight = frameHeight;
     this.insertedSamplesForDeceleration = insertedSamplesForDeceleration;
     this.jitterBufferDelay = jitterBufferDelay;
     this.jitterBufferEmittedCount = jitterBufferEmittedCount;
@@ -181,16 +187,18 @@ public class Track extends org.apache.avro.specific.SpecificRecordBase implement
     case 12: return framesSent;
     case 13: return framesReceived;
     case 14: return hugeFramesSent;
-    case 15: return insertedSamplesForDeceleration;
-    case 16: return jitterBufferDelay;
-    case 17: return jitterBufferEmittedCount;
-    case 18: return mediaSourceID;
-    case 19: return mediaType;
-    case 20: return remoteSource;
-    case 21: return removedSamplesForAcceleration;
-    case 22: return samplesDuration;
-    case 23: return silentConcealedSamples;
-    case 24: return totalSamplesReceived;
+    case 15: return frameWidth;
+    case 16: return frameHeight;
+    case 17: return insertedSamplesForDeceleration;
+    case 18: return jitterBufferDelay;
+    case 19: return jitterBufferEmittedCount;
+    case 20: return mediaSourceID;
+    case 21: return mediaType;
+    case 22: return remoteSource;
+    case 23: return removedSamplesForAcceleration;
+    case 24: return samplesDuration;
+    case 25: return silentConcealedSamples;
+    case 26: return totalSamplesReceived;
     default: throw new IndexOutOfBoundsException("Invalid index: " + field$);
     }
   }
@@ -214,16 +222,18 @@ public class Track extends org.apache.avro.specific.SpecificRecordBase implement
     case 12: framesSent = (java.lang.Integer)value$; break;
     case 13: framesReceived = (java.lang.Integer)value$; break;
     case 14: hugeFramesSent = (java.lang.Integer)value$; break;
-    case 15: insertedSamplesForDeceleration = (java.lang.Integer)value$; break;
-    case 16: jitterBufferDelay = (java.lang.Double)value$; break;
-    case 17: jitterBufferEmittedCount = (java.lang.Integer)value$; break;
-    case 18: mediaSourceID = value$ != null ? value$.toString() : null; break;
-    case 19: mediaType = (org.observertc.webrtc.schemas.reports.MediaType)value$; break;
-    case 20: remoteSource = (java.lang.Boolean)value$; break;
-    case 21: removedSamplesForAcceleration = (java.lang.Integer)value$; break;
-    case 22: samplesDuration = (java.lang.Double)value$; break;
-    case 23: silentConcealedSamples = (java.lang.Integer)value$; break;
-    case 24: totalSamplesReceived = (java.lang.Integer)value$; break;
+    case 15: frameWidth = (java.lang.Integer)value$; break;
+    case 16: frameHeight = (java.lang.Integer)value$; break;
+    case 17: insertedSamplesForDeceleration = (java.lang.Integer)value$; break;
+    case 18: jitterBufferDelay = (java.lang.Double)value$; break;
+    case 19: jitterBufferEmittedCount = (java.lang.Integer)value$; break;
+    case 20: mediaSourceID = value$ != null ? value$.toString() : null; break;
+    case 21: mediaType = (org.observertc.webrtc.schemas.reports.MediaType)value$; break;
+    case 22: remoteSource = (java.lang.Boolean)value$; break;
+    case 23: removedSamplesForAcceleration = (java.lang.Integer)value$; break;
+    case 24: samplesDuration = (java.lang.Double)value$; break;
+    case 25: silentConcealedSamples = (java.lang.Integer)value$; break;
+    case 26: totalSamplesReceived = (java.lang.Integer)value$; break;
     default: throw new IndexOutOfBoundsException("Invalid index: " + field$);
     }
   }
@@ -374,6 +384,26 @@ public class Track extends org.apache.avro.specific.SpecificRecordBase implement
    */
   public java.lang.Integer getHugeFramesSent() {
     return hugeFramesSent;
+  }
+
+
+
+  /**
+   * Gets the value of the 'frameWidth' field.
+   * @return The value of the 'frameWidth' field.
+   */
+  public java.lang.Integer getFrameWidth() {
+    return frameWidth;
+  }
+
+
+
+  /**
+   * Gets the value of the 'frameHeight' field.
+   * @return The value of the 'frameHeight' field.
+   */
+  public java.lang.Integer getFrameHeight() {
+    return frameHeight;
   }
 
 
@@ -534,6 +564,8 @@ public class Track extends org.apache.avro.specific.SpecificRecordBase implement
     private java.lang.Integer framesSent;
     private java.lang.Integer framesReceived;
     private java.lang.Integer hugeFramesSent;
+    private java.lang.Integer frameWidth;
+    private java.lang.Integer frameHeight;
     private java.lang.Integer insertedSamplesForDeceleration;
     private java.lang.Double jitterBufferDelay;
     private java.lang.Integer jitterBufferEmittedCount;
@@ -616,45 +648,53 @@ public class Track extends org.apache.avro.specific.SpecificRecordBase implement
         this.hugeFramesSent = data().deepCopy(fields()[14].schema(), other.hugeFramesSent);
         fieldSetFlags()[14] = other.fieldSetFlags()[14];
       }
-      if (isValidValue(fields()[15], other.insertedSamplesForDeceleration)) {
-        this.insertedSamplesForDeceleration = data().deepCopy(fields()[15].schema(), other.insertedSamplesForDeceleration);
+      if (isValidValue(fields()[15], other.frameWidth)) {
+        this.frameWidth = data().deepCopy(fields()[15].schema(), other.frameWidth);
         fieldSetFlags()[15] = other.fieldSetFlags()[15];
       }
-      if (isValidValue(fields()[16], other.jitterBufferDelay)) {
-        this.jitterBufferDelay = data().deepCopy(fields()[16].schema(), other.jitterBufferDelay);
+      if (isValidValue(fields()[16], other.frameHeight)) {
+        this.frameHeight = data().deepCopy(fields()[16].schema(), other.frameHeight);
         fieldSetFlags()[16] = other.fieldSetFlags()[16];
       }
-      if (isValidValue(fields()[17], other.jitterBufferEmittedCount)) {
-        this.jitterBufferEmittedCount = data().deepCopy(fields()[17].schema(), other.jitterBufferEmittedCount);
+      if (isValidValue(fields()[17], other.insertedSamplesForDeceleration)) {
+        this.insertedSamplesForDeceleration = data().deepCopy(fields()[17].schema(), other.insertedSamplesForDeceleration);
         fieldSetFlags()[17] = other.fieldSetFlags()[17];
       }
-      if (isValidValue(fields()[18], other.mediaSourceID)) {
-        this.mediaSourceID = data().deepCopy(fields()[18].schema(), other.mediaSourceID);
+      if (isValidValue(fields()[18], other.jitterBufferDelay)) {
+        this.jitterBufferDelay = data().deepCopy(fields()[18].schema(), other.jitterBufferDelay);
         fieldSetFlags()[18] = other.fieldSetFlags()[18];
       }
-      if (isValidValue(fields()[19], other.mediaType)) {
-        this.mediaType = data().deepCopy(fields()[19].schema(), other.mediaType);
+      if (isValidValue(fields()[19], other.jitterBufferEmittedCount)) {
+        this.jitterBufferEmittedCount = data().deepCopy(fields()[19].schema(), other.jitterBufferEmittedCount);
         fieldSetFlags()[19] = other.fieldSetFlags()[19];
       }
-      if (isValidValue(fields()[20], other.remoteSource)) {
-        this.remoteSource = data().deepCopy(fields()[20].schema(), other.remoteSource);
+      if (isValidValue(fields()[20], other.mediaSourceID)) {
+        this.mediaSourceID = data().deepCopy(fields()[20].schema(), other.mediaSourceID);
         fieldSetFlags()[20] = other.fieldSetFlags()[20];
       }
-      if (isValidValue(fields()[21], other.removedSamplesForAcceleration)) {
-        this.removedSamplesForAcceleration = data().deepCopy(fields()[21].schema(), other.removedSamplesForAcceleration);
+      if (isValidValue(fields()[21], other.mediaType)) {
+        this.mediaType = data().deepCopy(fields()[21].schema(), other.mediaType);
         fieldSetFlags()[21] = other.fieldSetFlags()[21];
       }
-      if (isValidValue(fields()[22], other.samplesDuration)) {
-        this.samplesDuration = data().deepCopy(fields()[22].schema(), other.samplesDuration);
+      if (isValidValue(fields()[22], other.remoteSource)) {
+        this.remoteSource = data().deepCopy(fields()[22].schema(), other.remoteSource);
         fieldSetFlags()[22] = other.fieldSetFlags()[22];
       }
-      if (isValidValue(fields()[23], other.silentConcealedSamples)) {
-        this.silentConcealedSamples = data().deepCopy(fields()[23].schema(), other.silentConcealedSamples);
+      if (isValidValue(fields()[23], other.removedSamplesForAcceleration)) {
+        this.removedSamplesForAcceleration = data().deepCopy(fields()[23].schema(), other.removedSamplesForAcceleration);
         fieldSetFlags()[23] = other.fieldSetFlags()[23];
       }
-      if (isValidValue(fields()[24], other.totalSamplesReceived)) {
-        this.totalSamplesReceived = data().deepCopy(fields()[24].schema(), other.totalSamplesReceived);
+      if (isValidValue(fields()[24], other.samplesDuration)) {
+        this.samplesDuration = data().deepCopy(fields()[24].schema(), other.samplesDuration);
         fieldSetFlags()[24] = other.fieldSetFlags()[24];
+      }
+      if (isValidValue(fields()[25], other.silentConcealedSamples)) {
+        this.silentConcealedSamples = data().deepCopy(fields()[25].schema(), other.silentConcealedSamples);
+        fieldSetFlags()[25] = other.fieldSetFlags()[25];
+      }
+      if (isValidValue(fields()[26], other.totalSamplesReceived)) {
+        this.totalSamplesReceived = data().deepCopy(fields()[26].schema(), other.totalSamplesReceived);
+        fieldSetFlags()[26] = other.fieldSetFlags()[26];
       }
     }
 
@@ -724,45 +764,53 @@ public class Track extends org.apache.avro.specific.SpecificRecordBase implement
         this.hugeFramesSent = data().deepCopy(fields()[14].schema(), other.hugeFramesSent);
         fieldSetFlags()[14] = true;
       }
-      if (isValidValue(fields()[15], other.insertedSamplesForDeceleration)) {
-        this.insertedSamplesForDeceleration = data().deepCopy(fields()[15].schema(), other.insertedSamplesForDeceleration);
+      if (isValidValue(fields()[15], other.frameWidth)) {
+        this.frameWidth = data().deepCopy(fields()[15].schema(), other.frameWidth);
         fieldSetFlags()[15] = true;
       }
-      if (isValidValue(fields()[16], other.jitterBufferDelay)) {
-        this.jitterBufferDelay = data().deepCopy(fields()[16].schema(), other.jitterBufferDelay);
+      if (isValidValue(fields()[16], other.frameHeight)) {
+        this.frameHeight = data().deepCopy(fields()[16].schema(), other.frameHeight);
         fieldSetFlags()[16] = true;
       }
-      if (isValidValue(fields()[17], other.jitterBufferEmittedCount)) {
-        this.jitterBufferEmittedCount = data().deepCopy(fields()[17].schema(), other.jitterBufferEmittedCount);
+      if (isValidValue(fields()[17], other.insertedSamplesForDeceleration)) {
+        this.insertedSamplesForDeceleration = data().deepCopy(fields()[17].schema(), other.insertedSamplesForDeceleration);
         fieldSetFlags()[17] = true;
       }
-      if (isValidValue(fields()[18], other.mediaSourceID)) {
-        this.mediaSourceID = data().deepCopy(fields()[18].schema(), other.mediaSourceID);
+      if (isValidValue(fields()[18], other.jitterBufferDelay)) {
+        this.jitterBufferDelay = data().deepCopy(fields()[18].schema(), other.jitterBufferDelay);
         fieldSetFlags()[18] = true;
       }
-      if (isValidValue(fields()[19], other.mediaType)) {
-        this.mediaType = data().deepCopy(fields()[19].schema(), other.mediaType);
+      if (isValidValue(fields()[19], other.jitterBufferEmittedCount)) {
+        this.jitterBufferEmittedCount = data().deepCopy(fields()[19].schema(), other.jitterBufferEmittedCount);
         fieldSetFlags()[19] = true;
       }
-      if (isValidValue(fields()[20], other.remoteSource)) {
-        this.remoteSource = data().deepCopy(fields()[20].schema(), other.remoteSource);
+      if (isValidValue(fields()[20], other.mediaSourceID)) {
+        this.mediaSourceID = data().deepCopy(fields()[20].schema(), other.mediaSourceID);
         fieldSetFlags()[20] = true;
       }
-      if (isValidValue(fields()[21], other.removedSamplesForAcceleration)) {
-        this.removedSamplesForAcceleration = data().deepCopy(fields()[21].schema(), other.removedSamplesForAcceleration);
+      if (isValidValue(fields()[21], other.mediaType)) {
+        this.mediaType = data().deepCopy(fields()[21].schema(), other.mediaType);
         fieldSetFlags()[21] = true;
       }
-      if (isValidValue(fields()[22], other.samplesDuration)) {
-        this.samplesDuration = data().deepCopy(fields()[22].schema(), other.samplesDuration);
+      if (isValidValue(fields()[22], other.remoteSource)) {
+        this.remoteSource = data().deepCopy(fields()[22].schema(), other.remoteSource);
         fieldSetFlags()[22] = true;
       }
-      if (isValidValue(fields()[23], other.silentConcealedSamples)) {
-        this.silentConcealedSamples = data().deepCopy(fields()[23].schema(), other.silentConcealedSamples);
+      if (isValidValue(fields()[23], other.removedSamplesForAcceleration)) {
+        this.removedSamplesForAcceleration = data().deepCopy(fields()[23].schema(), other.removedSamplesForAcceleration);
         fieldSetFlags()[23] = true;
       }
-      if (isValidValue(fields()[24], other.totalSamplesReceived)) {
-        this.totalSamplesReceived = data().deepCopy(fields()[24].schema(), other.totalSamplesReceived);
+      if (isValidValue(fields()[24], other.samplesDuration)) {
+        this.samplesDuration = data().deepCopy(fields()[24].schema(), other.samplesDuration);
         fieldSetFlags()[24] = true;
+      }
+      if (isValidValue(fields()[25], other.silentConcealedSamples)) {
+        this.silentConcealedSamples = data().deepCopy(fields()[25].schema(), other.silentConcealedSamples);
+        fieldSetFlags()[25] = true;
+      }
+      if (isValidValue(fields()[26], other.totalSamplesReceived)) {
+        this.totalSamplesReceived = data().deepCopy(fields()[26].schema(), other.totalSamplesReceived);
+        fieldSetFlags()[26] = true;
       }
     }
 
@@ -1367,6 +1415,86 @@ public class Track extends org.apache.avro.specific.SpecificRecordBase implement
     }
 
     /**
+      * Gets the value of the 'frameWidth' field.
+      * @return The value.
+      */
+    public java.lang.Integer getFrameWidth() {
+      return frameWidth;
+    }
+
+
+    /**
+      * Sets the value of the 'frameWidth' field.
+      * @param value The value of 'frameWidth'.
+      * @return This builder.
+      */
+    public org.observertc.webrtc.schemas.reports.Track.Builder setFrameWidth(java.lang.Integer value) {
+      validate(fields()[15], value);
+      this.frameWidth = value;
+      fieldSetFlags()[15] = true;
+      return this;
+    }
+
+    /**
+      * Checks whether the 'frameWidth' field has been set.
+      * @return True if the 'frameWidth' field has been set, false otherwise.
+      */
+    public boolean hasFrameWidth() {
+      return fieldSetFlags()[15];
+    }
+
+
+    /**
+      * Clears the value of the 'frameWidth' field.
+      * @return This builder.
+      */
+    public org.observertc.webrtc.schemas.reports.Track.Builder clearFrameWidth() {
+      frameWidth = null;
+      fieldSetFlags()[15] = false;
+      return this;
+    }
+
+    /**
+      * Gets the value of the 'frameHeight' field.
+      * @return The value.
+      */
+    public java.lang.Integer getFrameHeight() {
+      return frameHeight;
+    }
+
+
+    /**
+      * Sets the value of the 'frameHeight' field.
+      * @param value The value of 'frameHeight'.
+      * @return This builder.
+      */
+    public org.observertc.webrtc.schemas.reports.Track.Builder setFrameHeight(java.lang.Integer value) {
+      validate(fields()[16], value);
+      this.frameHeight = value;
+      fieldSetFlags()[16] = true;
+      return this;
+    }
+
+    /**
+      * Checks whether the 'frameHeight' field has been set.
+      * @return True if the 'frameHeight' field has been set, false otherwise.
+      */
+    public boolean hasFrameHeight() {
+      return fieldSetFlags()[16];
+    }
+
+
+    /**
+      * Clears the value of the 'frameHeight' field.
+      * @return This builder.
+      */
+    public org.observertc.webrtc.schemas.reports.Track.Builder clearFrameHeight() {
+      frameHeight = null;
+      fieldSetFlags()[16] = false;
+      return this;
+    }
+
+    /**
       * Gets the value of the 'insertedSamplesForDeceleration' field.
       * @return The value.
       */
@@ -1381,9 +1509,9 @@ public class Track extends org.apache.avro.specific.SpecificRecordBase implement
       * @return This builder.
       */
     public org.observertc.webrtc.schemas.reports.Track.Builder setInsertedSamplesForDeceleration(java.lang.Integer value) {
-      validate(fields()[15], value);
+      validate(fields()[17], value);
       this.insertedSamplesForDeceleration = value;
-      fieldSetFlags()[15] = true;
+      fieldSetFlags()[17] = true;
       return this;
     }
 
@@ -1392,7 +1520,7 @@ public class Track extends org.apache.avro.specific.SpecificRecordBase implement
       * @return True if the 'insertedSamplesForDeceleration' field has been set, false otherwise.
       */
     public boolean hasInsertedSamplesForDeceleration() {
-      return fieldSetFlags()[15];
+      return fieldSetFlags()[17];
     }
 
 
@@ -1402,7 +1530,7 @@ public class Track extends org.apache.avro.specific.SpecificRecordBase implement
       */
     public org.observertc.webrtc.schemas.reports.Track.Builder clearInsertedSamplesForDeceleration() {
       insertedSamplesForDeceleration = null;
-      fieldSetFlags()[15] = false;
+      fieldSetFlags()[17] = false;
       return this;
     }
 
@@ -1421,9 +1549,9 @@ public class Track extends org.apache.avro.specific.SpecificRecordBase implement
       * @return This builder.
       */
     public org.observertc.webrtc.schemas.reports.Track.Builder setJitterBufferDelay(java.lang.Double value) {
-      validate(fields()[16], value);
+      validate(fields()[18], value);
       this.jitterBufferDelay = value;
-      fieldSetFlags()[16] = true;
+      fieldSetFlags()[18] = true;
       return this;
     }
 
@@ -1432,7 +1560,7 @@ public class Track extends org.apache.avro.specific.SpecificRecordBase implement
       * @return True if the 'jitterBufferDelay' field has been set, false otherwise.
       */
     public boolean hasJitterBufferDelay() {
-      return fieldSetFlags()[16];
+      return fieldSetFlags()[18];
     }
 
 
@@ -1442,7 +1570,7 @@ public class Track extends org.apache.avro.specific.SpecificRecordBase implement
       */
     public org.observertc.webrtc.schemas.reports.Track.Builder clearJitterBufferDelay() {
       jitterBufferDelay = null;
-      fieldSetFlags()[16] = false;
+      fieldSetFlags()[18] = false;
       return this;
     }
 
@@ -1461,9 +1589,9 @@ public class Track extends org.apache.avro.specific.SpecificRecordBase implement
       * @return This builder.
       */
     public org.observertc.webrtc.schemas.reports.Track.Builder setJitterBufferEmittedCount(java.lang.Integer value) {
-      validate(fields()[17], value);
+      validate(fields()[19], value);
       this.jitterBufferEmittedCount = value;
-      fieldSetFlags()[17] = true;
+      fieldSetFlags()[19] = true;
       return this;
     }
 
@@ -1472,7 +1600,7 @@ public class Track extends org.apache.avro.specific.SpecificRecordBase implement
       * @return True if the 'jitterBufferEmittedCount' field has been set, false otherwise.
       */
     public boolean hasJitterBufferEmittedCount() {
-      return fieldSetFlags()[17];
+      return fieldSetFlags()[19];
     }
 
 
@@ -1482,7 +1610,7 @@ public class Track extends org.apache.avro.specific.SpecificRecordBase implement
       */
     public org.observertc.webrtc.schemas.reports.Track.Builder clearJitterBufferEmittedCount() {
       jitterBufferEmittedCount = null;
-      fieldSetFlags()[17] = false;
+      fieldSetFlags()[19] = false;
       return this;
     }
 
@@ -1501,9 +1629,9 @@ public class Track extends org.apache.avro.specific.SpecificRecordBase implement
       * @return This builder.
       */
     public org.observertc.webrtc.schemas.reports.Track.Builder setMediaSourceID(java.lang.String value) {
-      validate(fields()[18], value);
+      validate(fields()[20], value);
       this.mediaSourceID = value;
-      fieldSetFlags()[18] = true;
+      fieldSetFlags()[20] = true;
       return this;
     }
 
@@ -1512,7 +1640,7 @@ public class Track extends org.apache.avro.specific.SpecificRecordBase implement
       * @return True if the 'mediaSourceID' field has been set, false otherwise.
       */
     public boolean hasMediaSourceID() {
-      return fieldSetFlags()[18];
+      return fieldSetFlags()[20];
     }
 
 
@@ -1522,7 +1650,7 @@ public class Track extends org.apache.avro.specific.SpecificRecordBase implement
       */
     public org.observertc.webrtc.schemas.reports.Track.Builder clearMediaSourceID() {
       mediaSourceID = null;
-      fieldSetFlags()[18] = false;
+      fieldSetFlags()[20] = false;
       return this;
     }
 
@@ -1541,9 +1669,9 @@ public class Track extends org.apache.avro.specific.SpecificRecordBase implement
       * @return This builder.
       */
     public org.observertc.webrtc.schemas.reports.Track.Builder setMediaType(org.observertc.webrtc.schemas.reports.MediaType value) {
-      validate(fields()[19], value);
+      validate(fields()[21], value);
       this.mediaType = value;
-      fieldSetFlags()[19] = true;
+      fieldSetFlags()[21] = true;
       return this;
     }
 
@@ -1552,7 +1680,7 @@ public class Track extends org.apache.avro.specific.SpecificRecordBase implement
       * @return True if the 'mediaType' field has been set, false otherwise.
       */
     public boolean hasMediaType() {
-      return fieldSetFlags()[19];
+      return fieldSetFlags()[21];
     }
 
 
@@ -1562,7 +1690,7 @@ public class Track extends org.apache.avro.specific.SpecificRecordBase implement
       */
     public org.observertc.webrtc.schemas.reports.Track.Builder clearMediaType() {
       mediaType = null;
-      fieldSetFlags()[19] = false;
+      fieldSetFlags()[21] = false;
       return this;
     }
 
@@ -1581,9 +1709,9 @@ public class Track extends org.apache.avro.specific.SpecificRecordBase implement
       * @return This builder.
       */
     public org.observertc.webrtc.schemas.reports.Track.Builder setRemoteSource(java.lang.Boolean value) {
-      validate(fields()[20], value);
+      validate(fields()[22], value);
       this.remoteSource = value;
-      fieldSetFlags()[20] = true;
+      fieldSetFlags()[22] = true;
       return this;
     }
 
@@ -1592,7 +1720,7 @@ public class Track extends org.apache.avro.specific.SpecificRecordBase implement
       * @return True if the 'remoteSource' field has been set, false otherwise.
       */
     public boolean hasRemoteSource() {
-      return fieldSetFlags()[20];
+      return fieldSetFlags()[22];
     }
 
 
@@ -1602,7 +1730,7 @@ public class Track extends org.apache.avro.specific.SpecificRecordBase implement
       */
     public org.observertc.webrtc.schemas.reports.Track.Builder clearRemoteSource() {
       remoteSource = null;
-      fieldSetFlags()[20] = false;
+      fieldSetFlags()[22] = false;
       return this;
     }
 
@@ -1621,9 +1749,9 @@ public class Track extends org.apache.avro.specific.SpecificRecordBase implement
       * @return This builder.
       */
     public org.observertc.webrtc.schemas.reports.Track.Builder setRemovedSamplesForAcceleration(java.lang.Integer value) {
-      validate(fields()[21], value);
+      validate(fields()[23], value);
       this.removedSamplesForAcceleration = value;
-      fieldSetFlags()[21] = true;
+      fieldSetFlags()[23] = true;
       return this;
     }
 
@@ -1632,7 +1760,7 @@ public class Track extends org.apache.avro.specific.SpecificRecordBase implement
       * @return True if the 'removedSamplesForAcceleration' field has been set, false otherwise.
       */
     public boolean hasRemovedSamplesForAcceleration() {
-      return fieldSetFlags()[21];
+      return fieldSetFlags()[23];
     }
 
 
@@ -1642,7 +1770,7 @@ public class Track extends org.apache.avro.specific.SpecificRecordBase implement
       */
     public org.observertc.webrtc.schemas.reports.Track.Builder clearRemovedSamplesForAcceleration() {
       removedSamplesForAcceleration = null;
-      fieldSetFlags()[21] = false;
+      fieldSetFlags()[23] = false;
       return this;
     }
 
@@ -1661,9 +1789,9 @@ public class Track extends org.apache.avro.specific.SpecificRecordBase implement
       * @return This builder.
       */
     public org.observertc.webrtc.schemas.reports.Track.Builder setSamplesDuration(java.lang.Double value) {
-      validate(fields()[22], value);
+      validate(fields()[24], value);
       this.samplesDuration = value;
-      fieldSetFlags()[22] = true;
+      fieldSetFlags()[24] = true;
       return this;
     }
 
@@ -1672,7 +1800,7 @@ public class Track extends org.apache.avro.specific.SpecificRecordBase implement
       * @return True if the 'samplesDuration' field has been set, false otherwise.
       */
     public boolean hasSamplesDuration() {
-      return fieldSetFlags()[22];
+      return fieldSetFlags()[24];
     }
 
 
@@ -1682,7 +1810,7 @@ public class Track extends org.apache.avro.specific.SpecificRecordBase implement
       */
     public org.observertc.webrtc.schemas.reports.Track.Builder clearSamplesDuration() {
       samplesDuration = null;
-      fieldSetFlags()[22] = false;
+      fieldSetFlags()[24] = false;
       return this;
     }
 
@@ -1701,9 +1829,9 @@ public class Track extends org.apache.avro.specific.SpecificRecordBase implement
       * @return This builder.
       */
     public org.observertc.webrtc.schemas.reports.Track.Builder setSilentConcealedSamples(java.lang.Integer value) {
-      validate(fields()[23], value);
+      validate(fields()[25], value);
       this.silentConcealedSamples = value;
-      fieldSetFlags()[23] = true;
+      fieldSetFlags()[25] = true;
       return this;
     }
 
@@ -1712,7 +1840,7 @@ public class Track extends org.apache.avro.specific.SpecificRecordBase implement
       * @return True if the 'silentConcealedSamples' field has been set, false otherwise.
       */
     public boolean hasSilentConcealedSamples() {
-      return fieldSetFlags()[23];
+      return fieldSetFlags()[25];
     }
 
 
@@ -1722,7 +1850,7 @@ public class Track extends org.apache.avro.specific.SpecificRecordBase implement
       */
     public org.observertc.webrtc.schemas.reports.Track.Builder clearSilentConcealedSamples() {
       silentConcealedSamples = null;
-      fieldSetFlags()[23] = false;
+      fieldSetFlags()[25] = false;
       return this;
     }
 
@@ -1741,9 +1869,9 @@ public class Track extends org.apache.avro.specific.SpecificRecordBase implement
       * @return This builder.
       */
     public org.observertc.webrtc.schemas.reports.Track.Builder setTotalSamplesReceived(java.lang.Integer value) {
-      validate(fields()[24], value);
+      validate(fields()[26], value);
       this.totalSamplesReceived = value;
-      fieldSetFlags()[24] = true;
+      fieldSetFlags()[26] = true;
       return this;
     }
 
@@ -1752,7 +1880,7 @@ public class Track extends org.apache.avro.specific.SpecificRecordBase implement
       * @return True if the 'totalSamplesReceived' field has been set, false otherwise.
       */
     public boolean hasTotalSamplesReceived() {
-      return fieldSetFlags()[24];
+      return fieldSetFlags()[26];
     }
 
 
@@ -1762,7 +1890,7 @@ public class Track extends org.apache.avro.specific.SpecificRecordBase implement
       */
     public org.observertc.webrtc.schemas.reports.Track.Builder clearTotalSamplesReceived() {
       totalSamplesReceived = null;
-      fieldSetFlags()[24] = false;
+      fieldSetFlags()[26] = false;
       return this;
     }
 
@@ -1786,16 +1914,18 @@ public class Track extends org.apache.avro.specific.SpecificRecordBase implement
         record.framesSent = fieldSetFlags()[12] ? this.framesSent : (java.lang.Integer) defaultValue(fields()[12]);
         record.framesReceived = fieldSetFlags()[13] ? this.framesReceived : (java.lang.Integer) defaultValue(fields()[13]);
         record.hugeFramesSent = fieldSetFlags()[14] ? this.hugeFramesSent : (java.lang.Integer) defaultValue(fields()[14]);
-        record.insertedSamplesForDeceleration = fieldSetFlags()[15] ? this.insertedSamplesForDeceleration : (java.lang.Integer) defaultValue(fields()[15]);
-        record.jitterBufferDelay = fieldSetFlags()[16] ? this.jitterBufferDelay : (java.lang.Double) defaultValue(fields()[16]);
-        record.jitterBufferEmittedCount = fieldSetFlags()[17] ? this.jitterBufferEmittedCount : (java.lang.Integer) defaultValue(fields()[17]);
-        record.mediaSourceID = fieldSetFlags()[18] ? this.mediaSourceID : (java.lang.String) defaultValue(fields()[18]);
-        record.mediaType = fieldSetFlags()[19] ? this.mediaType : (org.observertc.webrtc.schemas.reports.MediaType) defaultValue(fields()[19]);
-        record.remoteSource = fieldSetFlags()[20] ? this.remoteSource : (java.lang.Boolean) defaultValue(fields()[20]);
-        record.removedSamplesForAcceleration = fieldSetFlags()[21] ? this.removedSamplesForAcceleration : (java.lang.Integer) defaultValue(fields()[21]);
-        record.samplesDuration = fieldSetFlags()[22] ? this.samplesDuration : (java.lang.Double) defaultValue(fields()[22]);
-        record.silentConcealedSamples = fieldSetFlags()[23] ? this.silentConcealedSamples : (java.lang.Integer) defaultValue(fields()[23]);
-        record.totalSamplesReceived = fieldSetFlags()[24] ? this.totalSamplesReceived : (java.lang.Integer) defaultValue(fields()[24]);
+        record.frameWidth = fieldSetFlags()[15] ? this.frameWidth : (java.lang.Integer) defaultValue(fields()[15]);
+        record.frameHeight = fieldSetFlags()[16] ? this.frameHeight : (java.lang.Integer) defaultValue(fields()[16]);
+        record.insertedSamplesForDeceleration = fieldSetFlags()[17] ? this.insertedSamplesForDeceleration : (java.lang.Integer) defaultValue(fields()[17]);
+        record.jitterBufferDelay = fieldSetFlags()[18] ? this.jitterBufferDelay : (java.lang.Double) defaultValue(fields()[18]);
+        record.jitterBufferEmittedCount = fieldSetFlags()[19] ? this.jitterBufferEmittedCount : (java.lang.Integer) defaultValue(fields()[19]);
+        record.mediaSourceID = fieldSetFlags()[20] ? this.mediaSourceID : (java.lang.String) defaultValue(fields()[20]);
+        record.mediaType = fieldSetFlags()[21] ? this.mediaType : (org.observertc.webrtc.schemas.reports.MediaType) defaultValue(fields()[21]);
+        record.remoteSource = fieldSetFlags()[22] ? this.remoteSource : (java.lang.Boolean) defaultValue(fields()[22]);
+        record.removedSamplesForAcceleration = fieldSetFlags()[23] ? this.removedSamplesForAcceleration : (java.lang.Integer) defaultValue(fields()[23]);
+        record.samplesDuration = fieldSetFlags()[24] ? this.samplesDuration : (java.lang.Double) defaultValue(fields()[24]);
+        record.silentConcealedSamples = fieldSetFlags()[25] ? this.silentConcealedSamples : (java.lang.Integer) defaultValue(fields()[25]);
+        record.totalSamplesReceived = fieldSetFlags()[26] ? this.totalSamplesReceived : (java.lang.Integer) defaultValue(fields()[26]);
         return record;
       } catch (org.apache.avro.AvroMissingFieldException e) {
         throw e;
@@ -1940,6 +2070,22 @@ public class Track extends org.apache.avro.specific.SpecificRecordBase implement
     } else {
       out.writeIndex(1);
       out.writeInt(this.hugeFramesSent);
+    }
+
+    if (this.frameWidth == null) {
+      out.writeIndex(0);
+      out.writeNull();
+    } else {
+      out.writeIndex(1);
+      out.writeInt(this.frameWidth);
+    }
+
+    if (this.frameHeight == null) {
+      out.writeIndex(0);
+      out.writeNull();
+    } else {
+      out.writeIndex(1);
+      out.writeInt(this.frameHeight);
     }
 
     if (this.insertedSamplesForDeceleration == null) {
@@ -2125,6 +2271,20 @@ public class Track extends org.apache.avro.specific.SpecificRecordBase implement
 
       if (in.readIndex() != 1) {
         in.readNull();
+        this.frameWidth = null;
+      } else {
+        this.frameWidth = in.readInt();
+      }
+
+      if (in.readIndex() != 1) {
+        in.readNull();
+        this.frameHeight = null;
+      } else {
+        this.frameHeight = in.readInt();
+      }
+
+      if (in.readIndex() != 1) {
+        in.readNull();
         this.insertedSamplesForDeceleration = null;
       } else {
         this.insertedSamplesForDeceleration = in.readInt();
@@ -2189,7 +2349,7 @@ public class Track extends org.apache.avro.specific.SpecificRecordBase implement
       }
 
     } else {
-      for (int i = 0; i < 25; i++) {
+      for (int i = 0; i < 27; i++) {
         switch (fieldOrder[i].pos()) {
         case 0:
           if (in.readIndex() != 1) {
@@ -2324,13 +2484,31 @@ public class Track extends org.apache.avro.specific.SpecificRecordBase implement
         case 15:
           if (in.readIndex() != 1) {
             in.readNull();
+            this.frameWidth = null;
+          } else {
+            this.frameWidth = in.readInt();
+          }
+          break;
+
+        case 16:
+          if (in.readIndex() != 1) {
+            in.readNull();
+            this.frameHeight = null;
+          } else {
+            this.frameHeight = in.readInt();
+          }
+          break;
+
+        case 17:
+          if (in.readIndex() != 1) {
+            in.readNull();
             this.insertedSamplesForDeceleration = null;
           } else {
             this.insertedSamplesForDeceleration = in.readInt();
           }
           break;
 
-        case 16:
+        case 18:
           if (in.readIndex() != 1) {
             in.readNull();
             this.jitterBufferDelay = null;
@@ -2339,7 +2517,7 @@ public class Track extends org.apache.avro.specific.SpecificRecordBase implement
           }
           break;
 
-        case 17:
+        case 19:
           if (in.readIndex() != 1) {
             in.readNull();
             this.jitterBufferEmittedCount = null;
@@ -2348,7 +2526,7 @@ public class Track extends org.apache.avro.specific.SpecificRecordBase implement
           }
           break;
 
-        case 18:
+        case 20:
           if (in.readIndex() != 1) {
             in.readNull();
             this.mediaSourceID = null;
@@ -2357,11 +2535,11 @@ public class Track extends org.apache.avro.specific.SpecificRecordBase implement
           }
           break;
 
-        case 19:
+        case 21:
           this.mediaType = org.observertc.webrtc.schemas.reports.MediaType.values()[in.readEnum()];
           break;
 
-        case 20:
+        case 22:
           if (in.readIndex() != 1) {
             in.readNull();
             this.remoteSource = null;
@@ -2370,7 +2548,7 @@ public class Track extends org.apache.avro.specific.SpecificRecordBase implement
           }
           break;
 
-        case 21:
+        case 23:
           if (in.readIndex() != 1) {
             in.readNull();
             this.removedSamplesForAcceleration = null;
@@ -2379,7 +2557,7 @@ public class Track extends org.apache.avro.specific.SpecificRecordBase implement
           }
           break;
 
-        case 22:
+        case 24:
           if (in.readIndex() != 1) {
             in.readNull();
             this.samplesDuration = null;
@@ -2388,7 +2566,7 @@ public class Track extends org.apache.avro.specific.SpecificRecordBase implement
           }
           break;
 
-        case 23:
+        case 25:
           if (in.readIndex() != 1) {
             in.readNull();
             this.silentConcealedSamples = null;
@@ -2397,7 +2575,7 @@ public class Track extends org.apache.avro.specific.SpecificRecordBase implement
           }
           break;
 
-        case 24:
+        case 26:
           if (in.readIndex() != 1) {
             in.readNull();
             this.totalSamplesReceived = null;

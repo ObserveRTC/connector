@@ -739,6 +739,14 @@
         "type" : [ "null", "int" ],
         "default" : null
       }, {
+        "name" : "frameWidth",
+        "type" : [ "null", "int" ],
+        "default" : null
+      }, {
+        "name" : "frameHeight",
+        "type" : [ "null", "int" ],
+        "default" : null
+      }, {
         "name" : "insertedSamplesForDeceleration",
         "type" : [ "null", "int" ],
         "default" : null
