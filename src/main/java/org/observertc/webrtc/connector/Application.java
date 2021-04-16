@@ -1,6 +1,9 @@
 package org.observertc.webrtc.connector;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.micronaut.context.ApplicationContext;
+import io.micronaut.context.event.BeanCreatedEvent;
+import io.micronaut.context.event.BeanCreatedEventListener;
 import io.micronaut.runtime.Micronaut;
 import org.jooq.tools.StringUtils;
 import org.observertc.webrtc.connector.configbuilders.ObservableConfig;
@@ -9,6 +12,7 @@ import org.observertc.webrtc.connector.pipelines.PipelinesConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.inject.Singleton;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.time.temporal.ChronoUnit;
@@ -19,7 +23,6 @@ public class Application {
     private static final Logger logger = LoggerFactory.getLogger(Application.class);
     private static final String INITIAL_WAIT_IN_S = "INITIAL_WAITING_TIME_IN_S";
     public static ApplicationContext context;
-
 
 
     public static void main(String[] args) {
@@ -93,5 +96,15 @@ public class Application {
         pipelines.startAll();
     }
 
+    @Singleton
+    static class ObjectMapperBeanEventListener implements BeanCreatedEventListener<ObjectMapper> {
+
+        @Override
+        public ObjectMapper onCreated(BeanCreatedEvent<ObjectMapper> event) {
+            final ObjectMapper mapper = event.getBean();
+            // Register versioning module to the Jackson mapper
+            return mapper;
+        }
+    }
 
 }

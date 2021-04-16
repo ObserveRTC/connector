@@ -15,10 +15,11 @@ public class ReportMapper implements Function<SpecificRecordBase, Map<String, Ob
         for (FieldValueResolver resolver : this.resolvers) {
             Map.Entry<String, Optional<Object>> kv = resolver.apply(subject);
             Optional<Object> valueHolder = kv.getValue();
+            String fieldName = kv.getKey().toLowerCase();
             if (valueHolder.isPresent()) {
-                result.put(kv.getKey(), valueHolder.get());
+                result.put(fieldName, valueHolder.get());
             } else {
-                result.put(kv.getKey(), null);
+                result.put(fieldName, null);
             }
         }
 

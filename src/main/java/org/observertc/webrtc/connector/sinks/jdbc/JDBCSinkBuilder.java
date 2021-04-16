@@ -5,6 +5,8 @@ import org.jooq.DSLContext;
 import org.jooq.Field;
 import org.jooq.SQLDialect;
 import org.jooq.Table;
+import org.jooq.conf.RenderNameCase;
+import org.jooq.conf.Settings;
 import org.jooq.impl.DSL;
 import org.observertc.webrtc.connector.Application;
 import org.observertc.webrtc.connector.common.DatasourceProvider;
@@ -85,7 +87,11 @@ public class JDBCSinkBuilder extends AbstractBuilder implements Builder<Sink> {
         } else {
 
         }
-        Supplier<DSLContext> contextSupplier = () -> DSL.using(datasource, dialect);
+        Supplier<DSLContext> contextSupplier = () -> {
+            Settings settings = new Settings()
+                    .withRenderNameCase(RenderNameCase.LOWER);
+            return DSL.using(datasource, dialect, settings);
+        };
         JDBCSink result = new JDBCSink(contextSupplier);
         reportMappers.entrySet()
                 .forEach(

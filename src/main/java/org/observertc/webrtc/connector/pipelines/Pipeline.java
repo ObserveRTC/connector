@@ -15,6 +15,19 @@ import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 public class Pipeline implements Runnable {
+    public enum State {
+        CREATED,
+        RUN,
+        FINISHED;
+
+        Throwable thrown;
+
+        State withException(Throwable t) {
+            this.thrown = t;
+            return this;
+        }
+    }
+
     private static final Logger DEFAULT_LOGGER = LoggerFactory.getLogger(Pipeline.class);
     private String name;
     private Source source;
@@ -24,6 +37,7 @@ public class Pipeline implements Runnable {
     private Sink sink;
     private BufferConfig bufferConfig = null;
     private final Logger logger;
+    private volatile State state = State.CREATED;
 
     public Pipeline(String name) {
         this.logger = LoggerFactory.getLogger(name);
@@ -57,17 +71,28 @@ public class Pipeline implements Runnable {
         }
 
         observableReports.subscribe(this.sink);
-
-        this.source.run();
         try {
-            this.closingCallback.run();
-        } catch (Throwable t) {
-            String message = String.format("At pipeline %s the callback called " +
-                    "right after the pipeline itself has ended its operation " +
-                    "is just crashed. That's wonderful!",
-                    this.getName());
-            logger.error(message, t);
+            this.state = State.RUN;
+            this.source.run();
+            this.state = State.FINISHED;
+        } catch(Throwable t) {
+            logger.error("Exception occurred during the execution of the pipeline", t);
+            this.state = State.FINISHED.withException(t);
+        } finally{
+            try {
+                this.closingCallback.run();
+            } catch (Throwable t) {
+                String message = String.format("At pipeline %s the callback called " +
+                                "right after the pipeline itself has ended its operation " +
+                                "is just crashed. That's wonderful!",
+                        this.getName());
+                logger.error(message, t);
+            }
         }
+    }
+
+    public State getState() {
+        return this.state;
     }
 
     public String getName() {
