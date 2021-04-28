@@ -28,7 +28,10 @@ import org.yaml.snakeyaml.constructor.SafeConstructor;
 import javax.inject.Singleton;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
-import java.util.*;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 /**
  * This class implements a yaml and json interpreter
@@ -53,7 +56,9 @@ public class ObservableConfig {
 		return Observable.fromCallable(() -> mapper.readValue(
 					jsonString, new TypeReference<Map<String, Object>>() {
 				}))
-				.filter(Objects::nonNull);
+//				.filter(Objects::nonNull)
+//				.cast(Map.class);
+		;
 	}
 
 	public Observable<Map<String, Object>> fromYamlInputStream(InputStream input) {

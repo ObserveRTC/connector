@@ -145,7 +145,11 @@ public class PostgresSchemaMapper extends SchemaMapperAbstract implements JOOQSc
         Map<ReportType, Table<?>> result = new HashMap<>();
         tables.stream().forEach(table -> {
             Optional<ReportType> foundReportType = tableConfigs.entrySet().stream()
-                    .filter(entry -> entry.getValue().tableName.equals(table.getName()))
+                    .filter(entry -> {
+                        String lowerCaseTableName = table.getName().toLowerCase();
+                        String configuredTableName = entry.getValue().tableName.toLowerCase();
+                        return lowerCaseTableName.equals(configuredTableName);
+                    })
                     .map(Map.Entry::getKey)
                     .findFirst();
             if (foundReportType.isPresent()) {

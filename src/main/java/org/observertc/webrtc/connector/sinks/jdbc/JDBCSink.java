@@ -37,8 +37,10 @@ public class JDBCSink extends Sink {
             if (Objects.isNull(insertValuesStepN)) {
                 var insertSetStep = context.insertInto(route.table);
                 insertValuesStepN = insertSetStep.columns(route.fields.toArray(new Field[0]));
+//                var insertValuesStep = insertSetStep.set(recordValues);
                 batch.put(reportType, insertValuesStepN);
             }
+            var lowerCasedRecordValues = recordValues.entrySet().stream().collect(Collectors.toMap())
             var values = route.fields.stream().map(f -> recordValues.get(f.getName())).collect(Collectors.toList());
             insertValuesStepN.values(values);
         }

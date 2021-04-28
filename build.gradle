@@ -13,6 +13,9 @@ apply from: "gradle/asciidoc.gradle"
 repositories {
     mavenCentral()
     jcenter()
+    flatDir {
+        dirs '/Users/balazskreith/Downloads/redshift-jdbc42-2.0.0.2'
+    }
 }
 
 avro {
@@ -64,15 +67,22 @@ dependencies {
 
     implementation group: 'org.jooq', name: 'jooq', version: '3.14.8'
     compile("io.micronaut.sql:micronaut-jdbc-hikari")
+    compile name: 'redshift-jdbc42-2.0.0.2'
 
     implementation group: 'mysql', name: 'mysql-connector-java', version: '8.0.19'
 
     implementation group: 'org.postgresql', name: 'postgresql', version: '9.3-1100-jdbc4'
-//    implementation group: 'com.amazon.redshift', name: 'redshift-jdbc42', version: '1.2.43.1067'
+//    implementation group: 'com.amazon.redshift', name: 'redshift-jdbc42-no-awssdk', version: '1.2.45.1069'
 
     testCompile "org.testcontainers:mysql:1.15.2"
     testCompile "org.testcontainers:postgresql:1.15.2"
     testCompile "org.testcontainers:kafka:1.15.1"
+
+//    compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.6.7.1'
+    // https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind
+    implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.12.2'
+
+    runtimeOnly group: 'com.fasterxml.jackson.module', name: 'jackson-modules-java8', version: '2.10.2', ext: 'pom'
 }
 
 
