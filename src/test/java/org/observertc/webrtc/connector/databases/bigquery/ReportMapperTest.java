@@ -83,6 +83,6 @@ class ReportMapperTest {
         // Then
         Assertions.assertNotNull(entry);
         Assertions.assertEquals(1, entry.size());
-        Assertions.assertEquals(report.getVersion(), entry.get(myKey));
+        Assertions.assertEquals(report.getVersion(), entry.get(myKey.toLowerCase()));
     }
 }

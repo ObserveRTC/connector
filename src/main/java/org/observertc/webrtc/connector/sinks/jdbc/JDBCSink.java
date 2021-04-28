@@ -40,7 +40,9 @@ public class JDBCSink extends Sink {
 //                var insertValuesStep = insertSetStep.set(recordValues);
                 batch.put(reportType, insertValuesStepN);
             }
-            var lowerCasedRecordValues = recordValues.entrySet().stream().collect(Collectors.toMap())
+            var lowerCasedRecordValues = recordValues.entrySet().stream()
+                    .collect(Collectors.toMap(entry -> entry.getKey() != null ? entry.getKey().toLowerCase() : null,
+                            Map.Entry::getValue));
             var values = route.fields.stream().map(f -> recordValues.get(f.getName())).collect(Collectors.toList());
             insertValuesStepN.values(values);
         }

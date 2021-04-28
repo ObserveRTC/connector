@@ -1,6 +1,11 @@
 All notable changes to this project will be documented in this file.
 We follow the [Semantic Versioning 2.0.0](http://semver.org/) format.
 
+## 0.1.8
+ * Fix postgreSQL JDBC Sink and make field names lowercase for JDBC
+
+## 0.1.7
+ * Change Report schema according to `observer:0.8.0` 
 
 ## 0.1.7
  * Change Report schema according to `observer:0.8.0` 

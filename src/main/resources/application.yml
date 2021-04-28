@@ -12,7 +12,7 @@ micronaut:
         step: PT1M
 
 connector:
-  pipelines:
+  pipelines: []
 #    - name: "ExmaplePipeline"
 #      source:
 #        type: KafkaSource
