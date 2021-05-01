@@ -2,32 +2,17 @@ package org.observertc.webrtc.connector.databases.jdbc.version1;
 
 import org.apache.avro.Schema;
 import org.jooq.DataType;
-import org.jooq.SQLDialect;
 import org.jooq.Table;
-import org.jooq.impl.DSL;
 import org.jooq.impl.SQLDataType;
 import org.observertc.webrtc.connector.databases.SchemaMapper;
 import org.observertc.webrtc.connector.databases.jdbc.TableInfoConfig;
 import org.observertc.webrtc.schemas.reports.ReportType;
 
-import javax.sql.DataSource;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.function.Function;
 
 public interface JOOQSchemaMapper extends SchemaMapper {
-
-    static JOOQSchemaMapper makeSchemaMapperFor(SQLDialect dialect, String databaseName, DataSource dataSource) {
-        var context = DSL.using(dataSource, dialect);
-        switch (dialect) {
-            case MYSQL:
-                return new MYSQLSchemaMapper(() -> context, databaseName);
-            case POSTGRES:
-                return new PostgresSchemaMapper(() -> context);
-            default:
-                throw new RuntimeException("Schema Mapper is not implemented for SQL Dialect " + dialect.getName());
-        }
-    }
 
     static DataType makeDataType(Schema.Type fieldType) {
         switch (fieldType) {
@@ -72,7 +57,4 @@ public interface JOOQSchemaMapper extends SchemaMapper {
     Map<ReportType, Table<?>> getTables();
 
     JOOQSchemaMapper addTableConfig(ReportType reportType, TableInfoConfig tableInfoConfig);
-
-
-
 }

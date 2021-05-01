@@ -16,7 +16,6 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
-
 public class JDBCSink extends Sink {
     private final Supplier<DSLContext> contextSupplier;
     private final Map<ReportType, Route> routes = new HashMap<>();
@@ -37,12 +36,8 @@ public class JDBCSink extends Sink {
             if (Objects.isNull(insertValuesStepN)) {
                 var insertSetStep = context.insertInto(route.table);
                 insertValuesStepN = insertSetStep.columns(route.fields.toArray(new Field[0]));
-//                var insertValuesStep = insertSetStep.set(recordValues);
                 batch.put(reportType, insertValuesStepN);
             }
-            var lowerCasedRecordValues = recordValues.entrySet().stream()
-                    .collect(Collectors.toMap(entry -> entry.getKey() != null ? entry.getKey().toLowerCase() : null,
-                            Map.Entry::getValue));
             var values = route.fields.stream().map(f -> recordValues.get(f.getName())).collect(Collectors.toList());
             insertValuesStepN.values(values);
         }

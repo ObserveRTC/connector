@@ -16,16 +16,10 @@ connector:
 #    - name: "ExmaplePipeline"
 #      source:
 #        type: KafkaSource
-#        tpoic: "reports"
-#      transformations:
-#        - type: Filter
-#          config:
-#            marker: "asdasd"
-#      sink:
-#        type: BigQuerySink
 #        config:
-#          detailedLogs: True
-#    - name: "MyP"
+#          topic: "reports"
+#          properties:
+#            bootstrap.servers: "localhost:9092"
 #      sink:
 #        type: LoggerSink
 #        config:
@@ -38,7 +32,7 @@ connector:
 #      source:
 #        type: FileSource
 #        config:
-#          path: src/test/resources/observer-0.6.5/testfiles
+#          path: src/test/resources/observer-0.8.1/testfiles
 #      decoder:
 #        type: AvroDecoder
 #      buffer:
@@ -55,21 +49,18 @@ connector:
 #            createDatasetIfNotExists: True
 
 #    - name: "postgres-pipeline"
-#      meta:
-#        replicas: 1
 #      source:
-#        type: FileSource
+#        type: KafkaSource
 #        config:
-#          path: src/test/resources/observer-0.6.5/testfiles
+#          topic: "reports"
+#          properties:
+#            bootstrap.servers: "localhost:9092"
 #      decoder:
 #        type: AvroDecoder
 #      buffer:
 #        maxItems: 100
 #        maxWaitingTimeInS: 10
 #      sink:
-#        type: FileSink
-#        config:
-#          path: "/src/"
 #        type: JDBCSink
 #        config:
 #          datasource: "postgres"
@@ -90,10 +81,6 @@ connector:
 #    username: user
 #    password: "password"
 #    driverClassName: com.mysql.cj.jdbc.Driver
-#  postgres:
-#    url: ${JDBC_URL:`jdbc:redshift://redshift-cluster-1.cz0dgezbxghy.us-west-2.redshift.amazonaws.com:5439/dev`}
-#    username: awsuserredshift
-#    password: "Redshift42"
-#    driverClassName: com.amazon.redshift.jdbc42.Driver
+
 
 

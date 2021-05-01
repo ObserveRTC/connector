@@ -13,5 +13,5 @@ keys/
 .settings
 .classpath
 .factorypath
-DEBUG_*.java
+DEBUG_*
 clients/python/mydev
