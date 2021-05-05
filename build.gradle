@@ -13,9 +13,6 @@ apply from: "gradle/asciidoc.gradle"
 repositories {
     mavenCentral()
     jcenter()
-    flatDir {
-        dirs './redshift-jdbc42-2.0.0.2'
-    }
 }
 
 avro {
@@ -64,10 +61,12 @@ dependencies {
 
     // https://mvnrepository.com/artifact/org.hibernate/hibernate-validator
     implementation("io.micronaut.beanvalidation:micronaut-hibernate-validator:3.0.0")
+// https://mvnrepository.com/artifact/com.amazon.redshift/redshift-jdbc42
+
 
     implementation group: 'org.jooq', name: 'jooq', version: '3.14.8'
     compile("io.micronaut.sql:micronaut-jdbc-hikari")
-    compile name: 'redshift-jdbc42-2.0.0.2'
+    implementation group: 'com.amazon.redshift', name: 'redshift-jdbc42', version: '2.0.0.3'
 
     implementation group: 'mysql', name: 'mysql-connector-java', version: '8.0.19'
 
