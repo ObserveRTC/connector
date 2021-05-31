@@ -86,9 +86,10 @@ second of all, please read [CONTRIBUTING](CONTRIBUTING.md) guidline.
 ## Observer Compatibility
 
 
-| observer :arrow_down: connector:arrow_forward: | 0.1.7 | 0.1.6 | 0.1.5 | 0.1.4 |
-|------------------------------------------------|-------|-------|-------|-------|
-| 0.8.0                                          | :ok:  | :x:   | :x:   | :x:   |
-| 0.7.0                                          | :x:   | :ok:  | :ok:  | :x:   |
-| 0.6.5                                          | :x:   | :ok:  | :ok:  | :x:   |
-| 0.6.4                                          | :x:   | :x:   | :x:   | :ok:  |
+| observer :arrow_down: connector:arrow_forward: | 0.1.9 | 0.1.7 | 0.1.6 | 0.1.5 | 0.1.4 |
+|------------------------------------------------|-------|-------|-------|-------|-------|
+| 0.8.2                                          | :ok:  | :x:   | :x:   | :x:   | :x:   |
+| 0.8.0                                          | :ok:  | :x:   | :x:   | :x:   | :x:   |
+| 0.7.0                                          | :x:   | :ok:  | :ok:  | :ok:  | :x:   |
+| 0.6.5                                          | :x:   | :ok:  | :ok:  | :ok:  | :x:   |
+| 0.6.4                                          | :x:   | :x:   | :x:   | :x:   | :ok:  |
