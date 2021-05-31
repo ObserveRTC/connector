@@ -81,6 +81,20 @@ public class ReportGenerator {
         };
     }
 
+    public Supplier<Report> extensionStatReportSupplier(String type, String payload) {
+        Random rand = new Random();
+
+        return () -> {
+            ExtensionReport extensionReport = ExtensionReport.newBuilder()
+                    .setCallName("callName")
+                    .setPeerConnectionUUID(UUID.randomUUID().toString())
+                    .setExtensionType(type)
+                    .setPayload(payload)
+                    .build();
+            return makeReport(ReportType.EXTENSION, extensionReport);
+        };
+    }
+
     public Supplier<Report> emptyReportSupplier(ReportType reportType) {
         return () -> {
             return makeReport(reportType, new Object());

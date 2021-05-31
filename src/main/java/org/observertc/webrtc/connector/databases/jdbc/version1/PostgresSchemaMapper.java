@@ -81,7 +81,7 @@ public class PostgresSchemaMapper extends SchemaMapperAbstract implements JOOQSc
         // common columns
         createTableColumnStep
                 .column("timestamp", SQLDataType.BIGINT)
-                .column("marker", SQLDataType.VARCHAR(1024));
+                .column("marker", SQLDataType.VARCHAR(8192));
 
         this.schemaFieldWalker(schema, fieldInfo -> {
             DataType dataType = JOOQSchemaMapper.makeDataType(fieldInfo.schema.getType());
