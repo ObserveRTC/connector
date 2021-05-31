@@ -21,12 +21,12 @@ public interface JOOQSchemaMapper extends SchemaMapper {
             case INT:
                 return SQLDataType.INTEGER;
             case BYTES:
-                return SQLDataType.BINARY(1024);
+                return SQLDataType.BINARY(8192);
             case BOOLEAN:
                 return SQLDataType.BOOLEAN;
             case ENUM:
             case STRING:
-                return SQLDataType.VARCHAR(255);
+                return SQLDataType.VARCHAR(8192);
             case DOUBLE:
                 return SQLDataType.DOUBLE;
             case FLOAT:
